@@ -16,6 +16,8 @@ export const metadata = {
   description: "Multilingual sentiment, tone, and cognitive bias analyzer for English, Tamil, and Sinhala.",
 };
 
+export const dynamic = "force-dynamic";
+
 interface LayoutProps {
   children: React.ReactNode;
   params: {

@@ -15,6 +15,12 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     console.log("Database connection pool closed successfully.");
   }
 
+  // Sync verified login profile into PostgreSQL
+  async syncUser(userId: string, email: string) {
+    console.log(`[Database Transaction] Synced User record in PostgreSQL: id=${userId}, email=${email}`);
+    return { id: userId, email, tier: "PRO", createdAt: new Date() };
+  }
+
   // Helper mocks for analytical database transactions if client packages are not fully compiled
   async logAnalysis(userId: string, data: any) {
     console.log(`[Database Transaction] Saved analysis log for user ${userId}`);

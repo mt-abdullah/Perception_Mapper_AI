@@ -16,13 +16,15 @@ import {
   Layers,
   CheckCircle,
   HelpCircle,
+  Lock,
 } from "lucide-react";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "../clerk-compat";
+import { SignedIn, SignedOut, SignInButton, UserButton, useAuth } from "../clerk-compat";
 
 export default function Dashboard() {
   const t = useTranslations("Index");
   const router = useRouter();
   const pathname = usePathname();
+  const { isSignedIn } = useAuth();
 
   // State management
   const [text, setText] = useState("");
@@ -244,9 +246,46 @@ export default function Dashboard() {
       </header>
 
       {/* Main Layout Container */}
-      <main className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
-        
-        {/* Left Side: Analyzer Workspace */}
+      <main className="max-w-7xl mx-auto px-6 py-8 relative z-10 min-h-[600px]">
+        {/* Glassmorphic Lock Overlay for Signed-Out Users */}
+        {!isSignedIn && (
+          <div className="absolute inset-x-6 top-8 bottom-8 z-20 backdrop-blur-md bg-slate-950/60 rounded-3xl flex flex-col justify-center items-center p-8 text-center border border-slate-900 shadow-2xl min-h-[500px]">
+            <div className="relative mb-6">
+              <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 blur-lg animate-pulse" />
+              <div className="relative bg-slate-950 p-5 rounded-full border border-slate-800 flex items-center justify-center">
+                <Lock className="h-8 w-8 text-indigo-400 animate-bounce" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold tracking-tight text-white mb-2">
+              Workspace Locked
+            </h3>
+            <p className="text-slate-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
+              Verify your session credentials to unlock standard NLP tone parsing, multilingual cognitive bias detection, and custom rule builders.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+              <SignInButton>
+                <button className="px-8 py-3.5 text-xs font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 hover:scale-[1.01] cursor-pointer">
+                  Sign In to Account
+                </button>
+              </SignInButton>
+              <button
+                onClick={() => {
+                  const segments = pathname.split("/");
+                  const locale = segments[1] || "en";
+                  router.push(`/${locale}/sign-up`);
+                }}
+                className="px-8 py-3.5 text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white rounded-xl hover:border-slate-700 transition duration-300 cursor-pointer"
+              >
+                Register Free Setup
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Dashboard Grid Workspace */}
+        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all duration-500 ${!isSignedIn ? "blur-md pointer-events-none select-none opacity-40" : ""}`}>
+          
+          {/* Left Side: Analyzer Workspace */}
         <div className="lg:col-span-7 flex flex-col space-y-6">
           
           {/* Welcome Card */}
@@ -618,6 +657,7 @@ export default function Dashboard() {
               </div>
             </div>
           </Card>
+        </div>
         </div>
       </main>
 

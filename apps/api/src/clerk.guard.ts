@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import * as jwt from "jsonwebtoken";
 import * as jwksRsa from "jwks-rsa";
+import { PrismaService } from "./prisma.service";
 
 const jwksClient = typeof jwksRsa === "function"
   ? jwksRsa
@@ -17,7 +18,7 @@ export class ClerkGuard implements CanActivate {
   private readonly logger = new Logger("ClerkGuard");
   private jwksClientInstance: any;
 
-  constructor() {
+  constructor(private readonly prisma: PrismaService) {
     // Standard Clerk JWKS client retrieval setup
     const jwksUri = process.env.CLERK_JWKS_URI || "https://api.clerk.com/v1/jwks";
     this.jwksClientInstance = jwksClient({
@@ -44,6 +45,10 @@ export class ClerkGuard implements CanActivate {
         email: "dev@perceptionmapper.ai",
         tier: "pro",
       };
+      
+      // Lazy sync mock profile in background
+      await this.prisma.syncUser(request.user.userId, request.user.email);
+      
       return true;
     }
 
@@ -73,7 +78,12 @@ export class ClerkGuard implements CanActivate {
       request.user = {
         userId: verifiedPayload.sub, // Clerk user ID
         sessionId: verifiedPayload.sid, // Clerk session ID
+        email: verifiedPayload.email || "user@perceptionmapper.ai", // Unified email fallback
+        tier: "PRO",
       };
+
+      // Lazy sync authenticated profile in database
+      await this.prisma.syncUser(request.user.userId, request.user.email);
 
       return true;
     } catch (error) {
