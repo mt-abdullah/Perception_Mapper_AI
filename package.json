@@ -1,7 +1,15 @@
 {
   "name": "perception-mapper-ai",
   "private": true,
-  "packageManager": "pnpm@9.1.1",
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@10.8.0",
+  "dependencies": {
+    "turbo": "^2.9.14"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -9,6 +17,6 @@
     "clean": "turbo run clean"
   },
   "devDependencies": {
-    "turbo": "^1.13.3"
+    "typescript": "^5.4.5"
   }
 }

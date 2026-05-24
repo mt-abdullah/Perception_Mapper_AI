@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { initSpeechRecognition, toggleListening, speakText } from "./voice-helper";
 import { useRouter, usePathname } from "next/navigation";
 import { Button, Card, Textarea, Badge } from "@perception-mapper/ui";
 import {
-  Sparkles,
+  Sparkles, Mic,
   Globe,
   TrendingUp,
   ShieldAlert,
@@ -25,6 +26,7 @@ export default function Dashboard() {
   const router = useRouter();
   const pathname = usePathname();
   const { isSignedIn } = useAuth();
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
 
   // State management
   const [text, setText] = useState("");
@@ -100,6 +102,21 @@ export default function Dashboard() {
   };
 
   // Live Analysis API connection to NestJS Gateway
+  useEffect(() => {
+    // Initialize speech recognition with callback to update text input
+    initSpeechRecognition((result) => {
+      // Append recognized speech to existing text
+      setText((prev) => (prev ? prev + " " + result.transcript : result.transcript));
+    });
+  }, []);
+
+  const handleVoiceToggle = () => {
+    const newState = toggleListening((result) => {
+      setText((prev) => (prev ? prev + " " + result.transcript : result.transcript));
+    });
+    setIsVoiceActive(newState);
+  };
+
   const triggerAnalysis = async () => {
     if (!text.trim()) return;
     setIsAnalyzing(true);
@@ -323,9 +340,17 @@ export default function Dashboard() {
                 placeholder={t("placeholder")}
                 className="flex-1 min-h-[280px] p-4 text-base focus:ring-indigo-500/40 border-slate-800"
               />
+              {/* Voice toggle button */}
+              <Button
+                variant="secondary"
+                className="absolute bottom-2 right-2 h-8 w-8 p-0 flex items-center justify-center"
+                onClick={handleVoiceToggle}
+              >
+                <Mic className={isVoiceActive ? "h-4 w-4 text-indigo-500" : "h-4 w-4 text-slate-400"} />
+              </Button>
               
               {/* Floating word count */}
-              <div className="absolute bottom-3 right-4 text-xs text-slate-500 font-mono">
+              <div className="absolute bottom-3 right-14 text-xs text-slate-500 font-mono">
                 {text.length} characters | {text.split(/\s+/).filter(Boolean).length} words
               </div>
             </div>
@@ -548,6 +573,21 @@ export default function Dashboard() {
 
               {/* Bias highlights and suggestions */}
               <Card hoverEffect={false}>
+                {/* Speak analysis button */}
+                {analysisResult && (
+                  <Button
+                    variant="ghost"
+                    className="mb-4 w-full flex items-center justify-center text-xs"
+                    onClick={() => {
+                      const summary = `Detected language ${analysisResult.language}. Bias index ${analysisResult.scores.biasIndex} percent. ${analysisResult.biases.length} bias highlights detected.`;
+                      speakText(summary, "en-US");
+                    }}
+                  >
+                    <Mic className="h-4 w-4 mr-1" />
+                    Listen to Summary
+                  </Button>
+                )}
+
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-sm font-semibold tracking-wider text-indigo-400 uppercase flex items-center">
                     <ShieldAlert className="h-4 w-4 mr-2 text-pink-500" />

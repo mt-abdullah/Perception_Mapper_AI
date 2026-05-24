@@ -2,7 +2,7 @@ import * as React from "react";
 
 // Premium Button Component
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "glass" | "danger";
+  variant?: "primary" | "secondary" | "glass" | "danger" | "ghost";
   size?: "sm" | "md" | "lg";
 }
 
@@ -23,6 +23,7 @@ export const Button: React.FC<ButtonProps> = ({
     glass:
       "bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border border-white/20 hover:shadow-white/10",
     danger: "bg-red-600 hover:bg-red-500 text-white hover:shadow-red-500/20",
+    ghost: "bg-transparent border border-gray-500 text-gray-300 hover:bg-gray-800 hover:text-white"
   };
 
   const sizes = {
