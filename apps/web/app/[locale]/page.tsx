@@ -17,7 +17,7 @@ import {
   CheckCircle,
   HelpCircle,
 } from "lucide-react";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "../clerk-compat";
 
 export default function Dashboard() {
   const t = useTranslations("Index");
