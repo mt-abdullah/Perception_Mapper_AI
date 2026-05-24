@@ -21,12 +21,16 @@ enum UserRole {
 model User {
   id                     String       @id // Clerk User ID
   email                  String       @unique
+  name                   String?
   stripeCustomerId       String?      @unique
   stripeSubscriptionId   String?      @unique
   tier                   PlanTier     @default(FREE)
   role                   UserRole     @default(USER)
+  status                 String       @default("ACTIVE") // ACTIVE | BLOCKED
+  plan                   String       @default("FREE")   // FREE | PRO | TEAM
   analysesLimit          Int          @default(50)
   analysesUsed           Int          @default(0)
+  lastLogin              DateTime?
   createdAt              DateTime     @default(now())
   updatedAt              DateTime     @updatedAt
   analyses               Analysis[]

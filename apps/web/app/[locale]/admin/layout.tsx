@@ -121,7 +121,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <AdminTabContext.Provider value={{ activeTab, setActiveTab }}>
       <div className="min-h-screen bg-slate-950 text-slate-100 flex overflow-hidden font-sans">
         {/* 1. Sidebar Navigation */}
-        <aside className="w-64 border-r border-slate-900 bg-slate-950 flex flex-col shrink-0 relative overflow-hidden hidden md:flex">
+        <aside className="w-64 border-r border-slate-900 bg-slate-950 flex-col shrink-0 relative overflow-hidden hidden md:flex">
           {/* Glow ambient */}
           <div className="absolute top-0 left-0 w-[120px] h-[120px] rounded-full bg-purple-500/5 blur-[40px] pointer-events-none" />
 

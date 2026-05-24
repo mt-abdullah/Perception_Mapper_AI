@@ -394,7 +394,7 @@ export default function Dashboard() {
 
                     {/* Administrative Role Switcher */}
                     <div className="py-3 border-b border-slate-900">
-                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2 flex items-center">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2 flex items-center">
                         <span className="mr-1.5">🛡️</span> Access Control Role
                       </span>
                       <div className="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-900">

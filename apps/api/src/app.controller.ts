@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
+  Delete,
   Body,
   Param,
   HttpException,
@@ -427,6 +429,81 @@ export class AppController {
       throw new HttpException("Invalid plan tier targeted", HttpStatus.BAD_REQUEST);
     }
     return await this.prisma.updateUserTier(id, body.tier.toUpperCase());
+  }
+
+  // RESTful users endpoints
+  @Get("users")
+  @UseGuards(ClerkGuard, AdminOnlyGuard)
+  async getUsersList() {
+    try {
+      return await this.prisma.getAllUsers();
+    } catch (e) {
+      throw new HttpException(
+        "Failed to retrieve user catalog: " + e.message,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Patch("users/:id")
+  @UseGuards(ClerkGuard, AdminOnlyGuard)
+  async patchUserDetail(
+    @Param("id") id: string,
+    @Body() body: { role?: string; status?: string; plan?: string; name?: string }
+  ) {
+    if (!body || Object.keys(body).length === 0) {
+      throw new HttpException("Update payload body must not be empty", HttpStatus.BAD_REQUEST);
+    }
+
+    // Input validation
+    if (body.role !== undefined) {
+      if (typeof body.role !== "string" || !["USER", "ADMIN"].includes(body.role.toUpperCase())) {
+        throw new HttpException("Invalid role profile targeted. Must be USER or ADMIN.", HttpStatus.BAD_REQUEST);
+      }
+    }
+    if (body.status !== undefined) {
+      if (typeof body.status !== "string" || !["ACTIVE", "BLOCKED"].includes(body.status.toUpperCase())) {
+        throw new HttpException("Invalid status targeted. Must be ACTIVE or BLOCKED.", HttpStatus.BAD_REQUEST);
+      }
+    }
+    if (body.plan !== undefined) {
+      if (typeof body.plan !== "string" || !["FREE", "PRO", "TEAM"].includes(body.plan.toUpperCase())) {
+        throw new HttpException("Invalid plan targeted. Must be FREE, PRO, or TEAM.", HttpStatus.BAD_REQUEST);
+      }
+    }
+    if (body.name !== undefined) {
+      if (body.name !== null && typeof body.name !== "string") {
+        throw new HttpException("Invalid name targeted. Must be a string.", HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    try {
+      const updatedUser = await this.prisma.updateUser(id, {
+        role: body.role?.toUpperCase(),
+        status: body.status?.toUpperCase(),
+        plan: body.plan?.toUpperCase(),
+        name: body.name,
+      });
+      return updatedUser;
+    } catch (e) {
+      throw new HttpException(
+        "Failed to update user profile: " + e.message,
+        HttpStatus.NOT_FOUND
+      );
+    }
+  }
+
+  @Delete("users/:id")
+  @UseGuards(ClerkGuard, AdminOnlyGuard)
+  async deleteUserDetail(@Param("id") id: string) {
+    try {
+      return await this.prisma.deleteUser(id);
+    } catch (e) {
+      throw new HttpException(
+        "Failed to delete user account: " + e.message,
+        HttpStatus.NOT_FOUND
+      );
+    }
   }
 
   // Developer mock action override to change standard user role dynamically from dashboard settings

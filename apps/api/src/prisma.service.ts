@@ -41,9 +41,12 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
       {
         id: "user_mock_dev_2k98fhj3",
         email: "dev@perceptionmapper.ai",
+        name: "Demo Developer",
         role: "ADMIN",
         tier: "PRO",
         isBlocked: false,
+        status: "ACTIVE",
+        plan: "PRO",
         analysesUsed: 142,
         analysesLimit: 500,
         lastLogin: new Date(Date.now() - 2 * 3600 * 1000),
@@ -53,9 +56,12 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
       {
         id: "user_mock_alex",
         email: "alex@acme.org",
+        name: "Alex Smith",
         role: "USER",
         tier: "FREE",
         isBlocked: false,
+        status: "ACTIVE",
+        plan: "FREE",
         analysesUsed: 12,
         analysesLimit: 50,
         lastLogin: new Date(Date.now() - 24 * 3600 * 1000),
@@ -65,9 +71,12 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
       {
         id: "user_mock_sarah",
         email: "sarah@percept.ai",
+        name: "Sarah Jenkins",
         role: "USER",
         tier: "TEAM",
         isBlocked: false,
+        status: "ACTIVE",
+        plan: "TEAM",
         analysesUsed: 88,
         analysesLimit: 1000,
         lastLogin: new Date(Date.now() - 4 * 3600 * 1000),
@@ -77,9 +86,12 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
       {
         id: "user_mock_blocked",
         email: "blocked_user@spam.com",
+        name: "Blocked Spammer",
         role: "USER",
         tier: "FREE",
         isBlocked: true,
+        status: "BLOCKED",
+        plan: "FREE",
         analysesUsed: 50,
         analysesLimit: 50,
         lastLogin: new Date(Date.now() - 10 * 24 * 3600 * 1000),
@@ -110,16 +122,23 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
       user = {
         id: userId,
         email,
+        name: email.split("@")[0],
         role: isDevAdmin ? "ADMIN" : "USER",
         tier: "PRO",
         isBlocked: false,
+        status: "ACTIVE",
+        plan: "PRO",
         analysesUsed: 0,
         analysesLimit: 100,
+        lastLogin: new Date(),
+        totalAiRequests: 0,
         createdAt: new Date(),
       };
       this.users.push(user);
+    } else {
+      user.lastLogin = new Date();
     }
-    console.log(`[Database Transaction] Synced User record: id=${user.id}, email=${user.email}, role=${user.role}, isBlocked=${user.isBlocked}`);
+    console.log(`[Database Transaction] Synced User record: id=${user.id}, email=${user.email}, role=${user.role}, isBlocked=${user.isBlocked}, status=${user.status}`);
     await this.trackActivity(userId, "LOGIN", `User ${email} authenticated as ${user.role}`, "SUCCESS", 120, 0);
     return user;
   }
@@ -349,5 +368,30 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     console.log(`[Database Transaction] Global AI policies updated`);
     await this.trackActivity("SYSTEM", "POLICY_UPDATE", `Global AI Policies modified`, "SUCCESS");
     return this.policies;
+  }
+
+  async updateUser(userId: string, data: { name?: string; role?: string; status?: string; plan?: string }) {
+    const user = this.users.find(u => u.id === userId);
+    if (user) {
+      if (data.name !== undefined) {
+        user.name = data.name;
+      }
+      if (data.role !== undefined) {
+        user.role = data.role.toUpperCase();
+      }
+      if (data.status !== undefined) {
+        user.status = data.status.toUpperCase();
+        user.isBlocked = data.status.toUpperCase() === "BLOCKED";
+      }
+      if (data.plan !== undefined) {
+        user.plan = data.plan.toUpperCase();
+        user.tier = data.plan.toUpperCase();
+        user.analysesLimit = data.plan.toUpperCase() === "FREE" ? 50 : data.plan.toUpperCase() === "PRO" ? 500 : 5000;
+      }
+      console.log(`[Database Transaction] Updated User ${userId}:`, data);
+      await this.trackActivity(userId, "USER_UPDATE", `User updated profile settings: ${JSON.stringify(data)}`, "SUCCESS");
+      return user;
+    }
+    throw new Error(`User with ID ${userId} not found`);
   }
 }

@@ -30,9 +30,12 @@ import {
 interface UserProfile {
   id: string;
   email: string;
+  name?: string;
   role: string;
   tier: string;
+  plan?: string;
   isBlocked: boolean;
+  status?: string;
   analysesUsed: number;
   analysesLimit: number;
   lastLogin: string;
@@ -110,6 +113,23 @@ export default function AdminDashboardIndex() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  // Custom Glassmorphic Confirm Modal State
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmText: string;
+    isDestructive: boolean;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmText: "",
+    isDestructive: false,
+    onConfirm: () => {},
+  });
+
   // Filters / Search states
   const [userSearch, setUserSearch] = useState("");
   const [logSearch, setLogSearch] = useState("");
@@ -127,8 +147,8 @@ export default function AdminDashboardIndex() {
     setIsLoading(true);
     setFeedback(null);
     try {
-      // 1. Fetch Users List
-      const usersRes = await fetch("http://localhost:3001/api/admin/users", {
+      // 1. Fetch Users List using standard REST endpoint
+      const usersRes = await fetch("http://localhost:3001/api/users", {
         headers: getHeaders(),
       });
       if (!usersRes.ok) throw new Error("Could not sync users database catalog");
@@ -176,79 +196,116 @@ export default function AdminDashboardIndex() {
   };
 
   // --- 1. USER MANAGER ACTIONS ---
-  const handleToggleBlock = async (item: UserProfile) => {
-    setActionLoading(item.id);
-    try {
-      const res = await fetch(`http://localhost:3001/api/admin/users/${item.id}/block`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify({ isBlocked: !item.isBlocked }),
-      });
-      if (!res.ok) throw new Error("Could not toggle target user block status");
-      triggerFeedback("success", `Account ${item.email} successfully ${item.isBlocked ? "activated" : "suspended"}`);
-      await loadAdministrativePayload();
-    } catch (err: any) {
-      triggerFeedback("error", err.message);
-    } finally {
-      setActionLoading(null);
-    }
+  const handleToggleBlock = (item: UserProfile) => {
+    const nextStatus = item.isBlocked || item.role === "BLOCKED" ? "ACTIVE" : "BLOCKED";
+    const nextIsBlocked = nextStatus === "BLOCKED";
+    setConfirmModal({
+      isOpen: true,
+      title: nextIsBlocked ? "Suspend User Profile" : "Unlock User Profile",
+      message: `Are you sure you want to ${nextIsBlocked ? "suspend" : "reactivate"} the user account for ${item.email}? ${nextIsBlocked ? "This will block them from accessing all platform features." : "This will restore full access to their dashboard and analyses."}`,
+      confirmText: nextIsBlocked ? "Suspend Account" : "Unlock Account",
+      isDestructive: nextIsBlocked,
+      onConfirm: async () => {
+        setActionLoading(item.id);
+        try {
+          const res = await fetch(`http://localhost:3001/api/users/${item.id}`, {
+            method: "PATCH",
+            headers: getHeaders(),
+            body: JSON.stringify({ status: nextStatus }),
+          });
+          if (!res.ok) throw new Error("Could not update target user status");
+          triggerFeedback("success", `Account ${item.email} successfully ${nextIsBlocked ? "suspended" : "activated"}`);
+          await loadAdministrativePayload();
+        } catch (err: any) {
+          triggerFeedback("error", err.message);
+        } finally {
+          setActionLoading(null);
+        }
+      }
+    });
   };
 
-  const handleToggleRole = async (item: UserProfile) => {
+  const handleToggleRole = (item: UserProfile) => {
     if (item.email === "dev@perceptionmapper.ai") return;
-    setActionLoading(item.id);
     const newRole = item.role === "ADMIN" ? "USER" : "ADMIN";
-    try {
-      const res = await fetch(`http://localhost:3001/api/admin/users/${item.id}/role`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify({ role: newRole }),
-      });
-      if (!res.ok) throw new Error("Could not update target user administrative role");
-      triggerFeedback("success", `Promoted ${item.email} to ${newRole}`);
-      await loadAdministrativePayload();
-    } catch (err: any) {
-      triggerFeedback("error", err.message);
-    } finally {
-      setActionLoading(null);
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: newRole === "ADMIN" ? "Promote User to Admin" : "Demote Admin to User",
+      message: `Are you sure you want to change the permissions for ${item.email} from ${item.role} to ${newRole}?`,
+      confirmText: "Confirm Change",
+      isDestructive: newRole === "USER",
+      onConfirm: async () => {
+        setActionLoading(item.id);
+        try {
+          const res = await fetch(`http://localhost:3001/api/users/${item.id}`, {
+            method: "PATCH",
+            headers: getHeaders(),
+            body: JSON.stringify({ role: newRole }),
+          });
+          if (!res.ok) throw new Error("Could not update target user administrative role");
+          triggerFeedback("success", `Promoted ${item.email} to ${newRole}`);
+          await loadAdministrativePayload();
+        } catch (err: any) {
+          triggerFeedback("error", err.message);
+        } finally {
+          setActionLoading(null);
+        }
+      }
+    });
   };
 
-  const handleUpdatePlanTier = async (userId: string, tier: string) => {
-    setActionLoading(userId);
-    try {
-      const res = await fetch(`http://localhost:3001/api/admin/users/${userId}/tier`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify({ tier }),
-      });
-      if (!res.ok) throw new Error("Failed to change user plan tier configuration");
-      triggerFeedback("success", `Upgraded user plan tier successfully`);
-      await loadAdministrativePayload();
-    } catch (err: any) {
-      triggerFeedback("error", err.message);
-    } finally {
-      setActionLoading(null);
-    }
+  const handleUpdatePlanTier = (userId: string, email: string, tier: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: "Modify Subscription Plan",
+      message: `Are you sure you want to change the subscription plan tier for ${email} to the ${tier} plan?`,
+      confirmText: "Update Plan",
+      isDestructive: false,
+      onConfirm: async () => {
+        setActionLoading(userId);
+        try {
+          const res = await fetch(`http://localhost:3001/api/users/${userId}`, {
+            method: "PATCH",
+            headers: getHeaders(),
+            body: JSON.stringify({ plan: tier }),
+          });
+          if (!res.ok) throw new Error("Failed to change user plan tier configuration");
+          triggerFeedback("success", `Updated user plan tier successfully to ${tier}`);
+          await loadAdministrativePayload();
+        } catch (err: any) {
+          triggerFeedback("error", err.message);
+        } finally {
+          setActionLoading(null);
+        }
+      }
+    });
   };
 
-  const handleDeleteUser = async (userId: string, email: string) => {
+  const handleDeleteUser = (userId: string, email: string) => {
     if (email === "dev@perceptionmapper.ai") return;
-    if (!confirm(`Confirm account deletion: ${email}? This action is irreversible.`)) return;
-    setActionLoading(userId);
-    try {
-      const res = await fetch(`http://localhost:3001/api/admin/users/${userId}/delete`, {
-        method: "POST",
-        headers: getHeaders(),
-      });
-      if (!res.ok) throw new Error("Could not delete user account from systems");
-      triggerFeedback("success", `Purged user account: ${email}`);
-      await loadAdministrativePayload();
-    } catch (err: any) {
-      triggerFeedback("error", err.message);
-    } finally {
-      setActionLoading(null);
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Purge User Account Permanently",
+      message: `Are you absolutely sure you want to delete the user account for ${email}? This action is irreversible. All analyses, api keys, and associated logs will be permanently deleted from the database.`,
+      confirmText: "Purge Account",
+      isDestructive: true,
+      onConfirm: async () => {
+        setActionLoading(userId);
+        try {
+          const res = await fetch(`http://localhost:3001/api/users/${userId}`, {
+            method: "DELETE",
+            headers: getHeaders(),
+          });
+          if (!res.ok) throw new Error("Could not delete user account from systems");
+          triggerFeedback("success", `Purged user account: ${email}`);
+          await loadAdministrativePayload();
+        } catch (err: any) {
+          triggerFeedback("error", err.message);
+        } finally {
+          setActionLoading(null);
+        }
+      }
+    });
   };
 
   // --- 2. AI POLICY ENFORCEMENT ACTIONS ---
@@ -302,6 +359,17 @@ export default function AdminDashboardIndex() {
       triggerFeedback("error", "Could not export security logs");
     }
   };
+
+  // Filter and Paginate users safely
+  const filteredUsers = users.filter((u) => {
+    if (!u) return false;
+    const query = userSearch.toLowerCase();
+    const emailMatches = u.email ? u.email.toLowerCase().includes(query) : false;
+    const nameMatches = u.name ? u.name.toLowerCase().includes(query) : false;
+    return emailMatches || nameMatches;
+  });
+
+  const paginatedUsers = filteredUsers.slice((userPage - 1) * usersPerPage, userPage * usersPerPage);
 
   // Render components dynamically based on layout activeTab context
   return (
@@ -390,7 +458,7 @@ export default function AdminDashboardIndex() {
                     setUserSearch(e.target.value);
                     setUserPage(1);
                   }}
-                  placeholder="Search user email..."
+                  placeholder="Search user name or email..."
                   className="w-full bg-slate-950 border border-slate-850 focus:border-purple-500/80 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-100 placeholder-slate-650 outline-none transition"
                 />
               </div>
@@ -406,9 +474,31 @@ export default function AdminDashboardIndex() {
 
             {/* Users Directory Table */}
             {isLoading ? (
-              <div className="py-20 text-center space-y-3">
-                <RefreshCw className="h-6 w-6 text-purple-400 animate-spin mx-auto" />
-                <span className="text-xs text-slate-500 block">Retrieving platform directory...</span>
+              <div className="space-y-3">
+                <div className="animate-pulse space-y-3">
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border border-slate-900/60 bg-slate-950/20 gap-4"
+                    >
+                      <div className="flex items-center space-x-3 w-full sm:w-1/3 animate-pulse">
+                        <div className="h-8 w-8 rounded-lg bg-slate-900 shrink-0" />
+                        <div className="space-y-2 w-full">
+                          <div className="h-3.5 bg-slate-900 rounded w-3/4" />
+                          <div className="h-2.5 bg-slate-900/60 rounded w-1/2" />
+                        </div>
+                      </div>
+                      <div className="h-5 bg-slate-900 rounded w-16 hidden sm:block animate-pulse" />
+                      <div className="h-5 bg-slate-900 rounded w-14 hidden sm:block animate-pulse" />
+                      <div className="h-4 bg-slate-900 rounded w-12 hidden sm:block animate-pulse" />
+                      <div className="flex space-x-2 shrink-0 self-end sm:self-auto animate-pulse">
+                        <div className="h-8 w-8 rounded bg-slate-900" />
+                        <div className="h-8 w-8 rounded bg-slate-900" />
+                        <div className="h-8 w-8 rounded bg-slate-900" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -423,96 +513,107 @@ export default function AdminDashboardIndex() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-900/60 text-xs">
-                    {users
-                      .filter((u) => u.email.toLowerCase().includes(userSearch.toLowerCase()))
-                      .slice((userPage - 1) * usersPerPage, userPage * usersPerPage)
-                      .map((item) => (
-                        <tr key={item.id} className={`hover:bg-slate-900/10 transition ${item.isBlocked ? "opacity-60 bg-red-950/5" : ""}`}>
-                          <td className="py-3.5 pl-2">
-                            <div className="flex items-center space-x-3">
-                              <img
-                                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(item.email)}&background=3b0764&color=c084fc`}
-                                alt={item.email}
-                                className="h-8 w-8 rounded-lg border border-slate-850 shrink-0"
-                              />
-                              <div className="min-w-0">
-                                <span className="block font-semibold text-white truncate max-w-[150px] sm:max-w-[200px]" title={item.email}>
-                                  {item.email}
-                                </span>
-                                <span className="text-[9px] text-slate-500 font-mono">
-                                  Last Login: {item.lastLogin ? new Date(item.lastLogin).toLocaleDateString() : "Never"}
-                                </span>
+                    {paginatedUsers.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-12 text-center text-xs text-slate-500 font-semibold">
+                          No registered user profiles matched search query.
+                        </td>
+                      </tr>
+                    ) : (
+                      paginatedUsers.map((item) => {
+                        const isBlocked = item.isBlocked || item.status === "BLOCKED";
+                        return (
+                          <tr key={item.id} className={`hover:bg-slate-900/10 transition ${isBlocked ? "opacity-60 bg-red-950/5" : ""}`}>
+                            <td className="py-3.5 pl-2">
+                              <div className="flex items-center space-x-3">
+                                <img
+                                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || item.email || "User")}&background=3b0764&color=c084fc`}
+                                  alt={item.email || "User"}
+                                  className="h-8 w-8 rounded-lg border border-slate-850 shrink-0"
+                                />
+                                <div className="min-w-0">
+                                  <span className="block font-semibold text-white truncate max-w-[150px] sm:max-w-[200px]" title={item.email}>
+                                    {item.name || item.email?.split("@")[0] || "Unknown"}
+                                  </span>
+                                  <span className="block text-[9px] text-slate-400 font-medium truncate max-w-[150px] sm:max-w-[200px]">
+                                    {item.email || "no-email@perceptionmapper.ai"}
+                                  </span>
+                                  <span className="text-[9px] text-slate-500 font-mono block mt-0.5">
+                                    Last Login: {item.lastLogin ? new Date(item.lastLogin).toLocaleDateString() : "Never"}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                          <td className="py-3.5">
-                            {item.email === "dev@perceptionmapper.ai" ? (
-                              <span className="text-[10px] font-bold uppercase text-purple-400">PRO Plan</span>
-                            ) : (
-                              <select
-                                value={item.tier}
-                                onChange={(e) => handleUpdatePlanTier(item.id, e.target.value)}
-                                className="bg-slate-950 border border-slate-850 rounded-lg px-2 py-1 text-slate-200 text-[10px] font-bold focus:border-purple-500 transition outline-none"
-                              >
-                                <option value="FREE">FREE</option>
-                                <option value="PRO">PRO</option>
-                                <option value="TEAM">TEAM</option>
-                              </select>
-                            )}
-                          </td>
-                          <td className="py-3.5">
-                            <span
-                              className={`px-2 py-0.5 text-[9px] font-bold rounded uppercase border ${
-                                item.role === "ADMIN"
-                                  ? "bg-purple-950/40 border-purple-500/20 text-purple-400"
-                                  : "bg-slate-900 border-slate-800 text-slate-400"
-                              }`}
-                            >
-                              {item.role}
-                            </span>
-                          </td>
-                          <td className="py-3.5">
-                            <span className="font-mono text-slate-300">{item.totalAiRequests || 0} calls</span>
-                          </td>
-                          <td className="py-3.5 pr-2 text-right">
-                            <div className="flex items-center justify-end space-x-1.5">
-                              {/* Block Toggle */}
-                              <button
-                                onClick={() => handleToggleBlock(item)}
-                                disabled={actionLoading === item.id}
-                                className={`p-1.5 rounded-lg border transition ${
-                                  item.isBlocked
-                                    ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-900/30"
-                                    : "bg-amber-950/20 border-amber-500/30 text-amber-400 hover:bg-amber-900/30"
+                            </td>
+                            <td className="py-3.5">
+                              {item.email === "dev@perceptionmapper.ai" ? (
+                                <span className="text-[10px] font-bold uppercase text-purple-400">PRO Plan</span>
+                              ) : (
+                                <select
+                                  value={item.plan || item.tier || "FREE"}
+                                  onChange={(e) => handleUpdatePlanTier(item.id, item.email || "Unknown", e.target.value)}
+                                  className="bg-slate-950 border border-slate-850 rounded-lg px-2 py-1 text-slate-200 text-[10px] font-bold focus:border-purple-500 transition outline-none"
+                                >
+                                  <option value="FREE">FREE</option>
+                                  <option value="PRO">PRO</option>
+                                  <option value="TEAM">TEAM</option>
+                                </select>
+                              )}
+                            </td>
+                            <td className="py-3.5">
+                              <span
+                                className={`px-2 py-0.5 text-[9px] font-bold rounded uppercase border ${
+                                  (item.role || "USER").toUpperCase() === "ADMIN"
+                                    ? "bg-purple-950/40 border-purple-500/20 text-purple-400"
+                                    : "bg-slate-900 border-slate-800 text-slate-400"
                                 }`}
-                                title={item.isBlocked ? "Unlock profile" : "Block profile"}
                               >
-                                {item.isBlocked ? <Unlock className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-                              </button>
+                                {item.role || "USER"}
+                              </span>
+                            </td>
+                            <td className="py-3.5">
+                              <span className="font-mono text-slate-300">{item.totalAiRequests || 0} calls</span>
+                            </td>
+                            <td className="py-3.5 pr-2 text-right">
+                              <div className="flex items-center justify-end space-x-1.5">
+                                {/* Block Toggle */}
+                                <button
+                                  onClick={() => handleToggleBlock(item)}
+                                  disabled={actionLoading === item.id}
+                                  className={`p-1.5 rounded-lg border transition ${
+                                    isBlocked
+                                      ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-900/30"
+                                      : "bg-amber-950/20 border-amber-500/30 text-amber-400 hover:bg-amber-900/30"
+                                  }`}
+                                  title={isBlocked ? "Unlock profile" : "Block profile"}
+                                >
+                                  {isBlocked ? <Unlock className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+                                </button>
 
-                              {/* Promotes Toggle */}
-                              <button
-                                onClick={() => handleToggleRole(item)}
-                                disabled={actionLoading === item.id || item.email === "dev@perceptionmapper.ai"}
-                                className="p-1.5 rounded-lg border bg-slate-900 border-slate-850 text-slate-400 hover:text-white hover:border-slate-700 transition"
-                                title="Toggle Administrative Status"
-                              >
-                                <ShieldAlert className="h-3.5 w-3.5" />
-                              </button>
+                                {/* Promotes Toggle */}
+                                <button
+                                  onClick={() => handleToggleRole(item)}
+                                  disabled={actionLoading === item.id || item.email === "dev@perceptionmapper.ai"}
+                                  className="p-1.5 rounded-lg border bg-slate-900 border-slate-850 text-slate-400 hover:text-white hover:border-slate-700 transition"
+                                  title="Toggle Administrative Status"
+                                >
+                                  <ShieldAlert className="h-3.5 w-3.5" />
+                                </button>
 
-                              {/* Purge delete */}
-                              <button
-                                onClick={() => handleDeleteUser(item.id, item.email)}
-                                disabled={actionLoading === item.id || item.email === "dev@perceptionmapper.ai"}
-                                className="p-1.5 rounded-lg border bg-rose-950/20 border-rose-500/30 text-rose-400 hover:bg-rose-900/30 transition disabled:opacity-30"
-                                title="Purge Account permanently"
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                                {/* Purge delete */}
+                                <button
+                                  onClick={() => handleDeleteUser(item.id, item.email || "Unknown")}
+                                  disabled={actionLoading === item.id || item.email === "dev@perceptionmapper.ai"}
+                                  className="p-1.5 rounded-lg border bg-rose-950/20 border-rose-500/30 text-rose-400 hover:bg-rose-900/30 transition disabled:opacity-30"
+                                  title="Purge Account permanently"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -520,7 +621,10 @@ export default function AdminDashboardIndex() {
 
             {/* Pagination footer */}
             <div className="flex justify-between items-center pt-4 border-t border-slate-900 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-              <span>Page {userPage}</span>
+              <span>
+                Showing {filteredUsers.length === 0 ? 0 : (userPage - 1) * usersPerPage + 1} to{" "}
+                {Math.min(userPage * usersPerPage, filteredUsers.length)} of {filteredUsers.length} entries
+              </span>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setUserPage((p) => Math.max(p - 1, 1))}
@@ -531,12 +635,11 @@ export default function AdminDashboardIndex() {
                 </button>
                 <button
                   onClick={() => {
-                    const totalFilteredUsers = users.filter((u) => u.email.toLowerCase().includes(userSearch.toLowerCase())).length;
-                    if (userPage * usersPerPage < totalFilteredUsers) {
+                    if (userPage * usersPerPage < filteredUsers.length) {
                       setUserPage((p) => p + 1);
                     }
                   }}
-                  disabled={userPage * usersPerPage >= users.filter((u) => u.email.toLowerCase().includes(userSearch.toLowerCase())).length}
+                  disabled={userPage * usersPerPage >= filteredUsers.length}
                   className="px-3 py-1.5 rounded bg-slate-900 border border-slate-850 text-slate-350 hover:text-white transition disabled:opacity-40"
                 >
                   Next
@@ -836,6 +939,49 @@ export default function AdminDashboardIndex() {
                   ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {/* Premium Glassmorphic Confirm Modal Overlay */}
+      {confirmModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-sm rounded-2xl border border-slate-900 bg-slate-950/90 backdrop-blur-xl shadow-2xl p-6 space-y-6 animate-in zoom-in-95 duration-200">
+            {/* Modal Ambient Glow */}
+            <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-purple-500/5 blur-2xl pointer-events-none" />
+            
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold text-white tracking-wide uppercase flex items-center">
+                <AlertCircle className={`h-4.5 w-4.5 mr-2 shrink-0 ${confirmModal.isDestructive ? "text-rose-500 animate-pulse" : "text-purple-400"}`} />
+                {confirmModal.title}
+              </h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                {confirmModal.message}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end space-x-2.5">
+              <button
+                type="button"
+                onClick={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+                className="px-3.5 py-2 text-xs font-semibold bg-slate-900 hover:bg-slate-800 border border-slate-850 text-slate-400 hover:text-white rounded-xl transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  confirmModal.onConfirm();
+                  setConfirmModal((prev) => ({ ...prev, isOpen: false }));
+                }}
+                className={`px-3.5 py-2 text-xs font-semibold text-white rounded-xl transition duration-200 shadow ${
+                  confirmModal.isDestructive
+                    ? "bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 shadow-rose-500/10"
+                    : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-purple-500/10"
+                }`}
+              >
+                {confirmModal.confirmText}
+              </button>
+            </div>
           </div>
         </div>
       )}
