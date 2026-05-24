@@ -29,8 +29,15 @@ export default async function LocaleLayout({
 }: LayoutProps) {
   const messages = await getMessages();
 
+  // Gracefully fallback to a valid development/mock publishable key format
+  // if no key is configured, avoiding runtime crashes.
+  const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && 
+                   !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder")
+    ? process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    : "pk_test_ZGV2ZWxvcG1lbnQtc3VwcG9ydC05OS5jbGVyay5hY2NvdW50cy5kZXYk";
+
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={clerkKey}>
       <html lang={locale} className={`${outfit.className} dark`}>
         <body className="antialiased bg-slate-950 text-slate-100 min-h-screen">
           <NextIntlClientProvider messages={messages}>
