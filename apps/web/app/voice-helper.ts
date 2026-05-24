@@ -11,7 +11,7 @@ export type SpeechRecognitionResult = {
 
 export type SpeechRecognitionCallback = (result: SpeechRecognitionResult) => void;
 
-let recognition: SpeechRecognition | null = null;
+let recognition: any = null;
 let isListening = false;
 
 /**
@@ -31,7 +31,7 @@ export function initSpeechRecognition(onResult: SpeechRecognitionCallback): void
   recognition.interimResults = false;
   recognition.lang = "en-US"; // default, can be overridden by UI
 
-  recognition.onresult = (event: SpeechRecognitionEvent) => {
+  recognition.onresult = (event: any) => {
     const last = event.results.length - 1;
     const result = event.results[last][0];
     onResult({ transcript: result.transcript.trim(), confidence: result.confidence });

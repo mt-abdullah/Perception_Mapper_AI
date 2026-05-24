@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { initSpeechRecognition, toggleListening, speakText } from "./voice-helper";
+import { speakText } from "../voice-helper";
+import VoiceInputButton from "./VoiceInputButton";
 import { useRouter, usePathname } from "next/navigation";
 import { Button, Card, Textarea, Badge } from "@perception-mapper/ui";
 import {
@@ -18,15 +19,24 @@ import {
   CheckCircle,
   HelpCircle,
   Lock,
+  ChevronDown,
+  Languages,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton, useAuth } from "../clerk-compat";
+import AnalyticsView from "./AnalyticsView";
+import DocsView from "./DocsView";
+import GatewayView from "./GatewayView";
 
 export default function Dashboard() {
   const t = useTranslations("Index");
   const router = useRouter();
   const pathname = usePathname();
-  const { isSignedIn } = useAuth();
-  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const { isSignedIn, user, setRole } = useAuth();
+  // Track mounting to avoid SSR mismatch flash
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // State management
   const [text, setText] = useState("");
@@ -34,6 +44,9 @@ export default function Dashboard() {
   const [selectedTier, setSelectedTier] = useState<"free" | "pro" | "team">("pro");
   const [languageMode, setLanguageMode] = useState<"auto" | "en" | "ta" | "si">("auto");
   const [analysisResult, setAnalysisResult] = useState<any | null>(null);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [currentTab, setCurrentTab] = useState<"dashboard" | "analytics" | "docs" | "gateway">("dashboard");
 
   // Custom Bias Rule states (Team Plan)
   const [customPattern, setCustomPattern] = useState("");
@@ -101,22 +114,6 @@ export default function Dashboard() {
     printWindow.document.close();
   };
 
-  // Live Analysis API connection to NestJS Gateway
-  useEffect(() => {
-    // Initialize speech recognition with callback to update text input
-    initSpeechRecognition((result) => {
-      // Append recognized speech to existing text
-      setText((prev) => (prev ? prev + " " + result.transcript : result.transcript));
-    });
-  }, []);
-
-  const handleVoiceToggle = () => {
-    const newState = toggleListening((result) => {
-      setText((prev) => (prev ? prev + " " + result.transcript : result.transcript));
-    });
-    setIsVoiceActive(newState);
-  };
-
   const triggerAnalysis = async () => {
     if (!text.trim()) return;
     setIsAnalyzing(true);
@@ -173,134 +170,335 @@ export default function Dashboard() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-pink-500/10 blur-[120px] pointer-events-none" />
 
       {/* Header / Navbar */}
-      <header className="sticky top-0 z-50 w-full bg-slate-950/60 backdrop-blur-xl border-b border-slate-900 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-2.5 rounded-xl shadow-lg shadow-indigo-500/20">
-            <Sparkles className="h-5 w-5 text-white" />
+      <header className="sticky top-0 z-50 w-full bg-slate-950/70 backdrop-blur-xl border-b border-slate-900 px-6 py-3.5 flex items-center justify-between">
+        {/* Left Section: Logo & Brand */}
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3 group cursor-pointer">
+            <div className="bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-2 rounded-xl shadow-lg shadow-indigo-500/10 transition-transform duration-300 group-hover:scale-105">
+              <Sparkles className="h-5 w-5 text-white" />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-md font-bold tracking-tight text-white leading-tight">
+                {t("title")}
+              </h1>
+              <span className="text-[9px] text-indigo-400 font-semibold tracking-wider uppercase">
+                NLP Perception Engine
+              </span>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
-              {t("title")}
-            </h1>
-            <span className="text-[10px] text-indigo-400 font-semibold tracking-widest uppercase">
-              NLP Perception Engine
-            </span>
-          </div>
+
+          {/* Minimalist Center Navigation Links (Hidden on small screens) */}
+          <nav className="hidden lg:flex items-center space-x-1.5 text-xs font-medium text-slate-400">
+            <span className="h-4 w-px bg-slate-900 mx-2" />
+            <button
+              onClick={() => setCurrentTab("dashboard")}
+              className={`px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                currentTab === "dashboard"
+                  ? "bg-slate-900/50 text-indigo-400 border border-slate-800/40"
+                  : "hover:text-slate-200 hover:bg-slate-900/30 border border-transparent"
+              }`}
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => setCurrentTab("analytics")}
+              className={`px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                currentTab === "analytics"
+                  ? "bg-slate-900/50 text-indigo-400 border border-slate-800/40"
+                  : "hover:text-slate-200 hover:bg-slate-900/30 border border-transparent"
+              }`}
+            >
+              Analytics
+            </button>
+            <button
+              onClick={() => setCurrentTab("docs")}
+              className={`px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                currentTab === "docs"
+                  ? "bg-slate-900/50 text-indigo-400 border border-slate-800/40"
+                  : "hover:text-slate-200 hover:bg-slate-900/30 border border-transparent"
+              }`}
+            >
+              Documentation
+            </button>
+            <button
+              onClick={() => setCurrentTab("gateway")}
+              className={`px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                currentTab === "gateway"
+                  ? "bg-slate-900/50 text-indigo-400 border border-slate-800/40"
+                  : "hover:text-slate-200 hover:bg-slate-900/30 border border-transparent"
+              }`}
+            >
+              API Gateway
+            </button>
+            {user?.role === "ADMIN" && (
+              <button
+                onClick={() => {
+                  const segments = pathname.split("/");
+                  const locale = segments[1] || "en";
+                  router.push(`/${locale}/admin`);
+                }}
+                className="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 border border-transparent transition duration-200"
+              >
+                Admin Panel
+              </button>
+            )}
+          </nav>
         </div>
 
-        {/* Global Control Bar */}
-        <div className="flex items-center space-x-4">
-          {/* i18n Language Toggler */}
-          <div className="flex bg-slate-900 border border-slate-800 rounded-lg p-1">
+        {/* Right Section: Compact Dropdowns & Session Controls */}
+        <div className="flex items-center space-x-3.5">
+          {/* Language Selector Dropdown */}
+          <div className="relative">
             <button
-              onClick={() => handleLocaleChange("en")}
-              className={`px-2.5 py-1 text-xs rounded font-medium transition ${
-                pathname.startsWith("/en") ? "bg-indigo-600 text-white shadow" : "text-slate-400 hover:text-slate-200"
-              }`}
+              onClick={() => {
+                setLangDropdownOpen(!langDropdownOpen);
+                setUserDropdownOpen(false);
+              }}
+              className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-950 border border-slate-900 hover:border-slate-800 rounded-xl transition duration-200"
             >
-              EN
+              <Globe className="h-3.5 w-3.5 text-indigo-400" />
+              <span>
+                {pathname.startsWith("/ta") ? "தமிழ்" : pathname.startsWith("/si") ? "සිංහල" : "EN"}
+              </span>
+              <ChevronDown className={`h-3 w-3 text-slate-500 transition-transform duration-200 ${langDropdownOpen ? "rotate-180" : ""}`} />
             </button>
-            <button
-              onClick={() => handleLocaleChange("ta")}
-              className={`px-2.5 py-1 text-xs rounded font-medium transition ${
-                pathname.startsWith("/ta") ? "bg-indigo-600 text-white shadow" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              தமிழ்
-            </button>
-            <button
-              onClick={() => handleLocaleChange("si")}
-              className={`px-2.5 py-1 text-xs rounded font-medium transition ${
-                pathname.startsWith("/si") ? "bg-indigo-600 text-white shadow" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              සිංහල
-            </button>
+
+            {langDropdownOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
+                <div className="absolute right-0 mt-2 w-40 rounded-xl border border-slate-900 bg-slate-950/90 backdrop-blur-xl p-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="px-2 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    Select Language
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleLocaleChange("en");
+                      setLangDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left mt-1 ${
+                      pathname.startsWith("/en") || (!pathname.startsWith("/ta") && !pathname.startsWith("/si"))
+                        ? "bg-indigo-600/10 text-indigo-400 font-semibold"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                    }`}
+                  >
+                    <span>English</span>
+                    {((pathname.startsWith("/en") || (!pathname.startsWith("/ta") && !pathname.startsWith("/si")))) && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleLocaleChange("ta");
+                      setLangDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left ${
+                      pathname.startsWith("/ta")
+                        ? "bg-indigo-600/10 text-indigo-400 font-semibold"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                    }`}
+                  >
+                    <span>தமிழ் (Tamil)</span>
+                    {pathname.startsWith("/ta") && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleLocaleChange("si");
+                      setLangDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left ${
+                      pathname.startsWith("/si")
+                        ? "bg-indigo-600/10 text-indigo-400 font-semibold"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                    }`}
+                  >
+                    <span>සිංහල (Sinhala)</span>
+                    {pathname.startsWith("/si") && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                    )}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Pricing Tier Selector (Mock State Switching) */}
-          <div className="hidden md:flex bg-slate-900 border border-slate-800 rounded-lg p-1 text-xs">
-            <button
-              onClick={() => setSelectedTier("free")}
-              className={`px-3 py-1 rounded transition-colors ${
-                selectedTier === "free" ? "bg-indigo-950 text-indigo-300 font-semibold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Free
-            </button>
-            <button
-              onClick={() => setSelectedTier("pro")}
-              className={`px-3 py-1 rounded transition-colors ${
-                selectedTier === "pro" ? "bg-indigo-950 text-indigo-300 font-semibold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Pro
-            </button>
-            <button
-              onClick={() => setSelectedTier("team")}
-              className={`px-3 py-1 rounded transition-colors ${
-                selectedTier === "team" ? "bg-indigo-950 text-indigo-300 font-semibold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Team
-            </button>
-          </div>
+          <div className="h-5 w-px bg-slate-900 hidden sm:block" />
 
-          <div className="h-6 w-px bg-slate-800 hidden md:block" />
-
-          {/* Clerk Session Controls */}
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button className="px-4 py-2 text-xs font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl transition duration-300 shadow shadow-indigo-500/10">
-                Sign In
+          {/* User Profile & Plan Selection Dropdown */}
+          <div className="relative">
+            <SignedIn>
+              <button
+                onClick={() => {
+                  setUserDropdownOpen(!userDropdownOpen);
+                  setLangDropdownOpen(false);
+                }}
+                className="flex items-center space-x-2.5 p-1 sm:px-3 sm:py-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-950 border border-slate-900 hover:border-slate-800 rounded-xl transition duration-200"
+              >
+                <img
+                  src={user?.avatarUrl}
+                  alt={user?.name || "User"}
+                  className="w-6 h-6 rounded-full border border-indigo-500/20"
+                />
+                <span className="hidden sm:block max-w-[100px] truncate">
+                  {user?.name || "Developer"}
+                </span>
+                <ChevronDown className={`h-3 w-3 text-slate-500 transition-transform duration-200 ${userDropdownOpen ? "rotate-180" : ""}`} />
               </button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton afterSignOutUrl="/" />
-          </SignedIn>
+
+              {userDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setUserDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-900 bg-slate-950/95 backdrop-blur-xl p-3.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {/* User Info Block */}
+                    <div className="flex items-center space-x-3 pb-3 border-b border-slate-900">
+                      <img
+                        src={user?.avatarUrl}
+                        alt={user?.name || "User"}
+                        className="w-10 h-10 rounded-full border-2 border-indigo-500/20 shadow-lg"
+                      />
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm font-semibold text-white truncate leading-tight">
+                          {user?.name || "Developer"}
+                        </span>
+                        <span className="text-[10px] text-slate-500 truncate mb-1">
+                          developer@perception.ai
+                        </span>
+                        <span className="inline-flex self-start text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/25">
+                          {selectedTier} Plan
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Subscription Quick-Switcher */}
+                    <div className="py-3 border-b border-slate-900">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">
+                        Active Workspace Tier
+                      </span>
+                      <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-900">
+                        {(["free", "pro", "team"] as const).map((tier) => (
+                          <button
+                            key={tier}
+                            onClick={() => setSelectedTier(tier)}
+                            className={`px-1.5 py-1.5 text-[10px] font-bold rounded-lg capitalize transition-all duration-200 ${
+                              selectedTier === tier
+                                ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow shadow-indigo-600/30"
+                                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                            }`}
+                          >
+                            {tier}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Administrative Role Switcher */}
+                    <div className="py-3 border-b border-slate-900">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2 flex items-center">
+                        <span className="mr-1.5">🛡️</span> Access Control Role
+                      </span>
+                      <div className="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-900">
+                        {["USER", "ADMIN"].map((roleOption) => (
+                          <button
+                            key={roleOption}
+                            onClick={async () => {
+                              setRole(roleOption);
+                              try {
+                                await fetch("http://localhost:3001/api/user/role", {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify({ role: roleOption }),
+                                });
+                              } catch (e) {
+                                console.error("Could not sync role to mock db", e);
+                              }
+                              if (roleOption === "ADMIN") {
+                                const segments = pathname.split("/");
+                                const locale = segments[1] || "en";
+                                router.push(`/${locale}/admin`);
+                              }
+                            }}
+                            className={`px-1.5 py-1.5 text-[10px] font-bold rounded-lg capitalize transition-all duration-200 ${
+                              user?.role === roleOption
+                                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow shadow-purple-600/30"
+                                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                            }`}
+                          >
+                            {roleOption}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Unified Session / Settings Option */}
+                    <div className="pt-3 flex flex-col space-y-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 font-bold uppercase tracking-wider px-1 pb-1">
+                        <span>Session Management</span>
+                      </div>
+                      <div className="flex w-full items-center justify-center">
+                        <UserButton afterSignOutUrl="/" />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </SignedIn>
+
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="flex items-center space-x-2 px-4 py-2 text-xs font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl transition duration-300 shadow shadow-indigo-500/10">
+                  <Key className="h-3 w-3" />
+                  <span>Authenticate</span>
+                </button>
+              </SignInButton>
+            </SignedOut>
+          </div>
         </div>
       </header>
 
       {/* Main Layout Container */}
       <main className="max-w-7xl mx-auto px-6 py-8 relative z-10 min-h-[600px]">
         {/* Glassmorphic Lock Overlay for Signed-Out Users */}
-        {!isSignedIn && (
-          <div className="absolute inset-x-6 top-8 bottom-8 z-20 backdrop-blur-md bg-slate-950/60 rounded-3xl flex flex-col justify-center items-center p-8 text-center border border-slate-900 shadow-2xl min-h-[500px]">
-            <div className="relative mb-6">
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 blur-lg animate-pulse" />
-              <div className="relative bg-slate-950 p-5 rounded-full border border-slate-800 flex items-center justify-center">
-                <Lock className="h-8 w-8 text-indigo-400 animate-bounce" />
+        {mounted && !isSignedIn && (
+            <div className="absolute inset-x-6 top-8 bottom-8 z-20 backdrop-blur-md bg-slate-950/60 rounded-3xl flex flex-col justify-center items-center p-8 text-center border border-slate-900 shadow-2xl min-h-[500px]">
+              <div className="relative mb-6">
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 blur-lg animate-pulse" />
+                <div className="relative bg-slate-950 p-5 rounded-full border border-slate-800 flex items-center justify-center">
+                  <Lock className="h-8 w-8 text-indigo-400 animate-bounce" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold tracking-tight text-white mb-2">
+                Workspace Locked
+              </h3>
+              <p className="text-slate-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
+                Verify your session credentials to unlock standard NLP tone parsing, multilingual cognitive bias detection, and custom rule builders.
+              </p>
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                <SignInButton>
+                  <button className="px-8 py-3.5 text-xs font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 hover:scale-[1.01] cursor-pointer">
+                    Sign In to Account
+                  </button>
+                </SignInButton>
+                <button
+                  onClick={() => {
+                    const segments = pathname.split("/");
+                    const locale = segments[1] || "en";
+                    router.push(`/${locale}/sign-up`);
+                  }}
+                  className="px-8 py-3.5 text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white rounded-xl hover:border-slate-700 transition duration-300 cursor-pointer"
+                >
+                  Register Free Setup
+                </button>
               </div>
             </div>
-            <h3 className="text-2xl font-bold tracking-tight text-white mb-2">
-              Workspace Locked
-            </h3>
-            <p className="text-slate-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
-              Verify your session credentials to unlock standard NLP tone parsing, multilingual cognitive bias detection, and custom rule builders.
-            </p>
-            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-              <SignInButton>
-                <button className="px-8 py-3.5 text-xs font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 hover:scale-[1.01] cursor-pointer">
-                  Sign In to Account
-                </button>
-              </SignInButton>
-              <button
-                onClick={() => {
-                  const segments = pathname.split("/");
-                  const locale = segments[1] || "en";
-                  router.push(`/${locale}/sign-up`);
-                }}
-                className="px-8 py-3.5 text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white rounded-xl hover:border-slate-700 transition duration-300 cursor-pointer"
-              >
-                Register Free Setup
-              </button>
-            </div>
-          </div>
         )}
 
         {/* Dashboard Grid Workspace */}
-        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all duration-500 ${!isSignedIn ? "blur-md pointer-events-none select-none opacity-40" : ""}`}>
+        {mounted && (
+          (!isSignedIn || currentTab === "dashboard") ? (
+            <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all duration-500 ${!isSignedIn ? "blur-md pointer-events-none select-none opacity-40" : ""}`}>
           
           {/* Left Side: Analyzer Workspace */}
         <div className="lg:col-span-7 flex flex-col space-y-6">
@@ -341,13 +539,11 @@ export default function Dashboard() {
                 className="flex-1 min-h-[280px] p-4 text-base focus:ring-indigo-500/40 border-slate-800"
               />
               {/* Voice toggle button */}
-              <Button
-                variant="secondary"
-                className="absolute bottom-2 right-2 h-8 w-8 p-0 flex items-center justify-center"
-                onClick={handleVoiceToggle}
-              >
-                <Mic className={isVoiceActive ? "h-4 w-4 text-indigo-500" : "h-4 w-4 text-slate-400"} />
-              </Button>
+              <div className="absolute bottom-2 right-2">
+                <VoiceInputButton
+                  onResult={(result) => setText((prev) => (prev ? prev + " " + result.transcript : result.transcript))}
+                />
+              </div>
               
               {/* Floating word count */}
               <div className="absolute bottom-3 right-14 text-xs text-slate-500 font-mono">
@@ -699,6 +895,14 @@ export default function Dashboard() {
           </Card>
         </div>
         </div>
+          ) : currentTab === "analytics" ? (
+            <AnalyticsView selectedTier={selectedTier} />
+          ) : currentTab === "docs" ? (
+            <DocsView />
+          ) : (
+            <GatewayView />
+          )
+        )}
       </main>
 
       {/* Footer */}

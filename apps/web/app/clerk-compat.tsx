@@ -15,13 +15,18 @@ const hasRealClerkKey =
 const MockClerkContext = createContext<{
   isSignedIn: boolean;
   setSignedIn: (val: boolean) => void;
+  user: { name: string; avatarUrl: string; role: string; tier: string };
+  setRole: (role: string) => void;
 }>({
-  isSignedIn: false, // Default to false to showcase the premium landing/locked state
+  isSignedIn: false,
   setSignedIn: () => {},
+  user: { name: "Demo Developer", avatarUrl: "https://ui-avatars.com/api/?name=Demo+Developer", role: "ADMIN", tier: "PRO" },
+  setRole: () => {},
 });
 
 export function ClerkProvider({ children, ...props }: any) {
   const [isSignedIn, setSignedIn] = useState(false);
+  const [role, setRole] = useState("ADMIN");
 
   // Sync session state from localStorage in mock mode to persist logins across refreshes
   useEffect(() => {
@@ -29,6 +34,11 @@ export function ClerkProvider({ children, ...props }: any) {
       const stored = localStorage.getItem("pm_mock_signed_in");
       if (stored === "true") {
         setSignedIn(true);
+      }
+      const storedRole = localStorage.getItem("pm_mock_user_rbac_role") || "ADMIN";
+      setRole(storedRole);
+      if (!localStorage.getItem("pm_mock_user_rbac_role")) {
+        localStorage.setItem("pm_mock_user_rbac_role", "ADMIN");
       }
     }
   }, []);
@@ -38,6 +48,18 @@ export function ClerkProvider({ children, ...props }: any) {
     if (!hasRealClerkKey) {
       localStorage.setItem("pm_mock_signed_in", val ? "true" : "false");
     }
+    // In mock mode we store a static user profile
+    if (!hasRealClerkKey && val) {
+      localStorage.setItem("pm_mock_user_name", "Demo Developer");
+      localStorage.setItem("pm_mock_user_rbac_role", "ADMIN");
+    }
+  };
+
+  const handleSetRole = (newRole: string) => {
+    setRole(newRole);
+    if (!hasRealClerkKey) {
+      localStorage.setItem("pm_mock_user_rbac_role", newRole);
+    }
   };
 
   if (hasRealClerkKey) {
@@ -45,7 +67,17 @@ export function ClerkProvider({ children, ...props }: any) {
   }
 
   return (
-    <MockClerkContext.Provider value={{ isSignedIn, setSignedIn: handleSetSignedIn }}>
+    <MockClerkContext.Provider value={{
+      isSignedIn,
+      setSignedIn: handleSetSignedIn,
+      user: {
+        name: localStorage.getItem("pm_mock_user_name") || "Demo Developer",
+        avatarUrl: "https://ui-avatars.com/api/?name=" + encodeURIComponent(localStorage.getItem("pm_mock_user_name") || "Demo Developer"),
+        role: role,
+        tier: "PRO",
+      },
+      setRole: handleSetRole,
+    }}>
       {children}
     </MockClerkContext.Provider>
   );
@@ -121,14 +153,16 @@ export function UserButton(props: any) {
   );
 }
 
-export function useAuth() {
+export function useAuth(): any {
   if (hasRealClerkKey) {
-    return RealClerk.useAuth();
+    return { ...RealClerk.useAuth(), setRole: () => {} };
   }
-  const { isSignedIn } = useContext(MockClerkContext);
+  const { isSignedIn, user, setRole } = useContext(MockClerkContext);
   return {
     isSignedIn,
     userId: isSignedIn ? "user_mock_dev_2k98fhj3" : null,
+    user,
+    setRole,
   };
 }
 

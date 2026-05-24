@@ -13,12 +13,18 @@ enum PlanTier {
   TEAM
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
   id                     String       @id // Clerk User ID
   email                  String       @unique
   stripeCustomerId       String?      @unique
   stripeSubscriptionId   String?      @unique
   tier                   PlanTier     @default(FREE)
+  role                   UserRole     @default(USER)
   analysesLimit          Int          @default(50)
   analysesUsed           Int          @default(0)
   createdAt              DateTime     @default(now())
@@ -60,4 +66,31 @@ model CustomRule {
   rephrase    String   // Recommended objective alternative
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  userId      String
+  activity    String   // "LOGIN", "ANALYSIS", "VOICE_INPUT", "IMAGE_UPLOAD"
+  details     String?
+  status      String   // "SUCCESS", "FAILED"
+  latencyMs   Int      @default(0)
+  tokensCount Int      @default(0)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Policy {
+  id                 String   @id @default("global-policy")
+  textEnabled        Boolean  @default(true)
+  voiceEnabled       Boolean  @default(true)
+  imageEnabled       Boolean  @default(true)
+  limitFree          Int      @default(50)
+  limitPro           Int      @default(500)
+  limitTeam          Int      @default(5000)
+  rateFree           Int      @default(10)
+  ratePro            Int      @default(60)
+  rateTeam           Int      @default(300)
+  experimentalToggle Boolean  @default(false)
+  updatedAt          DateTime @updatedAt
 }

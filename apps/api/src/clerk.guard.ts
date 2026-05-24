@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  ForbiddenException,
   Logger,
 } from "@nestjs/common";
 import * as jwt from "jsonwebtoken";
@@ -39,15 +40,30 @@ export class ClerkGuard implements CanActivate {
       this.logger.warn(
         "CLERK_SECRET_KEY is not defined. Falling back to Scaffolding/Dev Mode. All requests bypass verification."
       );
+      
+      const mockUserId = "user_mock_dev_2k98fhj3";
+      const mockEmail = "dev@perceptionmapper.ai";
+      
+      // Sync or retrieve mock profile
+      const dbUser = await this.prisma.syncUser(mockUserId, mockEmail);
+      
+      // Support toggling the active role dynamically via client role switcher headers
+      const clientMockRole = request.headers["x-mock-role"];
+      if (clientMockRole) {
+        dbUser.role = clientMockRole.toString().toUpperCase();
+      }
+
+      if (dbUser.isBlocked) {
+        throw new ForbiddenException("Access Denied: Your account has been suspended by an administrator.");
+      }
+
       // Inject mock user information to let development progress seamlessly
       request.user = {
-        userId: "user_mock_dev_2k98fhj3",
-        email: "dev@perceptionmapper.ai",
-        tier: "pro",
+        userId: dbUser.id,
+        email: dbUser.email,
+        tier: dbUser.tier,
+        role: dbUser.role,
       };
-      
-      // Lazy sync mock profile in background
-      await this.prisma.syncUser(request.user.userId, request.user.email);
       
       return true;
     }
@@ -74,20 +90,36 @@ export class ClerkGuard implements CanActivate {
         algorithms: ["RS256"],
       }) as any;
 
+      const userEmail = verifiedPayload.email || "user@perceptionmapper.ai";
+      
+      // Lazy sync authenticated profile in database
+      const dbUser = await this.prisma.syncUser(verifiedPayload.sub, userEmail);
+
+      // Support dynamic role switching for Clerk users too
+      const clientMockRole = request.headers["x-mock-role"];
+      if (clientMockRole) {
+        dbUser.role = clientMockRole.toString().toUpperCase();
+      }
+
+      if (dbUser.isBlocked) {
+        throw new ForbiddenException("Access Denied: Your account has been suspended by an administrator.");
+      }
+
       // Inject verified payload into request context
       request.user = {
-        userId: verifiedPayload.sub, // Clerk user ID
+        userId: dbUser.id, // Clerk user ID
         sessionId: verifiedPayload.sid, // Clerk session ID
-        email: verifiedPayload.email || "user@perceptionmapper.ai", // Unified email fallback
-        tier: "PRO",
+        email: dbUser.email,
+        tier: dbUser.tier,
+        role: dbUser.role,
       };
-
-      // Lazy sync authenticated profile in database
-      await this.prisma.syncUser(request.user.userId, request.user.email);
 
       return true;
     } catch (error) {
       this.logger.error(`Clerk JWT Verification failed: ${error.message}`);
+      if (error instanceof ForbiddenException) {
+        throw error;
+      }
       throw new UnauthorizedException("Session expired or token invalid");
     }
   }
