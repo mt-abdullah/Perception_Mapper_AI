@@ -6,7 +6,11 @@ import {
   Logger,
 } from "@nestjs/common";
 import * as jwt from "jsonwebtoken";
-import jwksClient from "jwks-rsa";
+import * as jwksRsa from "jwks-rsa";
+
+const jwksClient = typeof jwksRsa === "function"
+  ? jwksRsa
+  : ((jwksRsa as any).default || jwksRsa);
 
 @Injectable()
 export class ClerkGuard implements CanActivate {
