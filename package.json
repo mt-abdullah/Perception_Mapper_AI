@@ -1,0 +1,14 @@
+{
+  "name": "perception-mapper-ai",
+  "private": true,
+  "packageManager": "pnpm@9.1.1",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.3"
+  }
+}

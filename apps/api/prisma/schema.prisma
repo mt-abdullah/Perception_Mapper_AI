@@ -1,0 +1,63 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PlanTier {
+  FREE
+  PRO
+  TEAM
+}
+
+model User {
+  id                     String       @id // Clerk User ID
+  email                  String       @unique
+  stripeCustomerId       String?      @unique
+  stripeSubscriptionId   String?      @unique
+  tier                   PlanTier     @default(FREE)
+  analysesLimit          Int          @default(50)
+  analysesUsed           Int          @default(0)
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  analyses               Analysis[]
+  apiKeys                ApiKey[]
+  customRules            CustomRule[]
+}
+
+model Analysis {
+  id               String   @id @default(uuid())
+  userId           String
+  inputText        String   @db.Text
+  detectedLanguage String
+  sentimentScore   Int
+  biasIndex        Int
+  tones            Json     // List of matched tone profiles
+  biases           Json     // List of flagged bias details
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  key       String   @unique // Hashed key representation
+  userId    String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CustomRule {
+  id          String   @id @default(uuid())
+  userId      String
+  pattern     String   // Regex pattern for target bias
+  type        String   // Category of custom bias
+  description String
+  rephrase    String   // Recommended objective alternative
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
