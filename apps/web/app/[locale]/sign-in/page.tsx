@@ -4,8 +4,7 @@ export const dynamic = "force-dynamic";
 
 import React, { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useAuth } from "@/app/clerk-compat";
-import { SignIn } from "../../clerk-compat";
+import { useAuth, SignIn } from "../../clerk-compat";
 import { Sparkles } from "lucide-react";
 export default function SignInPage() {
   const router = useRouter();

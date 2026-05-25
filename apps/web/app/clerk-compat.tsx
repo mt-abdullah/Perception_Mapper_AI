@@ -24,19 +24,21 @@ export const useAuth = () => {
     setName(storedName);
   }, []);
 
-  const user = {
-    id: 'mock-user-id',
-    role,
-    emailAddress: 'admin@example.com',
-    email: 'admin@example.com',
-    avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b0764&color=c084fc`,
-    name,
-  };
+  const user = React.useMemo(() => {
+    return {
+      id: 'mock-user-id',
+      role,
+      emailAddress: 'admin@example.com',
+      email: 'admin@example.com',
+      avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b0764&color=c084fc`,
+      name,
+    };
+  }, [role, name]);
 
-  const setRoleWithStorage = (newRole: string) => {
+  const setRoleWithStorage = React.useCallback((newRole: string) => {
     setRole(newRole);
     localStorage.setItem('pm_mock_user_rbac_role', newRole);
-  };
+  }, []);
 
   return {
     isSignedIn: mounted ? isSignedIn : false,
