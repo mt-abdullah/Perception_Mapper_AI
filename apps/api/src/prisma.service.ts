@@ -2,6 +2,26 @@ import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
 
 @Injectable()
 export class PrismaService implements OnModuleInit, OnModuleDestroy {
+  // Mock Prisma model interfaces for configuration service
+  public systemSettings = {
+    findFirst: async () => ({
+      rateLimit: 1000,
+      signupEnabled: true,
+      maintenanceMode: false,
+    }),
+    upsert: async (args: any) => (args.create || args.update),
+  };
+  public aIEngineSettings = {
+    findFirst: async () => ({}),
+    upsert: async (args: any) => (args.create || args.update),
+  };
+  public userPreferences = {
+    findUnique: async (args: any) => ({}),
+    upsert: async (args: any) => (args.create || args.update),
+  };
+  public user = {
+    findUnique: async (args: any) => ({ role: 'USER' }),
+  };
   private isConnected = false;
 
   // In-memory high-fidelity database storage for mock/offline execution

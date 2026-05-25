@@ -2,10 +2,22 @@
 
 export const dynamic = "force-dynamic";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/app/clerk-compat";
 import { SignIn } from "../../clerk-compat";
 import { Sparkles } from "lucide-react";
 export default function SignInPage() {
+  const router = useRouter();
+  const { isSignedIn } = useAuth();
+  const pathname = usePathname();
+  useEffect(() => {
+    if (isSignedIn) {
+      const segments = pathname.split('/');
+      const locale = segments[1] || 'en';
+      router.push(`/${locale}/dashboard`);
+    }
+  }, [isSignedIn, router, pathname]);
 
   return (
     <div className="relative min-h-screen flex flex-col justify-center items-center px-6 py-12 overflow-hidden bg-slate-950">

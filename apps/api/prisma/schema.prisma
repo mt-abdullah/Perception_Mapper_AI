@@ -72,6 +72,7 @@ model User {
   customRules            CustomRule[]
   apiLogs                ApiLog[]
   targetUserActions      AdminAction[]   @relation("TargetUser")
+  userPreferences   UserPreferences?
 }
 
 
@@ -189,4 +190,31 @@ model AuditLog {
   action    String
   module    String   // users / ai / system etc.
   timestamp DateTime @default(now())
+}
+
+model SystemSettings {
+  id              Int    @id @default(autoincrement())
+  theme           String @default("light")
+  language        String @default("EN")
+  uiAnimations    Boolean @default(true)
+  maintenanceMode Boolean @default(false)
+  rateLimit       Int    @default(1000)
+  signupEnabled   Boolean @default(true)
+}
+
+model AIEngineSettings {
+  id            Int    @id @default(autoincrement())
+  toneAnalysis  Boolean @default(true)
+  biasDetection Boolean @default(true)
+  voiceInput    Boolean @default(true)
+  imageAnalysis Boolean @default(true)
+}
+
+model UserPreferences {
+  id                Int    @id @default(autoincrement())
+  userId            String @unique
+  defaultDashboard  String @default("/dashboard")
+  notifications     Boolean @default(true)
+  autoLogoutMinutes Int    @default(30)
+  user              User   @relation(fields: [userId], references: [id])
 }

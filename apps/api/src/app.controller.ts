@@ -515,4 +515,48 @@ export class AppController {
     }
     return await this.prisma.updateUserRole(req.user.userId, body.role.toUpperCase());
   }
+
+  @Get("configuration")
+  @UseGuards(ClerkGuard)
+  async getConfiguration(@Req() req: any) {
+    const system = await this.prisma.systemSettings.findFirst();
+    const ai = await this.prisma.aIEngineSettings.findFirst();
+    const userPref = await this.prisma.userPreferences.findUnique({ where: { userId: req.user.userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: req.user.userId } });
+
+    const isAdmin = user?.role === 'ADMIN';
+    return {
+      system,
+      ai,
+      user: userPref,
+      admin: isAdmin ? { rateLimit: system?.rateLimit, signupEnabled: system?.signupEnabled, maintenanceMode: system?.maintenanceMode } : undefined,
+    };
+  }
+
+  @Patch("configuration")
+  @UseGuards(ClerkGuard)
+  async updateConfiguration(@Req() req: any, @Body() body: any) {
+    if (body.system) {
+      await this.prisma.systemSettings.upsert({
+        where: { id: 1 },
+        update: body.system,
+        create: { ...body.system, id: 1 },
+      });
+    }
+    if (body.ai) {
+      await this.prisma.aIEngineSettings.upsert({
+        where: { id: 1 },
+        update: body.ai,
+        create: { ...body.ai, id: 1 },
+      });
+    }
+    if (body.user) {
+      await this.prisma.userPreferences.upsert({
+        where: { userId: req.user.userId },
+        update: body.user,
+        create: { ...body.user, userId: req.user.userId },
+      });
+    }
+    return this.getConfiguration(req);
+  }
 }

@@ -27,6 +27,10 @@ export const AdminTabContext = createContext<{
 });
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  // Server‑side guard: skip client‑only code during static generation
+  if (typeof window === "undefined") {
+    return <></>;
+  }
   const { isSignedIn, user, setRole } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -103,14 +107,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Secure Sidebar Admin Shell
   const handleSignOutAdmin = () => {
-    // Revoke mock admin local storage token and navigate back
+    // Revoke mock admin local storage token and clear session
     localStorage.removeItem("pm_mock_signed_in");
     localStorage.removeItem("pm_mock_user_rbac_role");
     setRole("USER");
-    
-    const segments = pathname.split("/");
-    const locale = segments[1] || "en";
-    router.push(`/${locale}/admin/login`);
+    // Clear all cookies to fully reset session
+    if (typeof document !== "undefined") {
+      document.cookie.split(";").forEach(c => {
+        const eqPos = c.indexOf("=");
+        const name = eqPos > -1 ? c.substr(0, eqPos).trim() : c.trim();
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      });
+    }
+    const locale = pathname.split('/')[1] || 'en';
+    router.push(`/${locale}`);
   };
 
   const handleReturnToUserDashboard = () => {
