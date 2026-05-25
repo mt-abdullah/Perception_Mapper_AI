@@ -13,12 +13,15 @@
     "lucide-react": "^0.306.0"
   },
   "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:api\"",
+    "dev:api": "npm --workspace api run dev",
+    "dev:web": "npm --workspace web run dev",
     "build": "turbo run build",
-    "dev": "turbo run dev",
     "lint": "turbo run lint",
     "clean": "turbo run clean"
   },
   "devDependencies": {
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "concurrently": "^8.2.2"
   }
 }

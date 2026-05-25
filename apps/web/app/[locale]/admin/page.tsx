@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect, useContext } from "react";
 import { AdminTabContext } from "./layout";
 import { useAuth } from "../../clerk-compat";

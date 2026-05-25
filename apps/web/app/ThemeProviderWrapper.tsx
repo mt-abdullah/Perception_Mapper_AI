@@ -1,23 +1,13 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { useState, useEffect } from "react";
 
-// Wrapper to ensure theme is only applied on the client after mounting.
+// Wrapper that applies the theme provider.
+// We rely on suppressHydrationWarning on the <html> tag (in root layout)
+// instead of returning null during SSR, which caused a flash of blank content.
 export default function ThemeProviderWrapper({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Prevent SSR mismatches by rendering nothing until mounted.
-  if (!mounted) {
-    return null;
-  }
-
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
       {children}
     </ThemeProvider>
   );

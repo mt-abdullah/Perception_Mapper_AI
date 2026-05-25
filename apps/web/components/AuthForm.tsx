@@ -8,8 +8,8 @@ interface AuthFormProps {
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
-  const signIn = useSignIn();
-  const signUp = useSignUp();
+  const { signIn, isLoaded: signInLoaded } = useSignIn();
+  const { signUp, isLoaded: signUpLoaded } = useSignUp();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -23,9 +23,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
     setLoading(true);
     try {
       if (mode === 'login') {
+        if (!signInLoaded) { setError('Auth not ready'); setLoading(false); return; }
         await signIn.create({ identifier: email, password });
         onSuccess?.();
       } else {
+        if (!signUpLoaded) { setError('Auth not ready'); setLoading(false); return; }
         if (password !== confirmPassword) {
           setError('Passwords do not match');
           setLoading(false);
@@ -34,7 +36,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
         await signUp.create({ emailAddress: email, password });
         await signUp.update({ firstName: name });
         await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
-        await signUp.attemptEmailAddressVerification({ code: '' }); // placeholder, real flow handled by Clerk UI
+        // verification flow handled by Clerk UI; placeholder omitted
         onSuccess?.();
       }
     } catch (err: any) {

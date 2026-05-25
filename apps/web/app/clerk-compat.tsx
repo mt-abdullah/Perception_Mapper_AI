@@ -27,6 +27,12 @@ const MockClerkContext = createContext<{
 export function ClerkProvider({ children, ...props }: any) {
   const [isSignedIn, setSignedIn] = useState(false);
   const [role, setRole] = useState("ADMIN");
+  const [user, setUser] = useState({
+    name: "Demo Developer",
+    avatarUrl: "https://ui-avatars.com/api/?name=Demo+Developer",
+    role: "ADMIN",
+    tier: "PRO",
+  });
 
   // Sync session state from localStorage in mock mode to persist logins across refreshes
   useEffect(() => {
@@ -37,6 +43,15 @@ export function ClerkProvider({ children, ...props }: any) {
       }
       const storedRole = localStorage.getItem("pm_mock_user_rbac_role") || "ADMIN";
       setRole(storedRole);
+
+      const storedName = localStorage.getItem("pm_mock_user_name") || "Demo Developer";
+      setUser({
+        name: storedName,
+        avatarUrl: "https://ui-avatars.com/api/?name=" + encodeURIComponent(storedName),
+        role: storedRole,
+        tier: "PRO",
+      });
+
       if (!localStorage.getItem("pm_mock_user_rbac_role")) {
         localStorage.setItem("pm_mock_user_rbac_role", "ADMIN");
       }
@@ -50,8 +65,15 @@ export function ClerkProvider({ children, ...props }: any) {
     }
     // In mock mode we store a static user profile
     if (!hasRealClerkKey && val) {
-      localStorage.setItem("pm_mock_user_name", "Demo Developer");
+      const name = "Demo Developer";
+      localStorage.setItem("pm_mock_user_name", name);
       localStorage.setItem("pm_mock_user_rbac_role", "ADMIN");
+      setUser({
+        name,
+        avatarUrl: "https://ui-avatars.com/api/?name=" + encodeURIComponent(name),
+        role: "ADMIN",
+        tier: "PRO",
+      });
     }
   };
 
@@ -59,6 +81,10 @@ export function ClerkProvider({ children, ...props }: any) {
     setRole(newRole);
     if (!hasRealClerkKey) {
       localStorage.setItem("pm_mock_user_rbac_role", newRole);
+      setUser((prev) => ({
+        ...prev,
+        role: newRole,
+      }));
     }
   };
 
@@ -70,12 +96,7 @@ export function ClerkProvider({ children, ...props }: any) {
     <MockClerkContext.Provider value={{
       isSignedIn,
       setSignedIn: handleSetSignedIn,
-      user: {
-        name: localStorage.getItem("pm_mock_user_name") || "Demo Developer",
-        avatarUrl: "https://ui-avatars.com/api/?name=" + encodeURIComponent(localStorage.getItem("pm_mock_user_name") || "Demo Developer"),
-        role: role,
-        tier: "PRO",
-      },
+      user,
       setRole: handleSetRole,
     }}>
       {children}

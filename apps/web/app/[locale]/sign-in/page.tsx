@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import { SignIn } from "../../clerk-compat";
 import { Sparkles } from "lucide-react";
