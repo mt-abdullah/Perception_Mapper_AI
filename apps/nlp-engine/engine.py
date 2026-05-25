@@ -118,6 +118,8 @@ def analyze_perception(text: str):
     match_count = sum(1 for w in words if w in keywords)
     # Increment core scores dynamically based on matches
     if match_count > 0:
+      if tone not in scores:
+        scores[tone] = 30
       scores[tone] = min(100, scores[tone] + (match_count * 15))
 
   tone_colors = {
