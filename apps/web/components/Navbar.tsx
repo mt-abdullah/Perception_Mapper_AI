@@ -21,7 +21,6 @@ export default function Navbar() {
   const navItems = user?.role === "ADMIN"
     ? [{ name: "Admin Panel", href: `/${locale}/admin/dashboard` }]
     : [
-        { name: "Home", href: homeHref },
         ...(isSignedIn ? [{ name: "Workspace", href: `/${locale}/dashboard` }] : []),
       ];
 
