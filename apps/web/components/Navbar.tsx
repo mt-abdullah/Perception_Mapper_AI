@@ -16,9 +16,7 @@ export default function Navbar() {
 
   const navItems = user?.role === "ADMIN"
     ? [{ name: "Admin Panel", href: "/admin/dashboard" }]
-    : [
-        ...(isSignedIn ? [{ name: "Workspace", href: "/dashboard" }] : []),
-      ];
+    : [];
 
   if (!mounted) {
     return <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-955/80 backdrop-blur-xl border-b border-slate-900/60 h-16" />;
