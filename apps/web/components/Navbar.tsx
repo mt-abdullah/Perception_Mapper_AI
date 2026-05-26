@@ -62,11 +62,18 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
-              <Link href={`/${locale}/sign-in`}>
-                <button className="px-4 py-2 text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/20 rounded-xl transition duration-300 shadow-md">
-                  Sign In
-                </button>
-              </Link>
+              <div className="flex items-center space-x-3">
+                <Link href={`/${locale}/sign-in`}>
+                  <button className="px-3.5 py-1.5 text-xs font-bold text-slate-400 hover:text-white transition">
+                    Sign In
+                  </button>
+                </Link>
+                <Link href={`/${locale}/sign-up`}>
+                  <button className="px-4 py-2 text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/20 rounded-xl transition duration-300 shadow-md">
+                    Sign Up
+                  </button>
+                </Link>
+              </div>
             )}
 
             <button
