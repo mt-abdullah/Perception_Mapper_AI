@@ -3,12 +3,15 @@ export const HARDCODED_ADMINS = [
   { email: "admin2@perception.ai", password: "Admin@456", name: "System Admin Two" },
 ];
 
+export type SubscriptionTier = "FREE" | "BASIC" | "PRO";
+
 export interface MockUser {
   id: string;
   email: string;
   name: string;
   role: "USER" | "ADMIN";
   avatarUrl: string;
+  tier: SubscriptionTier;
 }
 
 export const getMockSession = (): { isSignedIn: boolean; user: MockUser | null } => {
@@ -21,16 +24,17 @@ export const getMockSession = (): { isSignedIn: boolean; user: MockUser | null }
   const role = (localStorage.getItem("pm_mock_user_rbac_role") || "USER") as "USER" | "ADMIN";
   const name = localStorage.getItem("pm_mock_user_name") || "Standard User";
   const id = localStorage.getItem("pm_mock_user_id") || "mock-id";
+  const tier = (localStorage.getItem("pm_mock_user_tier") || "FREE") as SubscriptionTier;
 
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b0764&color=c084fc`;
 
   return {
     isSignedIn,
-    user: { id, email, name, role, avatarUrl },
+    user: { id, email, name, role, avatarUrl, tier },
   };
 };
 
-export const setMockSession = (email: string, role: "USER" | "ADMIN", name: string) => {
+export const setMockSession = (email: string, role: "USER" | "ADMIN", name: string, tier: SubscriptionTier = "FREE") => {
   if (typeof window === "undefined") return;
 
   const id = "mock-" + Math.random().toString(36).substring(2, 9);
@@ -39,6 +43,7 @@ export const setMockSession = (email: string, role: "USER" | "ADMIN", name: stri
   localStorage.setItem("pm_mock_user_email", email);
   localStorage.setItem("pm_mock_user_rbac_role", role);
   localStorage.setItem("pm_mock_user_name", name);
+  localStorage.setItem("pm_mock_user_tier", tier);
 
   if (role === "ADMIN") {
     localStorage.setItem("pm_mock_admin_session", "true");
@@ -56,6 +61,7 @@ export const clearMockSession = () => {
   localStorage.removeItem("pm_mock_user_email");
   localStorage.removeItem("pm_mock_user_rbac_role");
   localStorage.removeItem("pm_mock_user_name");
+  localStorage.removeItem("pm_mock_user_tier");
   localStorage.removeItem("pm_mock_admin_session");
 
   document.cookie = "pm_mock_signed_in=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

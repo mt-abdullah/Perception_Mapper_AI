@@ -7,17 +7,14 @@ import { useDashboard } from "../../hooks/useDashboard";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Preloader from "../../components/Preloader";
-import MultimodalScanner from "../../components/MultimodalScanner";
-import CognitiveAnalytics from "../../components/CognitiveAnalytics";
-import LiveTelemetry from "../../components/LiveTelemetry";
-import AuditLogConsole from "../../components/AuditLogConsole";
-import TeamWorkspace from "../../components/TeamWorkspace";
-import CustomBiasRules from "../../components/CustomBiasRules";
-import { Card } from "@perception-mapper/ui";
+import TierSelector from "../../components/dashboard/TierSelector";
+import BasicDashboard from "../../components/dashboard/BasicDashboard";
+import ProDashboard from "../../components/dashboard/ProDashboard";
+import EnterpriseDashboard from "../../components/dashboard/EnterpriseDashboard";
 
 export default function UserDashboard() {
   const router = useRouter();
-  const { isSignedIn, user, mounted } = useAuth();
+  const { isSignedIn, user, mounted, setTier } = useAuth();
   const db = useDashboard();
 
   useEffect(() => {
@@ -29,6 +26,19 @@ export default function UserDashboard() {
   if (!mounted || !isSignedIn || !user) {
     return <Preloader message="AUTHORIZING USER WORKSPACE..." />;
   }
+
+  const renderDashboardContent = () => {
+    switch (user.tier) {
+      case "FREE":
+        return <BasicDashboard db={db} onUpgrade={setTier} />;
+      case "BASIC":
+        return <ProDashboard db={db} onUpgrade={setTier} />;
+      case "PRO":
+        return <EnterpriseDashboard db={db} />;
+      default:
+        return <BasicDashboard db={db} onUpgrade={setTier} />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-955 text-slate-100 flex flex-col relative overflow-hidden font-sans">
@@ -47,69 +57,9 @@ export default function UserDashboard() {
           <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-400">Node cluster: 200 OK</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <Card className="lg:col-span-7 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
-            <MultimodalScanner
-              inputText={db.inputText} setInputText={db.setInputText}
-              activeTab={db.activeTab} setActiveTab={db.setActiveTab}
-              selectedLanguage={db.selectedLanguage} setSelectedLanguage={db.setSelectedLanguage}
-              isAnalyzing={db.isAnalyzing} triggerAnalysis={db.triggerAnalysis}
-              appendTerminalLog={db.appendTerminalLog}
-            />
-          </Card>
+        <TierSelector currentTier={user.tier} onChangeTier={setTier} />
 
-          <Card className="lg:col-span-5 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
-            <CognitiveAnalytics
-              analysisResult={db.analysisResult}
-              isAnalyzing={db.isAnalyzing}
-              onRephrase={(quote, rephrase) => {
-                const cleanText = db.inputText.replace(quote, rephrase);
-                db.setInputText(cleanText);
-                db.appendTerminalLog("💡 Applied objective rephrase pattern.");
-              }}
-            />
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <Card className="lg:col-span-8 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
-            <LiveTelemetry liveMetrics={db.liveMetrics} telemetryHistory={db.telemetryHistory} />
-          </Card>
-          <Card className="lg:col-span-4 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
-            <AuditLogConsole terminalLogs={db.terminalLogs} onClearLogs={() => db.appendTerminalLog("♻️ AUDIT LOG STREAM FLUSHED")} />
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <Card className="lg:col-span-7 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
-            <TeamWorkspace
-              teamMembers={db.teamMembers}
-              onInvite={(email, role) => {
-                const newMember = { id: Math.random().toString(36).substr(2, 5), name: email.split("@")[0], email, role, status: "ACTIVE" };
-                db.setTeamMembers([...db.teamMembers, newMember]);
-                db.appendTerminalLog(`👥 Seat allocated for: ${email}`);
-              }}
-              onRevoke={(id, email) => {
-                db.setTeamMembers(db.teamMembers.filter((m) => m.id !== id));
-                db.appendTerminalLog(`👥 Seat revoked for: ${email}`);
-              }}
-            />
-          </Card>
-          <Card className="lg:col-span-5 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
-            <CustomBiasRules
-              customRules={db.customRules}
-              onCreateRule={(pattern, rephrase) => {
-                const newRule = { id: Math.random().toString(36).substr(2, 5), pattern, type: "Custom Rule", category: "Linguistic", rephrase };
-                db.setCustomRules([...db.customRules, newRule]);
-                db.appendTerminalLog(`📏 Custom rule policy persisted: ${pattern}`);
-              }}
-              onDeleteRule={(id, pattern) => {
-                db.setCustomRules(db.customRules.filter((r) => r.id !== id));
-                db.appendTerminalLog(`📏 Safety rule purged: ${pattern}`);
-              }}
-            />
-          </Card>
-        </div>
+        {renderDashboardContent()}
       </main>
 
       <Footer />

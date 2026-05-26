@@ -1,22 +1,40 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useAuth } from "../../hooks/useAuth";
-import { Sparkles, Key, RefreshCw } from "lucide-react";
+import { Key, RefreshCw, Mail, Lock } from "lucide-react";
 import Preloader from "../../components/Preloader";
+import AuthCard from "../../components/auth/AuthCard";
+import AuthInput from "../../components/auth/AuthInput";
+import GoogleButton from "../../components/auth/GoogleButton";
+import GitHubButton from "../../components/auth/GitHubButton";
 
 export default function SignInPage() {
   const { isSignedIn, signInUser, signInAdmin, mounted } = useAuth();
   const [email, setEmail] = useState("user@perception.ai");
   const [password, setPassword] = useState("••••••••");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
+    setErrors({});
+    
+    const nextErrors: typeof errors = {};
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      nextErrors.email = "Please specify a valid email address.";
+    }
+    if (!password || password.length < 6) {
+      nextErrors.password = "Password must span at least 6 characters.";
+    }
+    
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      return;
+    }
 
+    setLoading(true);
     setTimeout(() => {
       const cleanEmail = email.trim().toLowerCase();
       const isAdmin = cleanEmail.startsWith("admin");
@@ -24,7 +42,7 @@ export default function SignInPage() {
       if (isAdmin) {
         const check = signInAdmin(cleanEmail, password);
         if (!check.success) {
-          setError(check.error || "Invalid administrator credentials.");
+          setErrors({ general: check.error || "Invalid credentials." });
           setLoading(false);
         }
       } else {
@@ -33,92 +51,97 @@ export default function SignInPage() {
     }, 700);
   };
 
+  const handleOAuth = (provider: string) => {
+    setLoading(true);
+    setTimeout(() => {
+      signInUser(`oauth-${provider.toLowerCase()}@perception.ai`, `${provider} User`);
+    }, 600);
+  };
+
   if (!mounted || isSignedIn) {
     return <Preloader message="CONNECTING TO SECURE AUTH GATEWAY..." />;
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-center items-center px-6 py-12 overflow-hidden bg-slate-955 font-sans">
-      <div className="absolute top-[-25%] left-[-20%] w-[70%] h-[70%] rounded-full bg-indigo-500/5 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-25%] w-[80%] h-[80%] rounded-full bg-pink-500/5 blur-[150px] pointer-events-none" />
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+    <AuthCard title="Welcome Back" description="Sign in to resume secure NLP node visualization and custom mappings.">
+      <form onSubmit={handleSignIn} className="space-y-4">
+        {errors.general && (
+          <div className="p-3 bg-rose-950/40 border border-rose-500/20 text-rose-450 rounded-xl font-semibold text-xs text-center">
+            {errors.general}
+          </div>
+        )}
 
-      <div className="flex items-center space-x-3 mb-8 relative z-10 select-none">
-        <div className="bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-2.5 rounded-xl border border-indigo-400/20 shadow-lg">
-          <Sparkles className="h-5 w-5 text-white animate-pulse" />
+        <AuthInput
+          label="Email Address"
+          id="email-field"
+          type="email"
+          icon={Mail}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="user@perception.ai"
+          error={errors.email}
+          required
+        />
+
+        <div className="space-y-1">
+          <AuthInput
+            label="Password"
+            id="password-field"
+            type="password"
+            icon={Lock}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            error={errors.password}
+            required
+          />
+          <div className="text-right">
+            <Link href="#" className="text-[10px] font-semibold text-indigo-400 hover:text-indigo-300 hover:underline transition">
+              Forgot password?
+            </Link>
+          </div>
         </div>
-        <div>
-          <h1 className="text-xl font-extrabold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight">
-            PERCEPTION MAPPER AI
-          </h1>
-          <span className="text-[9px] text-indigo-400 font-extrabold tracking-widest uppercase block">NLP Security Gate</span>
-        </div>
-      </div>
 
-      <div className="relative z-10 w-full max-w-md bg-slate-900/40 border border-slate-800/80 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
-
-        <div className="space-y-2 text-center mb-6">
-          <h2 className="text-lg font-bold tracking-wide text-white">Perception Sign In</h2>
-          <p className="text-xs text-slate-400 leading-normal max-w-xs mx-auto">
-            Provide workspace credentials to deploy core node handshakes.
-          </p>
-        </div>
-
-        <form onSubmit={handleSignIn} className="space-y-5 text-left text-xs">
-          {error && (
-            <div className="p-3 bg-rose-950/40 border border-rose-500/20 text-rose-400 rounded-xl font-semibold">
-              {error}
-            </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold border border-indigo-400/20 shadow-md transition flex items-center justify-center disabled:opacity-50 select-none uppercase tracking-wider font-sans"
+        >
+          {loading ? (
+            <>
+              <RefreshCw className="h-3.5 w-3.5 animate-spin mr-2" />
+              <span>Establishing Handshake...</span>
+            </>
+          ) : (
+            <>
+              <Key className="h-3.5 w-3.5 mr-2" />
+              <span>Sign In to Workspace</span>
+            </>
           )}
+        </button>
+      </form>
 
-          <div className="space-y-1.5">
-            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Email Address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-950/80 border border-slate-850 focus:border-indigo-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
-              placeholder="user@perception.ai"
-              required
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-955/80 border border-slate-850 focus:border-indigo-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold border border-indigo-400/20 shadow-lg transition flex items-center justify-center disabled:opacity-50 select-none font-sans uppercase tracking-wider"
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="h-3.5 w-3.5 animate-spin mr-2" />
-                <span>Establishing Handshake...</span>
-              </>
-            ) : (
-              <>
-                <Key className="h-3.5 w-3.5 mr-2" />
-                <span>Sign In to Workspace</span>
-              </>
-            )}
-          </button>
-        </form>
+      <div className="relative my-5 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-800/80"></div>
+        </div>
+        <span className="relative bg-[#090d16] px-3.5 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 select-none">
+          or continue with
+        </span>
       </div>
-      <div className="mt-12 text-center text-[10px] text-slate-600 relative z-10">
-        © 2026 Perception Mapper AI. Encrypted verification gateways.
+
+      <div className="grid grid-cols-2 gap-3.5">
+        <GoogleButton onClick={() => handleOAuth("Google")} disabled={loading} />
+        <GitHubButton onClick={() => handleOAuth("GitHub")} disabled={loading} />
       </div>
-    </div>
+
+      <div className="mt-6 text-center text-[10px] text-slate-400 font-semibold">
+        Don&apos;t have an account?{" "}
+        <Link href="/sign-up" className="text-indigo-400 hover:text-indigo-300 hover:underline transition">
+          Sign Up here
+        </Link>
+      </div>
+    </AuthCard>
   );
 }
 

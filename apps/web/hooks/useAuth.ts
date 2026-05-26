@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { getMockSession, setMockSession, clearMockSession, validateAdminCredentials, MockUser } from "../lib/auth";
+import { getMockSession, setMockSession, clearMockSession, validateAdminCredentials, MockUser, SubscriptionTier } from "../lib/auth";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -40,7 +40,13 @@ export const useAuth = () => {
 
   const setRole = useCallback((newRole: "USER" | "ADMIN") => {
     if (!user) return;
-    setMockSession(user.email, newRole, user.name);
+    setMockSession(user.email, newRole, user.name, user.tier);
+    syncSession();
+  }, [user, syncSession]);
+
+  const setTier = useCallback((newTier: SubscriptionTier) => {
+    if (!user) return;
+    setMockSession(user.email, user.role, user.name, newTier);
     syncSession();
   }, [user, syncSession]);
 
@@ -60,5 +66,6 @@ export const useAuth = () => {
     signInAdmin,
     signOut,
     setRole,
+    setTier,
   };
 };
