@@ -5,19 +5,6 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const signedInCookie = request.cookies.get("pm_mock_signed_in");
   const isSignedIn = signedInCookie?.value === "true";
-  const adminCookie = request.cookies.get("pm_mock_admin_session");
-  const isAdmin = adminCookie?.value === "true";
-
-  // Redirect root page based on auth state
-  if (pathname === "/") {
-    const url = request.nextUrl.clone();
-    if (isSignedIn) {
-      url.pathname = isAdmin ? "/admin/dashboard" : "/dashboard";
-    } else {
-      url.pathname = "/sign-in";
-    }
-    return NextResponse.redirect(url);
-  }
 
   // Protect dashboard routes
   if (pathname.startsWith("/dashboard") && !isSignedIn) {
@@ -37,5 +24,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/admin/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/:path*"],
 };
