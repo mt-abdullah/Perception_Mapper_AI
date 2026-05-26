@@ -1,21 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  HttpException,
-  HttpStatus,
-  UseGuards,
-  Req,
-  MessageEvent,
-  Sse,
-} from "@nestjs/common";
-import { Observable, interval, map } from "rxjs";
+import { Controller, Get, Post, Patch, Delete, Body, Param, HttpException, HttpStatus, UseGuards, Req } from "@nestjs/common";
+
 import { ClerkGuard } from "./clerk.guard";
-import { ApiKeyGuard } from "./api-key.guard";
+
 import { PrismaService } from "./prisma.service";
 import { RateLimiterService } from "./rate-limiter.service";
 import { Roles } from "./roles.decorator";
@@ -121,29 +107,7 @@ export class AppController {
     }
   }
 
-  // Developer Automation Endpoint protected by X-API-Key header
-  @Post("analyze/developer")
-  @UseGuards(ApiKeyGuard)
-  async analyzeTextDeveloper(
-    @Req() req: any,
-    @Body() body: { text: string }
-  ) {
-    if (!body.text || !body.text.trim()) {
-      throw new HttpException("Text content is required", HttpStatus.BAD_REQUEST);
-    }
 
-    return {
-      success: true,
-      service: "Perception Developer API Integration",
-      triggeredBy: req.user.email,
-      accountTier: req.user.tier,
-      results: {
-        sentiment: "Neutral",
-        biasScore: 12,
-        analyzedAt: new Date().toISOString(),
-      },
-    };
-  }
 
   // User History Log Retrieval protected by Clerk
   @Get("history")
@@ -245,118 +209,13 @@ export class AppController {
     return await this.prisma.trackActivity(req.user.userId, body.activity, body.details);
   }
 
-  @Post("gateway/keys")
-  @UseGuards(ClerkGuard)
-  async generateDeveloperKey(
-    @Req() req: any,
-    @Body() body: { name: string }
-  ) {
-    if (!body.name) {
-      throw new HttpException("API Key name is required", HttpStatus.BAD_REQUEST);
-    }
-    const newKey = "pm_key_" + Math.random().toString(36).substr(2, 10);
-    await this.prisma.trackActivity(req.user.userId, "IMAGE_UPLOAD", `Generated API Key named: ${body.name}`);
-    return {
-      success: true,
-      name: body.name,
-      key: newKey,
-      createdAt: new Date().toISOString(),
-    };
-  }
 
-  @Post("gateway/analyze")
-  @UseGuards(ApiKeyGuard)
-  async runGatewayAnalysis(
-    @Req() req: any,
-    @Body() body: { text: string }
-  ) {
-    if (!body.text || !body.text.trim()) {
-      throw new HttpException("Text content is required for gateway analysis", HttpStatus.BAD_REQUEST);
-    }
 
-    // Rate Limiter Check using the API key or identifier
-    const clientKey = req.user.userId;
-    const rateLimitCheck = await this.rateLimiter.checkRateLimit(clientKey, 5); // 5 requests per minute limit for sandbox mock trigger
-    
-    if (!rateLimitCheck.allowed) {
-      throw new HttpException({
-        statusCode: HttpStatus.TOO_MANY_REQUESTS,
-        error: "Too Many Requests",
-        message: "API Gateway rate limit exceeded. Max 5 requests/min in developer sandbox.",
-        limit: rateLimitCheck.limit,
-        remaining: rateLimitCheck.remaining,
-        resetTime: new Date(rateLimitCheck.resetTime).toISOString(),
-      }, HttpStatus.TOO_MANY_REQUESTS);
-    }
+  
 
-    try {
-      const response = await fetch("http://localhost:8000/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: body.text }),
-      });
 
-      if (!response.ok) {
-        throw new HttpException("NLP Engine gateway routing failed", HttpStatus.BAD_GATEWAY);
-      }
 
-      const result = await response.json();
-      await this.prisma.trackActivity(req.user.userId, "ANALYSIS", `Gateway analyze API called: "${body.text.slice(0, 20)}..."`);
-      
-      return {
-        success: true,
-        source: "SaaS API Gateway Router",
-        client: req.user.email,
-        rateLimit: {
-          limit: rateLimitCheck.limit,
-          remaining: rateLimitCheck.remaining,
-          resetTime: new Date(rateLimitCheck.resetTime).toISOString(),
-        },
-        ...result,
-      };
-    } catch (e) {
-      // Offline mock fallback
-      await this.prisma.trackActivity(req.user.userId, "ANALYSIS", `Gateway analyze API offline fallback: "${body.text.slice(0, 20)}..."`);
-      return {
-        success: true,
-        source: "SaaS API Gateway Mock Router",
-        client: req.user.email,
-        rateLimit: {
-          limit: rateLimitCheck.limit,
-          remaining: rateLimitCheck.remaining,
-          resetTime: new Date(rateLimitCheck.resetTime).toISOString(),
-        },
-        language: "English",
-        scores: { sentiment: 60, objectivity: 80, biasIndex: 20 },
-        tones: [{ name: "Gateway Mock", score: 90, color: "from-indigo-500 to-purple-500" }],
-        biases: [],
-      };
-    }
-  }
 
-  @Sse("analytics/live")
-  sseLiveTelemetry(): Observable<MessageEvent> {
-    return interval(3000).pipe(
-      map(() => {
-        const fluctuatingLatency = 38 + Math.floor(Math.random() * 12); // 38-50 ms
-        const fluctuatingCpu = 8 + Math.floor(Math.random() * 15); // 8-23% CPU load
-        const fluctuatingMemory = 320 + Math.floor(Math.random() * 40); // 320-360 MB memory allocation
-        const fluctuatingConnections = 4 + Math.floor(Math.random() * 3); // 4-7 active sockets
-
-        const liveStats = {
-          latencyMs: fluctuatingLatency,
-          cpuLoad: fluctuatingCpu,
-          memoryMb: fluctuatingMemory,
-          activeConnections: fluctuatingConnections,
-          timestamp: new Date().toISOString(),
-        };
-
-        return {
-          data: JSON.stringify(liveStats),
-        } as MessageEvent;
-      })
-    );
-  }
 
   // ADMIN ENDPOINTS
   @Get("admin/users")
@@ -506,57 +365,41 @@ export class AppController {
     }
   }
 
-  // Developer mock action override to change standard user role dynamically from dashboard settings
-  @Post("user/role")
-  @UseGuards(ClerkGuard)
-  async switchSelfRole(@Req() req: any, @Body() body: { role: string }) {
-    if (!body.role || !["USER", "ADMIN"].includes(body.role.toUpperCase())) {
-      throw new HttpException("Invalid role configuration", HttpStatus.BAD_REQUEST);
-    }
-    return await this.prisma.updateUserRole(req.user.userId, body.role.toUpperCase());
-  }
-
+  
+  // Get configuration endpoint
   @Get("configuration")
   @UseGuards(ClerkGuard)
-  async getConfiguration(@Req() req: any) {
-    const system = await this.prisma.systemSettings.findFirst();
-    const ai = await this.prisma.aIEngineSettings.findFirst();
-    const userPref = await this.prisma.userPreferences.findUnique({ where: { userId: req.user.userId } });
-    const user = await this.prisma.user.findUnique({ where: { id: req.user.userId } });
-
-    const isAdmin = user?.role === 'ADMIN';
+  async getConfiguration() {
+    const system = await this.prisma.systemSettings?.findFirst();
+    const ai = await this.prisma.aIEngineSettings?.findFirst();
+    // Returning only system and AI configuration; user-specific data omitted for simplicity.
     return {
       system,
       ai,
-      user: userPref,
-      admin: isAdmin ? { rateLimit: system?.rateLimit, signupEnabled: system?.signupEnabled, maintenanceMode: system?.maintenanceMode } : undefined,
     };
   }
 
+  // Update configuration endpoint (system and AI only)
   @Patch("configuration")
   @UseGuards(ClerkGuard)
-  async updateConfiguration(@Req() req: any, @Body() body: any) {
+  async updateConfiguration(@Body() body: any) {
     if (body.system) {
-      await this.prisma.systemSettings.upsert({
+      await this.prisma.systemSettings?.upsert({
         where: { id: 1 },
         update: body.system,
         create: { ...body.system, id: 1 },
       });
     }
     if (body.ai) {
-      await this.prisma.aIEngineSettings.upsert({
+      await this.prisma.aIEngineSettings?.upsert({
         where: { id: 1 },
         update: body.ai,
         create: { ...body.ai, id: 1 },
       });
     }
-    if (body.user) {
-      await this.prisma.userPreferences.upsert({
-        where: { userId: req.user.userId },
-        update: body.user,
-        create: { ...body.user, userId: req.user.userId },
-      });
-    }
-    return this.getConfiguration(req);
+    // No user-specific updates in simplified version.
+    return this.getConfiguration();
   }
+
+
 }

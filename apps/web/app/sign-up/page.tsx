@@ -43,7 +43,7 @@ export default function SignUpPage() {
       const cleanEmail = email.trim().toLowerCase();
       const users = JSON.parse(localStorage.getItem("pm_mock_users") || "[]");
       if (!users.some((u: any) => u.email === cleanEmail)) {
-        users.push({ email: cleanEmail, password, name: name.trim() });
+        users.push({ email: cleanEmail, password, name: name.trim(), tier: "FREE" });
         localStorage.setItem("pm_mock_users", JSON.stringify(users));
       }
       router.push(`/sign-in?registered=true&email=${encodeURIComponent(cleanEmail)}`);
