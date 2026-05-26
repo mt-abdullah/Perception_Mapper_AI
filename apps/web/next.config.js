@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin('./app/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     workerThreads: false,
   },

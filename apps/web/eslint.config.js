@@ -2,6 +2,8 @@
 import next from "@next/eslint-plugin-next";
 
 export default [
-  // Use the recommended Next.js config (includes core-web-vitals rules)
+  {
+    ignores: [".next/**", "node_modules/**", ".turbo/**", "dist/**"]
+  },
   next.configs.recommended,
 ];
