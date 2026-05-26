@@ -14,10 +14,14 @@ export default function Navbar() {
   const segments = pathname.split("/");
   const locale = segments[1] || "en";
 
+  const homeHref = isSignedIn
+    ? (user?.role === "ADMIN" ? `/${locale}/admin/dashboard` : `/${locale}/dashboard`)
+    : `/${locale}`;
+
   const navItems = user?.role === "ADMIN"
     ? [{ name: "Admin Panel", href: `/${locale}/admin/dashboard` }]
     : [
-        { name: "Home", href: `/${locale}` },
+        { name: "Home", href: homeHref },
         ...(isSignedIn ? [{ name: "Workspace", href: `/${locale}/dashboard` }] : []),
       ];
 
@@ -29,7 +33,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-900/60 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href={`/${locale}`} className="text-white font-extrabold text-sm tracking-widest uppercase hover:text-indigo-400 transition select-none">
+          <Link href={homeHref} className="text-white font-extrabold text-sm tracking-widest uppercase hover:text-indigo-400 transition select-none">
             Perception Mapper AI
           </Link>
 
