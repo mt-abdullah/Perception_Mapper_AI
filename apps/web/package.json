@@ -2,7 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "scripts": {
-    "dev": "npx next dev -p 3009",
+    "dev": "npx next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint ."

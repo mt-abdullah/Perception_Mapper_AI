@@ -11,6 +11,9 @@ export const ClerkProvider = ({ children, publishableKey }: { children: React.Re
 export const useAuth = () => {
   const [role, setRole] = React.useState<string>('ADMIN');
   const [name, setName] = React.useState<string>('Platform Admin');
+  const [email, setEmail] = React.useState<string>('admin@example.com');
+  const [userId, setUserId] = React.useState<string>('mock-user-id');
+  const [adminSession, setAdminSession] = React.useState<boolean>(false);
   const [isSignedIn, setIsSignedIn] = React.useState<boolean>(false);
   const [mounted, setMounted] = React.useState(false);
 
@@ -22,28 +25,51 @@ export const useAuth = () => {
     setRole(storedRole);
     const storedName = localStorage.getItem('pm_mock_user_name') || 'Platform Admin';
     setName(storedName);
+    const storedEmail = localStorage.getItem('pm_mock_user_email') || 'admin@example.com';
+    setEmail(storedEmail);
+    const storedUserId = localStorage.getItem('pm_mock_user_id') || 'mock-user-id';
+    setUserId(storedUserId);
+    const storedAdminSession = localStorage.getItem('pm_mock_admin_session') === 'true';
+    setAdminSession(storedAdminSession);
   }, []);
 
   const user = React.useMemo(() => {
     return {
-      id: 'mock-user-id',
+      id: userId,
       role,
-      emailAddress: 'admin@example.com',
-      email: 'admin@example.com',
+      emailAddress: email,
+      email: email,
+      adminSession,
       avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b0764&color=c084fc`,
       name,
     };
-  }, [role, name]);
+  }, [role, name, email, userId, adminSession]);
 
   const setRoleWithStorage = React.useCallback((newRole: string) => {
     setRole(newRole);
     localStorage.setItem('pm_mock_user_rbac_role', newRole);
   }, []);
 
+  const signOut = React.useCallback(() => {
+    localStorage.removeItem("pm_mock_signed_in");
+    localStorage.removeItem("pm_mock_user_name");
+    localStorage.removeItem("pm_mock_user_rbac_role");
+    localStorage.removeItem("pm_mock_user_email");
+    localStorage.removeItem("pm_mock_user_id");
+    localStorage.removeItem("pm_mock_admin_session");
+    if (typeof document !== "undefined") {
+      document.cookie = `pm_mock_signed_in=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      document.cookie = `pm_admin_session_token=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    }
+    // Also trigger server-side logout route to purge secure httpOnly cookies
+    fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
+  }, []);
+
   return {
     isSignedIn: mounted ? isSignedIn : false,
     user,
     setRole: setRoleWithStorage,
+    signOut,
   };
 };
 
@@ -195,7 +221,7 @@ export const SignUp = (props: React.HTMLAttributes<HTMLDivElement>) => {
     setTimeout(() => {
       localStorage.setItem('pm_mock_signed_in', 'true');
       localStorage.setItem('pm_mock_user_name', name || 'Astraea Vance');
-      localStorage.setItem('pm_mock_user_rbac_role', 'ADMIN');
+      localStorage.setItem('pm_mock_user_rbac_role', 'USER');
       document.cookie = 'pm_mock_signed_in=true; path=/';
       setLoading(false);
       const segments = window.location.pathname.split('/');
@@ -266,4 +292,38 @@ export const SignUp = (props: React.HTMLAttributes<HTMLDivElement>) => {
       </form>
     </div>
   );
+};
+
+export const useRequireAuth = (requiredRole: string) => {
+  const { isSignedIn, user } = useAuth();
+  const router = useRouter();
+  const [authorized, setAuthorized] = React.useState<boolean | null>(null);
+
+  React.useEffect(() => {
+    const signedIn = localStorage.getItem('pm_mock_signed_in') === 'true';
+    const storedRole = localStorage.getItem('pm_mock_user_rbac_role');
+    const isAdminSession = localStorage.getItem('pm_mock_admin_session') === 'true';
+
+    if (requiredRole === "ADMIN") {
+      if (!signedIn || storedRole !== "ADMIN" || !isAdminSession) {
+        setAuthorized(false);
+        const segments = window.location.pathname.split('/');
+        const locale = segments[1] || 'en';
+        router.replace(`/${locale}/admin/sign-in`);
+      } else {
+        setAuthorized(true);
+      }
+    } else {
+      if (!signedIn) {
+        setAuthorized(false);
+        const segments = window.location.pathname.split('/');
+        const locale = segments[1] || 'en';
+        router.replace(`/${locale}/sign-in`);
+      } else {
+        setAuthorized(true);
+      }
+    }
+  }, [isSignedIn, user, router, requiredRole]);
+
+  return { authorized };
 };

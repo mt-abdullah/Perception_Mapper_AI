@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (typeof window === "undefined") {
     return <></>;
   }
-  const { isSignedIn, user, setRole } = useAuth();
+  const { isSignedIn, user, setRole, signOut } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
@@ -41,21 +41,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setMounted(true);
   }, []);
 
-  const isLoginPage = pathname.endsWith("/admin/login");
+  const isLoginPage = pathname.endsWith("/admin/sign-in");
 
   // Client-side Router protection guard
   useEffect(() => {
     if (mounted && !isLoginPage) {
-      if (!isSignedIn) {
+      const signedIn = localStorage.getItem("pm_mock_signed_in") === "true";
+      const storedRole = localStorage.getItem("pm_mock_user_rbac_role");
+      const isAdminSession = localStorage.getItem("pm_mock_admin_session") === "true";
+
+      if (!signedIn || storedRole !== "ADMIN" || !isAdminSession) {
         const segments = pathname.split("/");
         const locale = segments[1] || "en";
-        router.push(`/${locale}/admin/login`);
-      } else if (user?.role !== "ADMIN") {
-        // Redirection block or let the forbidden UI handle it
-        console.warn("Intrusion detected: Unauthorized non-admin user forced route navigation");
+        router.replace(`/${locale}/admin/sign-in`);
       }
     }
-  }, [mounted, isSignedIn, user?.role, pathname, isLoginPage]);
+  }, [mounted, pathname, isLoginPage]);
 
   if (!mounted) {
     return (
@@ -107,26 +108,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Secure Sidebar Admin Shell
   const handleSignOutAdmin = () => {
-    // Revoke mock admin local storage token and clear session
-    localStorage.removeItem("pm_mock_signed_in");
-    localStorage.removeItem("pm_mock_user_rbac_role");
-    setRole("USER");
-    // Clear all cookies to fully reset session
-    if (typeof document !== "undefined") {
-      document.cookie.split(";").forEach(c => {
-        const eqPos = c.indexOf("=");
-        const name = eqPos > -1 ? c.substr(0, eqPos).trim() : c.trim();
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-      });
-    }
-    const locale = pathname.split('/')[1] || 'en';
-    router.push(`/${locale}`);
+    signOut();
+    const segments = pathname.split("/");
+    const locale = segments[1] || "en";
+    router.push(`/${locale}/admin/sign-in`);
   };
 
   const handleReturnToUserDashboard = () => {
     const segments = pathname.split("/");
     const locale = segments[1] || "en";
-    router.push(`/${locale}`);
+    router.push(`/${locale}/dashboard`);
   };
 
   return (

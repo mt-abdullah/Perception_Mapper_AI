@@ -17,7 +17,7 @@ import {
   ArrowRight,
   RefreshCw,
   Download,
-  Key,
+
   Users,
   Sliders,
   Cpu,
@@ -38,11 +38,7 @@ import {
   Maximize2,
   Minimize2,
   Eye,
-  Trash2,
-  Settings,
-  ShieldCheck,
-  Radio,
-  FileCheck
+  Trash2, Key, Settings, ShieldCheck, Radio, FileCheck
 } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 
@@ -107,12 +103,12 @@ export default function SupernovaWorkspace() {
         name: user.name || "Astraea Vance",
         email: user.email || "astraea@supernova.ai",
         avatar: user.avatarUrl || "https://ui-avatars.com/api/?name=Astraea+Vance",
-        tier: (user.role === "ADMIN" ? "Platform Admin" : user.role === "DEVELOPER" ? "System Developer" : "Standard User")
+        tier: user.role === "ADMIN" ? "Platform Admin" : "Standard User"
       });
     }
   }, [mounted, user]);
 
-  const [activeRole, setActiveRole] = useState<"USER" | "ADMIN" | "DEVELOPER">("USER");
+  const [activeRole, setActiveRole] = useState<"USER" | "ADMIN">("USER");
   const [userProfile, setUserProfile] = useState({
     name: "Astraea Vance",
     email: "astraea@supernova.ai",
@@ -148,16 +144,7 @@ export default function SupernovaWorkspace() {
     lastUpdate: new Date().toLocaleTimeString()
   });
 
-  // Developer Sandbox States
-  const [developerKeys, setDeveloperKeys] = useState<any[]>([
-    { id: "1", name: "Supernova Production API Gateway", key: "pm_key_s9a28jhs91h2", status: "ACTIVE", createdAt: "2026-05-24" },
-    { id: "2", name: "Astraea Integration Node Sandbox", key: "pm_key_t8j19kjsa9h1", status: "ACTIVE", createdAt: "2026-05-25" }
-  ]);
-  const [newKeyName, setNewKeyName] = useState("");
-  const [sandboxResponse, setSandboxResponse] = useState<any>(null);
-  const [sandboxLoading, setSandboxLoading] = useState(false);
-  const [sandboxKeyHeader, setSandboxKeyHeader] = useState("pm_key_s9a28jhs91h2");
-  const [sandboxText, setSandboxText] = useState("Obviously, this system is undeniably ready.");
+
 
   // Workspace Collaboration States
   const [teamMembers, setTeamMembers] = useState<any[]>([
@@ -459,95 +446,7 @@ export default function SupernovaWorkspace() {
     appendTerminalLog(`💾 SYSTEM REPORT DOWNLOADED`);
   };
 
-  // Developer Sandbox Api Gateway console trigger
-  const runSandboxRequest = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSandboxLoading(true);
-    setSandboxResponse(null);
 
-    appendTerminalLog(`⚡ SANDBOX COMPILER: Calling POST /gateway/analyze with key...`);
-
-    try {
-      const res = await fetch("http://localhost:3001/api/gateway/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": sandboxKeyHeader
-        },
-        body: JSON.stringify({ text: sandboxText })
-      });
-
-      const data = await res.json();
-      setSandboxResponse(data);
-      appendTerminalLog(`✅ SANDBOX TRANSACTION STATUS: ${res.status}`);
-    } catch (err) {
-      // Mock Sandbox Response fallback
-      setTimeout(() => {
-        setSandboxResponse({
-          statusCode: 200,
-          source: "Supernova API Sandbox Simulator",
-          client: "astraea@supernova.ai",
-          rateLimit: {
-            limit: 5,
-            remaining: 4,
-            resetTime: new Date(Date.now() + 50 * 1000).toISOString()
-          },
-          language: "English",
-          scores: { sentiment: 60, objectivity: 80, biasIndex: 20 },
-          tones: [{ name: "Sandbox Mock Mode", score: 90, color: "from-indigo-500 to-purple-500" }],
-          biases: []
-        });
-        appendTerminalLog(`⚠️ SANDBOX PORT FAIL: Returned simulated sandboxed mock response.`);
-      }, 500);
-    } finally {
-      setSandboxLoading(false);
-    }
-  };
-
-  // Add developer API Key
-  const handleGenerateKey = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newKeyName.trim()) return;
-
-    appendTerminalLog(`🔑 DATABASE TRANSACTION: Registering API client credentials`);
-
-    try {
-      const res = await fetch("http://localhost:3001/api/gateway/keys", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer mock_oauth_astraea_vance"
-        },
-        body: JSON.stringify({ name: newKeyName })
-      });
-      const data = await res.json();
-      
-      const newKeyObj = {
-        id: Math.random().toString(36).substr(2, 5),
-        name: newKeyName,
-        key: data.key || "pm_key_" + Math.random().toString(36).substr(2, 10),
-        status: "ACTIVE",
-        createdAt: new Date().toISOString().split("T")[0]
-      };
-      setDeveloperKeys([newKeyObj, ...developerKeys]);
-      setSandboxKeyHeader(newKeyObj.key);
-      appendTerminalLog(`✅ API CREDENTIALS CREATED AND DEPLOYED`);
-    } catch (e) {
-      const mockKey = "pm_key_" + Math.random().toString(36).substr(2, 12);
-      const newKeyObj = {
-        id: Math.random().toString(36).substr(2, 5),
-        name: newKeyName,
-        key: mockKey,
-        status: "ACTIVE",
-        createdAt: new Date().toISOString().split("T")[0]
-      };
-      setDeveloperKeys([newKeyObj, ...developerKeys]);
-      setSandboxKeyHeader(mockKey);
-      appendTerminalLog(`⚠️ LOCAL SYNC: API credential cached on Edge database.`);
-    }
-
-    setNewKeyName("");
-  };
 
   // Add Team Member Invite
   const handleInviteMember = (e: React.FormEvent) => {
@@ -586,19 +485,18 @@ export default function SupernovaWorkspace() {
     appendTerminalLog(`📏 BIAS SAFETY PATTERN PERSISTED: ${newRulePattern}`);
   };
 
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center font-mono text-[10px] text-slate-500 select-none">
-        <div className="relative">
-          <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 blur opacity-30 animate-pulse" />
-          <div className="relative bg-slate-950 border border-slate-900 rounded-xl px-6 py-4 flex items-center space-x-3.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping" />
-            <span>INITIALIZING SUPERNOVA ORBITAL CORE HANDSHAKE...</span>
-          </div>
-        </div>
+  if (!mounted) return (
+  <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center font-mono text-[10px] text-slate-500 select-none">
+    <div className="relative">
+      <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 blur opacity-30 animate-pulse" />
+      <div className="relative bg-slate-950 border border-slate-900 rounded-xl px-6 py-4 flex items-center space-x-3.5">
+        <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping" />
+        <span>INITIALIZING SUPERNOVA ORBITAL CORE HANDSHAKE...</span>
       </div>
-    );
-  }
+    </div>
+  </div>
+);
+
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col relative overflow-hidden supernova-grid font-sans">
@@ -637,7 +535,7 @@ export default function SupernovaWorkspace() {
         <nav className="hidden lg:flex items-center space-x-6 text-xs font-semibold text-slate-400">
           <a href="#workspace" className="hover:text-white transition">Core Assistant</a>
           <a href="#telemetry" className="hover:text-white transition">Telemetry Stream</a>
-          <a href="#developer" className="hover:text-white transition">Dev Sandbox</a>
+
           <a href="#team" className="hover:text-white transition">Team Control</a>
         </nav>
 
@@ -652,12 +550,6 @@ export default function SupernovaWorkspace() {
                   className={`px-3 py-1.5 rounded-lg transition-all ${activeRole === "USER" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200"}`}
                 >
                   USER
-                </button>
-                <button
-                  onClick={() => { setActiveRole("DEVELOPER"); appendTerminalLog(`⚡ DEPLOYED CONTEXT: Developer Sandbox`); }}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${activeRole === "DEVELOPER" ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200"}`}
-                >
-                  DEVELOPER
                 </button>
                 <button
                   onClick={() => { setActiveRole("ADMIN"); appendTerminalLog(`🛡️ DEPLOYED CONTEXT: Global Platform Admin`); }}
@@ -821,7 +713,7 @@ export default function SupernovaWorkspace() {
                   <div className="bg-pink-950/60 border border-pink-500/20 text-pink-400 p-3 rounded-xl w-11 h-11 flex items-center justify-center mb-5">
                     <Cpu className="h-5 w-5" />
                   </div>
-                  <h4 className="text-base font-bold text-white tracking-wide mb-2.5">API Developer Sandbox</h4>
+
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Generate secure access keys instantly. Review ready-to-run curl presets, test GET operations, and inspect live rate limit gauges.
                   </p>
@@ -919,7 +811,7 @@ export default function SupernovaWorkspace() {
                   <Card className="p-6 text-center space-y-4 border-slate-900/80">
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Acoustic Basic</span>
                     <h4 className="text-3xl font-extrabold text-white">$0 <span className="text-xs text-slate-500 font-semibold">/ month</span></h4>
-                    <p className="text-[10px] text-slate-400">Ideal for personal developers investigating microservice OCR and linguists scans.</p>
+
                     <ul className="text-[10px] text-slate-400 space-y-1.5 text-left py-2 border-t border-slate-900">
                       <li>✓ 50 Paragraph Analysis / Month</li>
                       <li>✓ Basic English parsing</li>
@@ -946,7 +838,7 @@ export default function SupernovaWorkspace() {
                       <li>✓ 500 Paragraphs Analysis / Month</li>
                       <li>✓ Multilingual (English, Tamil, Sinhala)</li>
                       <li>✓ Full Speech Synthesis & Recording</li>
-                      <li>✓ Developer Key Sandbox access</li>
+
                     </ul>
                     <button
                       onClick={handleSignUpClick}
@@ -1530,148 +1422,7 @@ export default function SupernovaWorkspace() {
 
               </div>
 
-              {/* WORKSPACE ROW 3: Developer Sandbox & Keys creator */}
-              <div id="developer" className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
-                {/* API Keys Roster & click-to-copy code blocks */}
-                <Card className="lg:col-span-7 p-6 space-y-6 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-[120px] h-[120px] rounded-full bg-indigo-500/5 blur-[25px] pointer-events-none" />
-                  
-                  <div className="border-b border-slate-900 pb-3 flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Key className="h-4.5 w-4.5 text-indigo-400" />
-                      <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-200">
-                        Developer API Keys Manager
-                      </h3>
-                    </div>
-                    <span className="text-[9px] font-mono text-slate-550 uppercase">REST credentials</span>
-                  </div>
 
-                  {/* Key Generator Form */}
-                  <form onSubmit={handleGenerateKey} className="flex gap-3">
-                    <input
-                      type="text"
-                      required
-                      value={newKeyName}
-                      onChange={(e) => setNewKeyName(e.target.value)}
-                      placeholder="e.g. Production Analytics Client key"
-                      className="flex-grow bg-slate-950 border border-slate-850 focus:border-indigo-500/80 rounded-xl px-4 py-2.5 text-xs text-slate-250 outline-none transition"
-                    />
-                    <Button type="submit" variant="primary" size="sm" className="shrink-0">
-                      <span>Generate Key</span>
-                    </Button>
-                  </form>
-
-                  {/* Active Keys Table */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse text-xs">
-                      <thead>
-                        <tr className="border-b border-slate-900 text-slate-500 text-[9px] font-bold uppercase tracking-widest">
-                          <th className="pb-3">Key Identifier</th>
-                          <th className="pb-3">Access Token</th>
-                          <th className="pb-3">Registered</th>
-                          <th className="pb-3 text-right">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-900/60 font-mono">
-                        {developerKeys.map((item) => (
-                          <tr key={item.id} className="hover:bg-slate-900/10">
-                            <td className="py-3 font-sans font-bold text-slate-350">{item.name}</td>
-                            <td className="py-3 text-slate-450">{item.key.slice(0, 10)}...</td>
-                            <td className="py-3 text-[10px] text-slate-550">{item.createdAt}</td>
-                            <td className="py-3 text-right">
-                              <button
-                                onClick={() => {
-                                  setSandboxKeyHeader(item.key);
-                                  appendTerminalLog(`📋 Copied API key reference to sandbox console`);
-                                }}
-                                className="text-indigo-400 font-bold hover:underline"
-                              >
-                                Test
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* Click to Copy Code Playground */}
-                  <div className="space-y-2">
-                    <span className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                      Developer curl Integration code snippet
-                    </span>
-
-                    <div className="relative bg-slate-950 border border-slate-900 rounded-xl p-4 font-mono text-[10px] text-indigo-300 space-y-1 overflow-x-auto select-all">
-                      <div>curl -X POST "http://localhost:3001/api/gateway/analyze" \</div>
-                      <div>  -H "Content-Type: application/json" \</div>
-                      <div>  -H "x-api-key: {sandboxKeyHeader}" \</div>
-                      <div>  -d '{`{ "text": "${sandboxText.slice(0, 40)}..." }`}'</div>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* Interactive API Sandbox testing console */}
-                <Card className="lg:col-span-5 p-6 space-y-4 flex flex-col justify-between relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-[120px] h-[120px] rounded-full bg-purple-500/5 blur-[25px] pointer-events-none" />
-                  
-                  <div className="border-b border-slate-900 pb-3 flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Sliders className="h-4.5 w-4.5 text-purple-400" />
-                      <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-200">
-                        Interactive API Gateway Sandbox
-                      </h3>
-                    </div>
-                    <Badge variant="neutral" className="text-[8px] font-mono select-none">Consumes Sandbox key</Badge>
-                  </div>
-
-                  {/* Sandbox console form */}
-                  <form onSubmit={runSandboxRequest} className="space-y-4 text-xs">
-                    <div className="space-y-1">
-                      <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Target Sandbox Key Header</span>
-                      <input
-                        type="text"
-                        value={sandboxKeyHeader}
-                        onChange={(e) => setSandboxKeyHeader(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-850 font-mono rounded-xl px-3 py-2 text-indigo-400 focus:border-purple-500 outline-none"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Analysis Payload text</span>
-                      <input
-                        type="text"
-                        value={sandboxText}
-                        onChange={(e) => setSandboxText(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-200 outline-none focus:border-purple-500"
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={sandboxLoading} variant="primary" size="sm" className="w-full">
-                      {sandboxLoading ? (
-                        <RefreshCw className="h-3.5 w-3.5 animate-spin mr-1.5" />
-                      ) : (
-                        <Play className="h-3.5 w-3.5 mr-1.5" />
-                      )}
-                      <span>Execute Sandbox Request</span>
-                    </Button>
-                  </form>
-
-                  {/* Sandbox console HTTP Response preview */}
-                  <div className="flex-grow mt-4 border border-slate-900 rounded-xl bg-slate-950 p-4 font-mono text-[9px] text-slate-350 space-y-1 h-[140px] overflow-y-auto">
-                    {sandboxResponse ? (
-                      <pre className="whitespace-pre-wrap leading-tight">{JSON.stringify(sandboxResponse, null, 2)}</pre>
-                    ) : (
-                      <span className="text-slate-650 flex items-center justify-center h-full">Trigger Sandbox execution to display raw HTTP JSON response payload...</span>
-                    )}
-                  </div>
-
-                  <div className="text-[8px] text-slate-550 leading-none text-center select-none pt-1">
-                    Rate limits reset automatically every 60 seconds (max 5 requests / min).
-                  </div>
-                </Card>
-
-              </div>
 
               {/* WORKSPACE ROW 4: Team Workspace Collaboration members Roster */}
               <div id="team" className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -1707,7 +1458,7 @@ export default function SupernovaWorkspace() {
                     >
                       <option value="USER">USER</option>
                       <option value="ADMIN">ADMIN</option>
-                      <option value="DEVELOPER">DEVELOPER</option>
+
                     </select>
                     <Button type="submit" variant="primary" size="sm" className="shrink-0">
                       <span>Invite Seat</span>
@@ -1837,7 +1588,7 @@ export default function SupernovaWorkspace() {
           <div className="flex space-x-4">
             <a href="#workspace" className="hover:text-slate-400">Assistant Workbench</a>
             <a href="#telemetry" className="hover:text-slate-400">SSE Monitor</a>
-            <a href="#developer" className="hover:text-slate-400">Sandbox API</a>
+
           </div>
         </div>
       </footer>
