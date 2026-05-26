@@ -1,3 +1,5 @@
+"use client";
+
 import LandingLayout from "../components/LandingLayout";
 import LandingRedirect from "../components/LandingRedirect";
 import Navbar from "../components/Navbar";
