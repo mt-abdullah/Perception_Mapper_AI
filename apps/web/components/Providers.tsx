@@ -1,16 +1,12 @@
-// apps/web/components/Providers.tsx
 "use client";
 
 import { ClerkProvider } from "../app/clerk-compat";
-import { NextIntlClientProvider } from "next-intl";
 
 interface ProvidersProps {
   children: React.ReactNode;
-  messages: any;
-  locale: string;
 }
 
-export default function Providers({ children, messages, locale }: ProvidersProps) {
+export default function Providers({ children }: ProvidersProps) {
   const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
     !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder")
     ? process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
@@ -18,9 +14,7 @@ export default function Providers({ children, messages, locale }: ProvidersProps
 
   return (
     <ClerkProvider publishableKey={clerkKey}>
-      <NextIntlClientProvider messages={messages} locale={locale}>
-        {children}
-      </NextIntlClientProvider>
+      {children}
     </ClerkProvider>
   );
 }

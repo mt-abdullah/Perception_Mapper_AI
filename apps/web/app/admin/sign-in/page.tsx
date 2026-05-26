@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../../../../hooks/useAuth";
+import React, { useState } from "react";
+import { useAuth } from "../../../hooks/useAuth";
 import { ShieldAlert, RefreshCw, ArrowRight } from "lucide-react";
-import Preloader from "../../../../components/Preloader";
+import Preloader from "../../../components/Preloader";
 
 export default function AdminSignInPage() {
   const { isSignedIn, signInAdmin, mounted } = useAuth();
@@ -16,7 +16,6 @@ export default function AdminSignInPage() {
     e.preventDefault();
     setError(null);
     if (!email || !password) return;
-
     setLoading(true);
 
     setTimeout(() => {
@@ -88,7 +87,7 @@ export default function AdminSignInPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-slate-950/80 border border-slate-850 focus:border-purple-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
+              className="w-full bg-slate-955/80 border border-slate-850 focus:border-purple-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
             />
           </div>
 
@@ -117,4 +116,5 @@ export default function AdminSignInPage() {
     </div>
   );
 }
+
 export const dynamic = "force-dynamic";

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState, createContext, useCallback } from "react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { useRouter, usePathname } from "next/navigation";
 import { ShieldAlert, Users, Sliders, Cpu, ArrowLeft, LogOut, Lock } from "lucide-react";
-import Preloader from "../../../components/Preloader";
+import Preloader from "../../components/Preloader";
 
 export const AdminTabContext = createContext<{
   activeTab: string;
@@ -29,26 +29,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const isAdminSession = localStorage.getItem("pm_mock_admin_session") === "true";
 
       if (!signedIn || storedRole !== "ADMIN" || !isAdminSession) {
-        const segments = pathname.split("/");
-        const locale = segments[1] || "en";
-        router.replace(`/${locale}/admin/sign-in`);
+        router.replace("/admin/sign-in");
       }
     }
-  }, [mounted, pathname, isLoginPage, router]);
+  }, [mounted, isLoginPage, router]);
 
   const handleSignOut = useCallback(() => {
     signOut();
-    const segments = pathname.split("/");
-    const locale = segments[1] || "en";
-    router.push(`/${locale}/admin/sign-in`);
-  }, [signOut, pathname, router]);
+    router.push("/admin/sign-in");
+  }, [signOut, router]);
 
   if (!mounted) return <Preloader message="AUTHORIZING SYSTEM SECURITY..." />;
   if (isLoginPage) return <>{children}</>;
 
   if (isSignedIn && user?.role !== "ADMIN") {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-8 text-center">
+      <div className="min-h-screen bg-slate-955 flex flex-col justify-center items-center p-8 text-center font-sans">
         <div className="p-8 rounded-2xl border border-slate-900 bg-slate-950/60 backdrop-blur-2xl max-w-md w-full space-y-6">
           <Lock className="h-10 w-10 text-rose-500 mx-auto animate-bounce" />
           <h2 className="text-lg font-bold text-white">403: Forbidden</h2>
@@ -70,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AdminTabContext.Provider value={{ activeTab, setActiveTab }}>
       <div className="min-h-screen bg-slate-950 text-slate-100 flex overflow-hidden font-sans">
-        <aside className="w-64 border-r border-slate-900 bg-slate-950 flex flex-col shrink-0 relative overflow-hidden">
+        <aside className="w-64 border-r border-slate-900 bg-slate-955 flex flex-col shrink-0 relative overflow-hidden">
           <div className="p-6 border-b border-slate-900/60 flex items-center space-x-3.5 z-10 select-none">
             <ShieldAlert className="h-5 w-5 text-purple-400" />
             <div>
@@ -108,7 +104,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
           <header className="h-16 border-b border-slate-900/60 px-6 sm:px-8 flex items-center justify-between z-10 shrink-0 select-none">
-            <span className="text-[9px] font-semibold text-slate-500 uppercase tracking-widest uppercase">Admin Panel / {activeTab}</span>
+            <span className="text-[9px] font-semibold text-slate-500 uppercase tracking-widest">Admin Panel / {activeTab}</span>
             <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 text-[9px] font-bold text-purple-400 bg-purple-950/40 border border-purple-500/20 rounded-md uppercase tracking-wider">
               <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
               <span>Secure Shell Active</span>
@@ -120,4 +116,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </AdminTabContext.Provider>
   );
 }
+
 export const dynamic = "force-dynamic";

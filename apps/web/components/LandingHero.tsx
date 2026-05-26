@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { Badge } from "@perception-mapper/ui";
 import { motion } from "framer-motion";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface LandingHeroProps {
   onSignUp?: () => void;
@@ -15,7 +15,6 @@ export default function LandingHero({ onSignUp, loadingAction = null }: LandingH
   const [typedText, setTypedText] = useState("");
   const fullText = "Unveil implicit cognitive biases, rephrase subjective phrases, and audit transaction logs securely.";
   const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
     let index = 0;
@@ -33,8 +32,7 @@ export default function LandingHero({ onSignUp, loadingAction = null }: LandingH
     if (onSignUp) {
       onSignUp();
     } else {
-      const locale = pathname.split("/")[1] || "en";
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     }
   };
 

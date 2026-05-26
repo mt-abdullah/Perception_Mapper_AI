@@ -3,7 +3,7 @@
 import React from "react";
 import { Card } from "@perception-mapper/ui";
 import { motion } from "framer-motion";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface LandingPricingProps {
   onSignUp?: () => void;
@@ -11,7 +11,6 @@ interface LandingPricingProps {
 
 export default function LandingPricing({ onSignUp }: LandingPricingProps) {
   const router = useRouter();
-  const pathname = usePathname();
 
   const plans = [
     { title: "Acoustic Basic", price: "$0", desc: "For independent writers scanning simple drafts.", features: ["✓ 50 Paragraph Analysis / Month", "✓ Basic English parsing", "✓ OCR presets scan validation"], border: "border-slate-900 bg-slate-950/40", pro: false },
@@ -23,8 +22,7 @@ export default function LandingPricing({ onSignUp }: LandingPricingProps) {
     if (onSignUp) {
       onSignUp();
     } else {
-      const locale = pathname.split("/")[1] || "en";
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     }
   };
 

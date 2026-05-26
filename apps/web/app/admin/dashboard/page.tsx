@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AdminTabContext } from "../layout";
-import { useAuth } from "../../../../hooks/useAuth";
-import { UserProfile, PolicySettings, GlobalStats, AuditLog } from "../../../../types";
-import { fetchUsers, fetchGlobalAnalytics, fetchPolicies, updatePolicies, updateUserProfile, deleteUserProfile, fetchAuditLogs } from "../../../../lib/api";
-import AdminStats from "../../../../components/admin/AdminStats";
-import AdminUsersList from "../../../../components/admin/AdminUsersList";
-import AdminPoliciesForm from "../../../../components/admin/AdminPoliciesForm";
-import AdminAuditLogsList from "../../../../components/admin/AdminAuditLogsList";
-import ConfirmModal from "../../../../components/admin/ConfirmModal";
-import Preloader from "../../../../components/Preloader";
+import { useAuth } from "../../../hooks/useAuth";
+import { UserProfile, PolicySettings, GlobalStats, AuditLog } from "../../../types";
+import { fetchUsers, fetchGlobalAnalytics, fetchPolicies, updatePolicies, updateUserProfile, deleteUserProfile, fetchAuditLogs } from "../../../lib/api";
+import AdminStats from "../../../components/admin/AdminStats";
+import AdminUsersList from "../../../components/admin/AdminUsersList";
+import AdminPoliciesForm from "../../../components/admin/AdminPoliciesForm";
+import AdminAuditLogsList from "../../../components/admin/AdminAuditLogsList";
+import ConfirmModal from "../../../components/admin/ConfirmModal";
+import Preloader from "../../../components/Preloader";
 
 export default function AdminDashboard() {
   const { activeTab } = useContext(AdminTabContext);
@@ -97,4 +97,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
 export const dynamic = "force-dynamic";

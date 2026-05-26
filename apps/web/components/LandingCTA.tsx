@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface LandingCTAProps {
   onSignUp?: () => void;
@@ -11,14 +11,12 @@ interface LandingCTAProps {
 
 export default function LandingCTA({ onSignUp }: LandingCTAProps) {
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleAction = () => {
     if (onSignUp) {
       onSignUp();
     } else {
-      const locale = pathname.split("/")[1] || "en";
-      router.push(`/${locale}/sign-in`);
+      router.push("/sign-in");
     }
   };
 

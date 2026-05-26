@@ -10,22 +10,18 @@ export default function Navbar() {
   const pathname = usePathname();
   const { isSignedIn, user, signOut, mounted } = useAuth();
 
-  // Extract locale prefix
-  const segments = pathname.split("/");
-  const locale = segments[1] || "en";
-
   const homeHref = isSignedIn
-    ? (user?.role === "ADMIN" ? `/${locale}/admin/dashboard` : `/${locale}/dashboard`)
-    : `/${locale}`;
+    ? (user?.role === "ADMIN" ? "/admin/dashboard" : "/dashboard")
+    : "/";
 
   const navItems = user?.role === "ADMIN"
-    ? [{ name: "Admin Panel", href: `/${locale}/admin/dashboard` }]
+    ? [{ name: "Admin Panel", href: "/admin/dashboard" }]
     : [
-        ...(isSignedIn ? [{ name: "Workspace", href: `/${locale}/dashboard` }] : []),
+        ...(isSignedIn ? [{ name: "Workspace", href: "/dashboard" }] : []),
       ];
 
   if (!mounted) {
-    return <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-900/60 h-16" />;
+    return <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-955/80 backdrop-blur-xl border-b border-slate-900/60 h-16" />;
   }
 
   return (
@@ -63,12 +59,12 @@ export default function Navbar() {
               </>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link href={`/${locale}/sign-in`}>
+                <Link href="/sign-in">
                   <button className="px-3.5 py-1.5 text-xs font-bold text-slate-400 hover:text-white transition">
                     Sign In
                   </button>
                 </Link>
-                <Link href={`/${locale}/sign-up`}>
+                <Link href="/sign-up">
                   <button className="px-4 py-2 text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/20 rounded-xl transition duration-300 shadow-md">
                     Sign Up
                   </button>
@@ -94,13 +90,13 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-slate-950 border-t border-slate-900/60 px-4 pb-4 pt-2 space-y-2 select-none">
+        <div className="md:hidden bg-slate-955 border-t border-slate-900/60 px-4 pb-4 pt-2 space-y-2 select-none">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-350 hover:text-white hover:bg-slate-900/50 transition"
+              className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-355 hover:text-white hover:bg-slate-900/50 transition"
             >
               {item.name}
             </Link>

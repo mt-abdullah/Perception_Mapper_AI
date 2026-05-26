@@ -1,17 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getMockSession, setMockSession, clearMockSession, validateAdminCredentials, MockUser } from "../lib/auth";
 
 export const useAuth = () => {
   const router = useRouter();
-  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState<MockUser | null>(null);
-
-  // Extract locale prefix
-  const segments = pathname.split("/");
-  const locale = segments[1] || "en";
 
   const syncSession = useCallback(() => {
     const session = getMockSession();
@@ -27,9 +22,9 @@ export const useAuth = () => {
   const signInUser = useCallback((email: string, name = "Standard User") => {
     setMockSession(email, "USER", name);
     syncSession();
-    router.replace(`/${locale}/dashboard`);
+    router.replace("/dashboard");
     setTimeout(() => window.location.reload(), 150);
-  }, [router, locale, syncSession]);
+  }, [router, syncSession]);
 
   const signInAdmin = useCallback((email: string, pass: string): { success: boolean; error?: string } => {
     const check = validateAdminCredentials(email, pass);
@@ -38,10 +33,10 @@ export const useAuth = () => {
     }
     setMockSession(email, "ADMIN", check.name);
     syncSession();
-    router.replace(`/${locale}/admin/dashboard`);
+    router.replace("/admin/dashboard");
     setTimeout(() => window.location.reload(), 150);
     return { success: true };
-  }, [router, locale, syncSession]);
+  }, [router, syncSession]);
 
   const setRole = useCallback((newRole: "USER" | "ADMIN") => {
     if (!user) return;
@@ -53,9 +48,9 @@ export const useAuth = () => {
     clearMockSession();
     setIsSignedIn(false);
     setUser(null);
-    router.replace(`/${locale}`);
+    router.replace("/");
     setTimeout(() => window.location.reload(), 150);
-  }, [router, locale]);
+  }, [router]);
 
   return {
     isSignedIn: mounted ? isSignedIn : false,
