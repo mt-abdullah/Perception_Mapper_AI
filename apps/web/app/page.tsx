@@ -1,34 +1,15 @@
-import LandingLayout from "../components/LandingLayout";
+"use client";
+
+import React from "react";
 import LandingRedirect from "../components/LandingRedirect";
-import Navbar from "../components/Navbar";
-import LandingMain from "../components/LandingMain";
-import LandingHero from "../components/LandingHero";
-import LandingStats from "../components/LandingStats";
-import LandingFeatures from "../components/LandingFeatures";
-import LandingHowItWorks from "../components/LandingHowItWorks";
-import LandingShowcase from "../components/LandingShowcase";
-import LandingTestimonials from "../components/LandingTestimonials";
-import LandingPricing from "../components/LandingPricing";
-import LandingCTA from "../components/LandingCTA";
-import Footer from "../components/Footer";
+import Preloader from "../components/Preloader";
 
 export default function PerceptionLanding() {
   return (
-    <LandingLayout>
+    <div className="min-h-screen bg-slate-955 flex items-center justify-center">
       <LandingRedirect />
-      <Navbar />
-      <LandingMain>
-        <LandingHero />
-        <LandingStats />
-        <LandingFeatures />
-        <LandingHowItWorks />
-        <LandingShowcase />
-        <LandingTestimonials />
-        <LandingPricing />
-        <LandingCTA />
-      </LandingMain>
-      <Footer />
-    </LandingLayout>
+      <Preloader message="INITIALIZING WORKSPACE ACCESS..." />
+    </div>
   );
 }
 

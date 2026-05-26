@@ -9,11 +9,15 @@ export default function LandingRedirect() {
   const { isSignedIn, user, mounted } = useAuth();
 
   useEffect(() => {
-    if (mounted && isSignedIn && user) {
-      if (user.role === "ADMIN") {
-        router.replace("/admin/dashboard");
+    if (mounted) {
+      if (isSignedIn && user) {
+        if (user.role === "ADMIN") {
+          router.replace("/admin/dashboard");
+        } else {
+          router.replace("/dashboard");
+        }
       } else {
-        router.replace("/dashboard");
+        router.replace("/sign-in");
       }
     }
   }, [mounted, isSignedIn, user, router]);
