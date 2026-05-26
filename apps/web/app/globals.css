@@ -15,7 +15,7 @@ body {
 }
 
 /* Futuristic ambient space grids */
-.supernova-grid {
+.perception-grid {
   background-size: 40px 40px;
   background-image: 
     linear-gradient(to right, rgba(99, 102, 241, 0.03) 1px, transparent 1px),

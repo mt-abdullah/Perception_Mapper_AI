@@ -43,7 +43,7 @@ export default function LandingHero({ onSignUp, loadingAction = null }: LandingH
       <div className="absolute top-[10%] left-[20%] w-[350px] h-[350px] rounded-full bg-indigo-500/5 blur-[100px] pointer-events-none animate-pulse" />
       
       <Badge variant="info" className="px-3.5 py-1 text-[10px] tracking-widest font-extrabold shadow-sm bg-indigo-950/60 border border-indigo-500/20 text-indigo-400">
-        ✨ SUPERNOVA AI PLATFORM v1.0 ENTERPRISE
+        ✨ PERCEPTION AI PLATFORM v1.0 ENTERPRISE
       </Badge>
       
       <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.1] text-white">

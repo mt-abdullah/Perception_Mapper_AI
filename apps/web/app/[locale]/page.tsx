@@ -12,7 +12,7 @@ import LandingPricing from "../../components/LandingPricing";
 import LandingCTA from "../../components/LandingCTA";
 import Footer from "../../components/Footer";
 
-export default function SupernovaLanding() {
+export default function PerceptionLanding() {
   return (
     <LandingLayout>
       <LandingRedirect />

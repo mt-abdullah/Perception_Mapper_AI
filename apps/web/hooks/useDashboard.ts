@@ -54,7 +54,7 @@ export const useDashboard = () => {
 
       setAnalysisResult({
         success: true,
-        source: "Supernova Edge Heuristics",
+        source: "Perception Edge Heuristics",
         language: "English",
         scores: { sentiment: score > 50 ? 42 : 78, objectivity: Math.max(0, 100 - score), biasIndex: score },
         tones: [

@@ -50,7 +50,7 @@ export default function SignUpPage() {
       <div className="relative z-10 w-full max-w-md bg-slate-900/40 border border-slate-800/80 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
         <div className="space-y-2 text-center mb-6">
-          <h2 className="text-lg font-bold tracking-wide text-white">Supernova Sign Up</h2>
+          <h2 className="text-lg font-bold tracking-wide text-white">Perception Sign Up</h2>
           <p className="text-xs text-slate-400 leading-normal max-w-xs mx-auto">
             Establish modular node keys to register your secure profile.
           </p>

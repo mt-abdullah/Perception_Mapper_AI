@@ -56,7 +56,7 @@ export default function DashboardPage() {
     }
   }, [isSignedIn]);
 
-  // Re‑use the UI from the previous workspace page (SupernovaWorkspace)
+  // Re‑use the UI from the previous workspace page (PerceptionWorkspace)
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -65,7 +65,7 @@ export default function DashboardPage() {
   const [activeRole, setActiveRole] = useState<"USER" | "ADMIN" | "DEVELOPER">("USER");
   const [userProfile, setUserProfile] = useState({
     name: "Astraea Vance",
-    email: "astraea@supernova.ai",
+    email: "astraea@perception.ai",
     avatar: "https://ui-avatars.com/api/?name=Astraea+Vance&background=4f46e5&color=fff",
     tier: "Enterprise Tier",
   });
@@ -79,7 +79,7 @@ export default function DashboardPage() {
     if (mounted && user) {
       setUserProfile({
         name: user.name || "Astraea Vance",
-        email: user.email || "astraea@supernova.ai",
+        email: user.email || "astraea@perception.ai",
         avatar: user.avatarUrl || "https://ui-avatars.com/api/?name=Astraea+Vance",
         tier: user.role === "ADMIN" ? "Platform Admin" : user.role === "DEVELOPER" ? "System Developer" : "Standard User",
       });
@@ -89,11 +89,11 @@ export default function DashboardPage() {
   // The rest of the UI (omitted for brevity) can be copied from the original workspace
   // For this implementation we simply render a placeholder indicating the dashboard is loaded.
   return (
-    <section className="min-h-screen bg-slate-950 text-white p-8">
+    <section className="min-h-screen bg-slate-955 text-white p-8 font-sans">
       <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
       <p className="mb-2">Welcome, {userProfile.name}!</p>
       <p className="mb-4">Your role: {userProfile.tier}</p>
-      {/* Insert the full SupernovaWorkspace UI here if needed */}
+      {/* Insert the full PerceptionWorkspace UI here if needed */}
     </section>
   );
 }

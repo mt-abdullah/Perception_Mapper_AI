@@ -59,7 +59,7 @@ export default function SignInPage() {
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
 
         <div className="space-y-2 text-center mb-6">
-          <h2 className="text-lg font-bold tracking-wide text-white">Supernova Sign In</h2>
+          <h2 className="text-lg font-bold tracking-wide text-white">Perception Sign In</h2>
           <p className="text-xs text-slate-400 leading-normal max-w-xs mx-auto">
             Provide workspace credentials to deploy core node handshakes.
           </p>

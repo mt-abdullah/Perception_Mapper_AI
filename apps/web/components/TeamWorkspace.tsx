@@ -38,7 +38,7 @@ export default function TeamWorkspace({ teamMembers, onInvite, onRevoke }: TeamW
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="colleague@supernova.ai"
+          placeholder="colleague@perception.ai"
           className="flex-grow bg-slate-950 border border-slate-850 focus:border-indigo-500/80 rounded-xl px-4 py-2 text-xs text-slate-250 outline-none"
         />
         <select

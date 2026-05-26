@@ -6,7 +6,7 @@ import { Card } from "@perception-mapper/ui";
 
 export default function LandingTestimonials() {
   const reviews = [
-    { text: "“Perception Mapper completely revolutionized how we monitor language objectivity inside our global customer reports.”", name: "Astraea Vance", role: "VP of Product", company: "Supernova AI", avatar: "https://ui-avatars.com/api/?name=Astraea+Vance&background=4f46e5&color=fff" },
+    { text: "“Perception Mapper completely revolutionized how we monitor language objectivity inside our global customer reports.”", name: "Astraea Vance", role: "VP of Product", company: "Perception AI", avatar: "https://ui-avatars.com/api/?name=Astraea+Vance&background=4f46e5&color=fff" },
     { text: "“The OCR manifest scans accuracy speed saved our border verification team hundreds of operational hours monthly.”", name: "Gabriel Thorne", role: "Lead Systems Auditor", company: "Global Logistics", avatar: "https://ui-avatars.com/api/?name=Gabriel+Thorne&background=3b0764&color=fff" },
     { text: "“The ability to persist custom rules is extremely powerful. We easily set up safety compliance criteria in minutes.”", name: "Celeste Sterling", role: "Information Security Director", company: "Sterling Corp", avatar: "https://ui-avatars.com/api/?name=Celeste+Sterling&background=0284c7&color=fff" }
   ];

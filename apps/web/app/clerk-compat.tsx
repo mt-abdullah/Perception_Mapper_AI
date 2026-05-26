@@ -157,7 +157,7 @@ export const SignIn = (props: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div className="w-full max-w-md bg-slate-900/40 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-6 shadow-xl text-left">
       <div className="space-y-1.5 text-center">
-        <h3 className="text-lg font-bold text-white">Sign in to Supernova Workspace</h3>
+        <h3 className="text-lg font-bold text-white">Sign in to Perception Workspace</h3>
         <p className="text-xs text-slate-400">Enter your credentials to establish a secure handshake</p>
       </div>
       <form onSubmit={handleSignIn} className="space-y-4">
@@ -235,7 +235,7 @@ export const SignUp = (props: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div className="w-full max-w-md bg-slate-900/40 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-6 shadow-xl text-left">
       <div className="space-y-1.5 text-center">
-        <h3 className="text-lg font-bold text-white">Create Supernova Node Account</h3>
+        <h3 className="text-lg font-bold text-white">Create Perception Node Account</h3>
         <p className="text-xs text-slate-400">Initialize standard enterprise workspace credentials</p>
       </div>
       <form onSubmit={handleSignUp} className="space-y-4">
@@ -257,7 +257,7 @@ export const SignUp = (props: React.HTMLAttributes<HTMLDivElement>) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:border-indigo-500 focus:outline-none transition"
-            placeholder="astraea@supernova.ai"
+            placeholder="astraea@perception.ai"
             required
           />
         </div>

@@ -4,7 +4,7 @@ interface PreloaderProps {
   message?: string;
 }
 
-export default function Preloader({ message = "INITIALIZING SUPERNOVA ORBITAL CORE HANDSHAKE..." }: PreloaderProps) {
+export default function Preloader({ message = "INITIALIZING PERCEPTION COGNITIVE CORE HANDSHAKE..." }: PreloaderProps) {
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center font-mono text-[10px] text-slate-500 select-none">
       <div className="relative">

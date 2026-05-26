@@ -32,8 +32,8 @@ export const IMAGE_PRESETS = [
 ];
 
 export const INITIAL_TEAM_MEMBERS: TeamMember[] = [
-  { id: "1", name: "Gabriel Thorne", email: "g.thorne@supernova.ai", role: "ADMIN", status: "ACTIVE" },
-  { id: "2", name: "Celeste Sterling", email: "c.sterling@supernova.ai", role: "USER", status: "ACTIVE" }
+  { id: "1", name: "Gabriel Thorne", email: "g.thorne@perception.ai", role: "ADMIN", status: "ACTIVE" },
+  { id: "2", name: "Celeste Sterling", email: "c.sterling@perception.ai", role: "USER", status: "ACTIVE" }
 ];
 
 export const INITIAL_CUSTOM_RULES: CustomRule[] = [
