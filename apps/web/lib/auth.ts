@@ -18,13 +18,28 @@ export const getMockSession = (): { isSignedIn: boolean; user: MockUser | null }
   if (typeof window === "undefined") return { isSignedIn: false, user: null };
 
   const isSignedIn = localStorage.getItem("pm_mock_signed_in") === "true";
-  if (!isSignedIn) return { isSignedIn: false, user: null };
+  if (!isSignedIn) {
+    if (document.cookie.includes("pm_mock_signed_in=true")) {
+      document.cookie = "pm_mock_signed_in=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "pm_mock_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+    return { isSignedIn: false, user: null };
+  }
+
+  // Self-heal cookie state if out-of-sync
+  if (!document.cookie.includes("pm_mock_signed_in=true")) {
+    document.cookie = "pm_mock_signed_in=true; path=/";
+  }
 
   const email = localStorage.getItem("pm_mock_user_email") || "user@example.com";
   const role = (localStorage.getItem("pm_mock_user_rbac_role") || "USER") as "USER" | "ADMIN";
   const name = localStorage.getItem("pm_mock_user_name") || "Standard User";
   const id = localStorage.getItem("pm_mock_user_id") || "mock-id";
   const tier = (localStorage.getItem("pm_mock_user_tier") || "FREE") as SubscriptionTier;
+
+  if (role === "ADMIN" && !document.cookie.includes("pm_mock_admin_session=true")) {
+    document.cookie = "pm_mock_admin_session=true; path=/";
+  }
 
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b0764&color=c084fc`;
 
