@@ -7,7 +7,6 @@ import { useDashboard } from "../../hooks/useDashboard";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Preloader from "../../components/Preloader";
-import TierSelector from "../../components/dashboard/TierSelector";
 import BasicDashboard from "../../components/dashboard/BasicDashboard";
 import ProDashboard from "../../components/dashboard/ProDashboard";
 import EnterpriseDashboard from "../../components/dashboard/EnterpriseDashboard";
@@ -56,8 +55,6 @@ export default function UserDashboard() {
           </div>
           <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-400">Node cluster: 200 OK</span>
         </div>
-
-        <TierSelector currentTier={user.tier} onChangeTier={setTier} />
 
         {renderDashboardContent()}
       </main>

@@ -6,6 +6,7 @@ import CognitiveAnalytics from "../CognitiveAnalytics";
 import { Card } from "@perception-mapper/ui";
 import { Lock, Cpu } from "lucide-react";
 import { SubscriptionTier } from "../../lib/auth";
+import TierSelector from "./TierSelector";
 
 interface DashboardProps {
   db: any;
@@ -15,6 +16,8 @@ interface DashboardProps {
 export default function BasicDashboard({ db, onUpgrade }: DashboardProps) {
   return (
     <div className="space-y-8 animate-fadeIn duration-500">
+      <TierSelector currentTier="FREE" onChangeTier={onUpgrade} />
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <Card className="lg:col-span-7 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
           <MultimodalScanner
