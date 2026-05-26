@@ -4,7 +4,6 @@ import React from "react";
 import MultimodalScanner from "../MultimodalScanner";
 import CognitiveAnalytics from "../CognitiveAnalytics";
 import LiveTelemetry from "../LiveTelemetry";
-import TeamWorkspace from "../TeamWorkspace";
 import CustomBiasRules from "../CustomBiasRules";
 import { Card } from "@perception-mapper/ui";
 import { Lock, Terminal } from "lucide-react";
@@ -74,23 +73,8 @@ export default function ProDashboard({ db, onUpgrade }: DashboardProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <Card className="lg:col-span-7 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
-          <TeamWorkspace
-            teamMembers={db.teamMembers}
-            onInvite={(email, role) => {
-              const newMember = { id: Math.random().toString(36).substr(2, 5), name: email.split("@")[0], email, role, status: "ACTIVE" };
-              db.setTeamMembers([...db.teamMembers, newMember]);
-              db.appendTerminalLog(`👥 Seat allocated for: ${email}`);
-            }}
-            onRevoke={(id, email) => {
-              db.setTeamMembers(db.teamMembers.filter((m) => m.id !== id));
-              db.appendTerminalLog(`👥 Seat revoked for: ${email}`);
-            }}
-          />
-        </Card>
-
-        <Card className="lg:col-span-5 p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
+      <div className="grid grid-cols-1 gap-8">
+        <Card className="p-6 border-slate-900 bg-slate-950/40 backdrop-blur-md">
           <CustomBiasRules
             customRules={db.customRules}
             onCreateRule={(pattern, rephrase) => {
