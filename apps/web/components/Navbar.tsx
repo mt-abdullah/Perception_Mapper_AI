@@ -31,6 +31,12 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-400">
+            <Link
+              href="/pricing"
+              className={`transition ${pathname === "/pricing" ? "text-indigo-400" : "hover:text-white"}`}
+            >
+              Pricing
+            </Link>
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -89,6 +95,13 @@ export default function Navbar() {
 
       {mobileOpen && (
         <div className="md:hidden bg-slate-955 border-t border-slate-900/60 px-4 pb-4 pt-2 space-y-2 select-none">
+          <Link
+            href="/pricing"
+            onClick={() => setMobileOpen(false)}
+            className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-355 hover:text-white hover:bg-slate-900/50 transition"
+          >
+            Pricing
+          </Link>
           {navItems.map((item) => (
             <Link
               key={item.name}

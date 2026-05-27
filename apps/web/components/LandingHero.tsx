@@ -72,10 +72,10 @@ export default function LandingHero({ onSignUp, loadingAction = null }: LandingH
         </motion.button>
         
         <a
-          href="#features"
-          className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-800 hover:border-slate-700 rounded-xl px-7 py-3.5 text-xs font-bold uppercase tracking-wider transition duration-300 shadow-md"
+          href="#pricing"
+          className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-800 hover:border-slate-700 rounded-xl px-7 py-3.5 text-xs font-bold uppercase tracking-wider transition duration-300 shadow-md animate-fadeIn"
         >
-          <span>Explore Capabilities</span>
+          <span>View Pricing Tiers</span>
         </a>
       </div>
     </div>
