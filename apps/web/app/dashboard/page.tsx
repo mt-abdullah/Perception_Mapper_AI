@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
 import { useDashboard } from "../../hooks/useDashboard";
@@ -10,11 +9,14 @@ import Preloader from "../../components/Preloader";
 import BasicDashboard from "../../components/dashboard/BasicDashboard";
 import ProDashboard from "../../components/dashboard/ProDashboard";
 import EnterpriseDashboard from "../../components/dashboard/EnterpriseDashboard";
+import StripeCheckoutModal from "../../components/pricing/StripeCheckoutModal";
+import { SubscriptionTier } from "../../lib/auth";
 
 export default function UserDashboard() {
   const router = useRouter();
   const { isSignedIn, user, mounted, setTier } = useAuth();
   const db = useDashboard();
+  const [checkoutPlan, setCheckoutPlan] = useState<{ id: 'free' | 'basic' | 'pro'; price: number; name: string } | null>(null);
 
   useEffect(() => {
     if (mounted && !isSignedIn) {
@@ -26,16 +28,26 @@ export default function UserDashboard() {
     return <Preloader message="AUTHORIZING USER WORKSPACE..." />;
   }
 
+  const handleUpgradeRequest = (targetTier: SubscriptionTier) => {
+    if (targetTier === "FREE") {
+      setTier("FREE");
+      return;
+    }
+    const name = targetTier === "BASIC" ? "Basic Plan" : "Pro Plan";
+    const price = targetTier === "BASIC" ? 19 : 59;
+    setCheckoutPlan({ id: targetTier.toLowerCase() as any, price, name });
+  };
+
   const renderDashboardContent = () => {
     switch (user.tier) {
       case "FREE":
-        return <BasicDashboard db={db} onUpgrade={setTier} />;
+        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} />;
       case "BASIC":
-        return <ProDashboard db={db} onUpgrade={setTier} />;
+        return <ProDashboard db={db} onUpgrade={handleUpgradeRequest} />;
       case "PRO":
         return <EnterpriseDashboard db={db} />;
       default:
-        return <BasicDashboard db={db} onUpgrade={setTier} />;
+        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} />;
     }
   };
 
@@ -60,6 +72,21 @@ export default function UserDashboard() {
       </main>
 
       <Footer />
+
+      {/* Stripe Billing Modal */}
+      {checkoutPlan && (
+        <StripeCheckoutModal
+          isOpen={checkoutPlan !== null}
+          onClose={() => setCheckoutPlan(null)}
+          planId={checkoutPlan.id}
+          planName={checkoutPlan.name}
+          planPrice={checkoutPlan.price}
+          userEmail={user.email}
+          onSuccess={(tier) => {
+            setTier(tier);
+          }}
+        />
+      )}
     </div>
   );
 }

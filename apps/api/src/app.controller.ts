@@ -137,6 +137,13 @@ export class AppController {
       case "customer.subscription.updated":
       case "customer.subscription.created":
         console.log("Upgraded user plan tier configurations in database.");
+        if (body.data?.email && body.data?.tier) {
+          const matchedUser = (await this.prisma.getAllUsers()).find(u => u.email === body.data.email);
+          if (matchedUser) {
+            await this.prisma.updateUserTier(matchedUser.id, body.data.tier);
+            console.log(`[Stripe Webhook Success] Synced billing database profile: email=${body.data.email}, tier=${body.data.tier}`);
+          }
+        }
         break;
       case "invoice.payment_failed":
         console.log("Suspended active plan permissions due to subscription payment failure.");

@@ -6,10 +6,14 @@ import ComparisonTable from '../../components/pricing/ComparisonTable';
 import FAQAccordion from '../../components/pricing/FAQAccordion';
 import TestimonialStrip from '../../components/pricing/TestimonialStrip';
 import PricingCTABanner from '../../components/pricing/PricingCTABanner';
+import StripeCheckoutModal from '../../components/pricing/StripeCheckoutModal';
 import { pricingPlans } from '../../components/pricing/pricingData';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function PricingPage() {
+  const { user, setTier } = useAuth();
   const [isAnnual, setIsAnnual] = useState(false);
+  const [checkoutPlan, setCheckoutPlan] = useState<{ id: 'free' | 'basic' | 'pro'; price: number; name: string } | null>(null);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans px-4 sm:px-6 lg:px-8 py-6 relative overflow-hidden">
@@ -24,7 +28,12 @@ export default function PricingPage() {
         {/* 3-Plan Responsive Cards Grid */}
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {pricingPlans.map((plan) => (
-            <PricingCard key={plan.id} plan={plan} isAnnual={isAnnual} />
+            <PricingCard
+              key={plan.id}
+              plan={plan}
+              isAnnual={isAnnual}
+              onSelectPlan={(id, price, name) => setCheckoutPlan({ id, price, name })}
+            />
           ))}
         </div>
 
@@ -40,6 +49,21 @@ export default function PricingPage() {
         {/* Bottom CTA conversions box */}
         <PricingCTABanner />
       </div>
+
+      {/* Stripe Billing Modal */}
+      {checkoutPlan && user && (
+        <StripeCheckoutModal
+          isOpen={checkoutPlan !== null}
+          onClose={() => setCheckoutPlan(null)}
+          planId={checkoutPlan.id}
+          planName={checkoutPlan.name}
+          planPrice={checkoutPlan.price}
+          userEmail={user.email}
+          onSuccess={(tier) => {
+            setTier(tier);
+          }}
+        />
+      )}
     </div>
   );
 }
