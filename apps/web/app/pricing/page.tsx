@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PricingHero from '../../components/pricing/PricingHero';
 import PricingCard from '../../components/pricing/PricingCard';
 import ComparisonTable from '../../components/pricing/ComparisonTable';
@@ -14,6 +14,30 @@ export default function PricingPage() {
   const { user, setTier } = useAuth();
   const [isAnnual, setIsAnnual] = useState(false);
   const [checkoutPlan, setCheckoutPlan] = useState<{ id: 'free' | 'basic' | 'pro'; price: number; name: string } | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && user) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const planParam = searchParams.get("plan");
+      if (planParam === "free" || planParam === "basic" || planParam === "pro") {
+        const selectedPlan = pricingPlans.find((p) => p.id === planParam);
+        if (selectedPlan) {
+          if (selectedPlan.id === "free") {
+            setTier("FREE");
+          } else {
+            setCheckoutPlan({
+              id: selectedPlan.id,
+              price: isAnnual ? selectedPlan.priceAnnually : selectedPlan.priceMonthly,
+              name: selectedPlan.name,
+            });
+          }
+          // Clean search parameter so the modal doesn't open continuously on state changes
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, "", newUrl);
+        }
+      }
+    }
+  }, [user, isAnnual, setTier]);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans px-4 sm:px-6 lg:px-8 py-6 relative overflow-hidden">

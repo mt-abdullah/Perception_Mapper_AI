@@ -13,17 +13,61 @@ export default function LandingPricing({ onSignUp }: LandingPricingProps) {
   const router = useRouter();
 
   const plans = [
-    { title: "Free", badge: "Starter", price: "$0", desc: "For independent writers scanning simple drafts.", features: ["✓ 50 Paragraph Analysis / Month", "✓ Basic English parsing", "✓ OCR presets scan validation"], border: "border-slate-900 bg-slate-950/40", highlight: false, btnText: "Start Free", btnClass: "bg-slate-900 hover:bg-slate-800 text-white border border-slate-800" },
-    { title: "Basic", badge: "Popular", price: "$29", desc: "For professional researchers requiring fast nodes.", features: ["✓ 500 Paragraphs Analysis / Month", "✓ Multilingual (EN, TA, SI)", "✓ Full Speech Synthesis readouts"], border: "border-indigo-650/80 bg-slate-950/50 shadow-indigo-500/5", highlight: true, btnText: "Upgrade to Basic", btnClass: "bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/10" },
-    { title: "Pro", badge: "Teams", price: "$99", desc: "For teams requiring safety policies compliance.", features: ["✓ Unlimited Analysis requests", "✓ Custom Safety Rules Persistence", "✓ Live Telemetry Log Feeds"], border: "border-pink-900/40 bg-slate-950/40 shadow-pink-500/5", highlight: false, btnText: "Deploy Pro", btnClass: "bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white shadow-md shadow-pink-600/10" }
+    { 
+      title: "Free", 
+      badge: "Starter", 
+      price: "$0", 
+      desc: "Perfect for casual writers and individual linguistic testing.", 
+      features: [
+        "✓ 50 Analyses / Month", 
+        "✓ English only parsing", 
+        "✓ 3 core cognitive bias types", 
+        "✓ Partial tone assessment"
+      ], 
+      border: "border-slate-900 bg-slate-950/40", 
+      highlight: false, 
+      btnText: "Start Free", 
+      btnClass: "bg-slate-900 hover:bg-slate-800 text-white border border-slate-800",
+      planId: "free"
+    },
+    { 
+      title: "Basic", 
+      badge: "Popular", 
+      price: "$19", 
+      desc: "Empowers publishers and professionals with multi-locale analysis.", 
+      features: [
+        "✓ 500 Analyses / Month", 
+        "✓ EN + Tamil + Sinhala", 
+        "✓ All cognitive bias types", 
+        "✓ Objective rephrasing & CSV/PDF"
+      ], 
+      border: "border-indigo-650/80 bg-slate-950/50 shadow-indigo-500/5", 
+      highlight: true, 
+      btnText: "Get Basic", 
+      btnClass: "bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/10",
+      planId: "basic"
+    },
+    { 
+      title: "Pro", 
+      badge: "Teams", 
+      price: "$59", 
+      desc: "Full-scale workspace pipeline built for agile editing groups.", 
+      features: [
+        "✓ Unlimited Analysis requests", 
+        "✓ API Access + X-API-Key", 
+        "✓ Team Workspace integration", 
+        "✓ Custom webhooks & priority support"
+      ], 
+      border: "border-pink-900/40 bg-slate-950/40 shadow-pink-500/5", 
+      highlight: false, 
+      btnText: "Get Pro", 
+      btnClass: "bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white shadow-md shadow-pink-600/10",
+      planId: "pro"
+    }
   ];
 
-  const handleAction = () => {
-    if (onSignUp) {
-      onSignUp();
-    } else {
-      router.push("/sign-in");
-    }
+  const handleAction = (planId: string) => {
+    router.push(`/pricing?plan=${planId}`);
   };
 
   return (
@@ -71,7 +115,7 @@ export default function LandingPricing({ onSignUp }: LandingPricingProps) {
               </div>
 
               <button
-                onClick={handleAction}
+                onClick={() => handleAction(plan.planId)}
                 className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center font-sans tracking-wide uppercase ${plan.btnClass}`}
               >
                 {plan.btnText}
@@ -79,6 +123,18 @@ export default function LandingPricing({ onSignUp }: LandingPricingProps) {
             </Card>
           </motion.div>
         ))}
+      </div>
+
+      <div className="text-center pt-4">
+        <a
+          href="/pricing"
+          className="inline-flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-indigo-400 hover:text-indigo-350 transition duration-200"
+        >
+          <span>Compare full features & billing plans</span>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
       </div>
     </div>
   );

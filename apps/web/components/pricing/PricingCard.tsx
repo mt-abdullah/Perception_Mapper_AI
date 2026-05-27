@@ -35,7 +35,7 @@ export default function PricingCard({ plan, isAnnual, onSelectPlan }: PricingCar
 
   const handleAction = () => {
     if (!isSignedIn) {
-      router.push(`/signup?plan=${plan.id}`);
+      router.push(`/sign-up?plan=${plan.id}`);
       return;
     }
 
