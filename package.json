@@ -22,7 +22,7 @@
     "dev": "turbo run dev",
     "dev:api": "npm --prefix apps/api run dev",
     "dev:web": "npm --prefix apps/web run dev",
-    "storybook": "npx storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006",
     "test": "turbo run test",
     "build": "turbo run build",
     "lint": "turbo run lint",
