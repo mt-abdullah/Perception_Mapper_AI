@@ -26,6 +26,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   // In-memory high-fidelity database storage for mock/offline execution
   private users: any[] = [];
+  private teams: any[] = [];
   private activityLogs: any[] = [];
   private userAnalysesCount = 0;
   private policies = {
@@ -46,6 +47,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     this.isConnected = true;
     this.seedDefaultUsers();
+    this.seedDefaultTeams();
     this.seedDefaultActivityLogs();
     console.log("Database connection initialized via Prisma Service.");
   }
@@ -413,5 +415,76 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
       return user;
     }
     throw new Error(`User with ID ${userId} not found`);
+  }
+
+  private seedDefaultTeams() {
+    this.teams = [
+      {
+        id: "team_mock_1",
+        name: "Alpha Core Team",
+        description: "Core Research & Development",
+        tier: "TEAM",
+        status: "ACTIVE",
+        maxMembers: 10,
+        createdAt: new Date(Date.now() - 15 * 24 * 3600 * 1000).toISOString(),
+        members: [
+          { id: "tm_1", role: "LEAD", userId: "user_mock_dev_2k98fhj3", email: "dev@perceptionmapper.ai" },
+          { id: "tm_2", role: "MEMBER", userId: "user_mock_alex", email: "alex@acme.org" }
+        ],
+        leadEmail: "dev@perceptionmapper.ai"
+      },
+      {
+        id: "team_mock_2",
+        name: "Acme Analytics",
+        description: "Acme Corp Analytics and Perception Audits",
+        tier: "PRO",
+        status: "ACTIVE",
+        maxMembers: 5,
+        createdAt: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString(),
+        members: [
+          { id: "tm_3", role: "LEAD", userId: "user_mock_sarah", email: "sarah@percept.ai" }
+        ],
+        leadEmail: "sarah@percept.ai"
+      }
+    ];
+  }
+
+  async getAllTeams() {
+    return this.teams;
+  }
+
+  async createTeam(data: any) {
+    const newTeam = {
+      id: "team_" + Math.random().toString(36).substr(2, 9),
+      name: data.name,
+      description: data.description || "",
+      tier: data.tier || "FREE",
+      status: data.status || "ACTIVE",
+      maxMembers: Number(data.maxMembers) || 5,
+      createdAt: new Date().toISOString(),
+      members: data.leadId ? [{
+        id: "tm_" + Math.random().toString(36).substr(2, 9),
+        role: "LEAD",
+        userId: data.leadId,
+        email: this.users.find(u => u.id === data.leadId)?.email || "lead@team.com"
+      }] : [],
+      leadEmail: data.leadId ? this.users.find(u => u.id === data.leadId)?.email || "lead@team.com" : ""
+    };
+    this.teams.push(newTeam);
+    console.log(`[Database Transaction] Created Team record: id=${newTeam.id}, name=${newTeam.name}`);
+    await this.trackActivity("SYSTEM", "TEAM_CREATE", `Team ${newTeam.name} created`, "SUCCESS");
+    return newTeam;
+  }
+
+  async deleteTeam(teamId: string) {
+    const index = this.teams.findIndex(t => t.id === teamId);
+    if (index !== -1) {
+      const deletedTeam = this.teams[index];
+      this.teams.splice(index, 1);
+      console.log(`[Database Transaction] Deleted Team: ${teamId}`);
+      await this.trackActivity("SYSTEM", "TEAM_DELETE", `Team ${deletedTeam.name} deleted`, "SUCCESS");
+      return { success: true, id: teamId };
+    }
+    throw new Error(`Team with ID ${teamId} not found`);
   }
 }

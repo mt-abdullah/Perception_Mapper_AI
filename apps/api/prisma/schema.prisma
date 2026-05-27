@@ -218,3 +218,25 @@ model UserPreferences {
   autoLogoutMinutes Int    @default(30)
   user              User   @relation(fields: [userId], references: [id])
 }
+
+// New models for team management
+model Team {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  tier        String
+  status      String
+  maxMembers  Int
+  createdAt   DateTime      @default(now())
+  members     TeamMember[]
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  role      String
+  userId    String
+  teamId    String
+  createdAt DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id])
+}

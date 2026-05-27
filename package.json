@@ -22,11 +22,16 @@
     "dev": "turbo run dev",
     "dev:api": "npm --prefix apps/api run dev",
     "dev:web": "npm --prefix apps/web run dev",
+    "storybook": "npx storybook dev -p 6006",
+    "test": "turbo run test",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "clean": "turbo run clean"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^8.0.0",
+    "@storybook/nextjs": "^8.6.18",
+    "@storybook/react": "^8.0.0",
     "concurrently": "^8.2.2",
     "playwright": "^1.60.0",
     "typescript": "^5.4.5"

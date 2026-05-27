@@ -5,6 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useRouter, usePathname } from "next/navigation";
 import { ShieldAlert, Users, Sliders, Cpu, ArrowLeft, LogOut, Lock } from "lucide-react";
 import Preloader from "../../components/Preloader";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
 
 export const AdminTabContext = createContext<{
   activeTab: string;
@@ -105,10 +106,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
           <header className="h-16 border-b border-slate-900/60 px-6 sm:px-8 flex items-center justify-between z-10 shrink-0 select-none">
             <span className="text-[9px] font-semibold text-slate-500 uppercase tracking-widest">Admin Panel / {activeTab}</span>
-            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 text-[9px] font-bold text-purple-400 bg-purple-950/40 border border-purple-500/20 rounded-md uppercase tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
-              <span>Secure Shell Active</span>
-            </span>
+            <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 text-[9px] font-bold text-purple-400 bg-purple-950/40 border border-purple-500/20 rounded-md uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                <span>Secure Shell Active</span>
+              </span>
+            </div>
           </header>
           <main className="flex-1 p-6 sm:p-8 z-10 max-w-7xl w-full mx-auto">{children}</main>
         </div>

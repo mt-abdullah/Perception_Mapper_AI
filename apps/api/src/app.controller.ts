@@ -278,6 +278,34 @@ export class AppController {
     return await this.prisma.updateGlobalPolicies(body);
   }
 
+  @Get("admin/teams")
+  @UseGuards(ClerkGuard, AdminOnlyGuard)
+  async getAdminTeams() {
+    return await this.prisma.getAllTeams();
+  }
+
+  @Post("admin/teams")
+  @UseGuards(ClerkGuard, AdminOnlyGuard)
+  async createAdminTeam(@Body() body: any) {
+    if (!body.name) {
+      throw new HttpException("Team name is required", HttpStatus.BAD_REQUEST);
+    }
+    return await this.prisma.createTeam(body);
+  }
+
+  @Delete("admin/teams/:id")
+  @UseGuards(ClerkGuard, AdminOnlyGuard)
+  async deleteAdminTeam(@Param("id") id: string) {
+    try {
+      return await this.prisma.deleteTeam(id);
+    } catch (e) {
+      throw new HttpException(
+        "Failed to delete team: " + e.message,
+        HttpStatus.NOT_FOUND
+      );
+    }
+  }
+
   @Post("admin/users/:id/tier")
   @UseGuards(ClerkGuard, AdminOnlyGuard)
   async updateAdminUserTier(

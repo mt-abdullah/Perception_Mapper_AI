@@ -5,12 +5,13 @@ import { AdminTabContext } from "../layout";
 import { useAuth } from "../../../hooks/useAuth";
 import { UserProfile, PolicySettings, GlobalStats, AuditLog } from "../../../types";
 import { fetchUsers, fetchGlobalAnalytics, fetchPolicies, updatePolicies, updateUserProfile, deleteUserProfile, fetchAuditLogs } from "../../../lib/api";
+import Preloader from "../../../components/Preloader";
 import AdminStats from "../../../components/admin/AdminStats";
 import AdminUsersList from "../../../components/admin/AdminUsersList";
 import AdminPoliciesForm from "../../../components/admin/AdminPoliciesForm";
 import AdminAuditLogsList from "../../../components/admin/AdminAuditLogsList";
 import ConfirmModal from "../../../components/admin/ConfirmModal";
-import Preloader from "../../../components/Preloader";
+import TeamWorkspace from "../../../components/admin/team/TeamWorkspace";
 
 export default function AdminDashboard() {
   const { activeTab } = useContext(AdminTabContext);
@@ -73,7 +74,13 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       {modal && <ConfirmModal {...modal} onClose={() => setModal(null)} />}
 
-      {activeTab === "dashboard" && <AdminStats stats={stats} isLoading={isLoading} />}
+      {activeTab === "dashboard" && ((user?.role as any) === "ADMIN" || (user?.role as any) === "SUPER_ADMIN") && (<>
+        <AdminStats stats={stats} isLoading={isLoading} />
+        <TeamWorkspace />
+      </>)}
+      {activeTab === "dashboard" && !((user?.role as any) === "ADMIN" || (user?.role as any) === "SUPER_ADMIN") && (
+        <p className="text-slate-400">Access denied: insufficient permissions.</p>
+      )}
 
       {activeTab === "users" && (
         <AdminUsersList
