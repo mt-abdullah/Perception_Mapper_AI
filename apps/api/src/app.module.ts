@@ -4,6 +4,7 @@ import { AppController } from "./app.controller";
 import { PrismaService } from "./prisma.service";
 import { AppService } from "./app.service";
 import { RateLimiterService } from "./rate-limiter.service";
+import { TelemetryGateway } from "./telemetry/telemetry.gateway";
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { RateLimiterService } from "./rate-limiter.service";
     }),
   ],
   controllers: [AppController],
-  providers: [PrismaService, AppService, RateLimiterService],
+  providers: [PrismaService, AppService, RateLimiterService, TelemetryGateway],
 })
 export class AppModule {}

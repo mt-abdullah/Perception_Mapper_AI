@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { TeamMember, CustomRule, AnalysisResult } from "../types";
 import { INITIAL_TEAM_MEMBERS, INITIAL_CUSTOM_RULES } from "../lib/constants";
+import { io } from "socket.io-client";
 
 export const useDashboard = () => {
   const [inputText, setInputText] = useState("Obviously, this disaster is a complete conspiracy. Everyone knows that the corporation is undeniably trying to cover up their horrible, catastrophic failure without a doubt.");
@@ -20,7 +21,32 @@ export const useDashboard = () => {
     setTerminalLogs((prev) => [...prev.slice(-15), `[${new Date().toLocaleTimeString()}] ${log}`]);
   }, []);
 
-  // Telemetry simulation
+  // WebSockets telemetry connection
+  useEffect(() => {
+    const socket = io("http://localhost:3001/telemetry", {
+      transports: ["websocket"],
+    });
+
+    socket.on("status", () => {
+      appendTerminalLog("🔌 Real-Time Telemetry Socket Connection Established.");
+    });
+
+    socket.on("analysis", (data) => {
+      appendTerminalLog(`🛡️ [Linguistic Handshake] Locale=${data.detectedLanguage} | BiasIndex=${data.biasIndex}% | Chars=${data.textLength}`);
+      setLiveMetrics((prev) => ({
+        latencyMs: 15 + Math.floor(Math.random() * 20),
+        cpuLoad: 25 + Math.floor(Math.random() * 15),
+        memoryMb: prev.memoryMb,
+        activeConnections: prev.activeConnections,
+      }));
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [appendTerminalLog]);
+
+  // Telemetry simulation fallback for metrics
   useEffect(() => {
     const interval = setInterval(() => {
       const latency = 38 + Math.floor(Math.random() * 12);
@@ -28,7 +54,7 @@ export const useDashboard = () => {
       const ram = 320 + Math.floor(Math.random() * 40);
       const conn = 4 + Math.floor(Math.random() * 3);
 
-      setLiveMetrics({ latencyMs: latency, cpuLoad: cpu, memoryMb: ram, activeConnections: conn });
+      setLiveMetrics((prev) => ({ latencyMs: latency, cpuLoad: cpu, memoryMb: ram, activeConnections: conn }));
       setTelemetryHistory((prev) => [...prev, { name: new Date().toLocaleTimeString().slice(-8), latency, cpu }].slice(-8));
     }, 4000);
     return () => clearInterval(interval);
@@ -40,32 +66,22 @@ export const useDashboard = () => {
     setIsAnalyzing(true);
     appendTerminalLog(`🤖 SCANNING CHUNK: "${text.slice(0, 35)}..."`);
 
-    setTimeout(() => {
-      let score = 20;
-      const biasesMatched = [];
-      if (/\b(obviously|clearly|undeniably)\b/i.test(text)) {
-        biasesMatched.push({ quote: "Obviously, this disaster is a complete conspiracy.", type: "Confirmation Bias", description: "Presents assumptions as absolute facts.", rephrase: "Evidence points to potential procedural vulnerabilities." });
-        score += 30;
-      }
-      if (/\b(everyone|always|never)\b/i.test(text)) {
-        biasesMatched.push({ quote: "Everyone knows that the corporation is trying to cover up.", type: "Over-generalization", description: "Uses absolute statements that fail to accommodate context nuances.", rephrase: "Several stakeholders indicate transparency challenges." });
-        score += 25;
-      }
-
-      setAnalysisResult({
-        success: true,
-        source: "Perception Edge Heuristics",
-        language: "English",
-        scores: { sentiment: score > 50 ? 42 : 78, objectivity: Math.max(0, 100 - score), biasIndex: score },
-        tones: [
-          { name: "Assertive", score: 85, color: "from-purple-500 to-pink-500" },
-          { name: "Informative", score: 40, color: "from-blue-500 to-indigo-500" }
-        ],
-        biases: biasesMatched.length > 0 ? biasesMatched : [{ quote: text.slice(0, 50), type: "Objective Analysis", description: "No bias matched.", rephrase: "Balanced." }]
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
       });
+
+      if (!response.ok) throw new Error(`API returned status ${response.status}`);
+      const result = await response.json();
+      setAnalysisResult(result);
       appendTerminalLog(`✅ ANALYSIS RESOLVED`);
+    } catch (err: any) {
+      appendTerminalLog(`❌ ANALYSIS FAILED: ${err.message}`);
+    } finally {
       setIsAnalyzing(false);
-    }, 600);
+    }
   }, [inputText, appendTerminalLog]);
 
   const cleanBias = useCallback(() => {

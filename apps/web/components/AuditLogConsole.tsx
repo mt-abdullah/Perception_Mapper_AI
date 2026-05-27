@@ -20,7 +20,7 @@ export default function AuditLogConsole({ terminalLogs, onClearLogs }: AuditLogC
           </h3>
         </div>
         <Badge variant="success" className="text-[8px] font-mono select-none bg-emerald-950/40 border-emerald-800/20 text-emerald-400">
-          SSE Simulation
+          WebSockets Stream
         </Badge>
       </div>
 

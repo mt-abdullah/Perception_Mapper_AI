@@ -7,12 +7,14 @@ import { RateLimiterService } from "./rate-limiter.service";
 import { Roles } from "./roles.decorator";
 import { RolesGuard } from "./roles.guard";
 import { AdminOnlyGuard } from "./admin-only.guard";
+import { TelemetryGateway } from "./telemetry/telemetry.gateway";
 
 @Controller()
 export class AppController {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly rateLimiter: RateLimiterService
+    private readonly rateLimiter: RateLimiterService,
+    private readonly telemetryGateway: TelemetryGateway
   ) {}
   @Get()
   getRoot() {
@@ -74,12 +76,30 @@ export class AppController {
         biases: result.biases,
       });
 
+      this.telemetryGateway.broadcastTelemetry("analysis", {
+        userId: req.user.userId,
+        detectedLanguage: result.language || "English",
+        sentimentScore: result.scores?.sentiment || 55,
+        biasIndex: result.scores?.biasIndex || 25,
+        biasesCount: result.biases?.length || 0,
+        textLength: body.text.length,
+      });
+
       return {
         success: true,
         source: "FastAPI Live Sidecar",
         ...result,
       };
     } catch (error) {
+      this.telemetryGateway.broadcastTelemetry("analysis", {
+        userId: req.user.userId,
+        detectedLanguage: "English (Offline)",
+        sentimentScore: 55,
+        biasIndex: 25,
+        biasesCount: 1,
+        textLength: body.text.length,
+      });
+
       // Offline fallback wrapper
       return {
         success: false,
