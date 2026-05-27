@@ -22,7 +22,7 @@
     "dev": "turbo run dev",
     "dev:api": "npm --prefix apps/api run dev",
     "dev:web": "npm --prefix apps/web run dev",
-    "storybook": "node node_modules/storybook/bin/index.js dev -p 6006",
+    "storybook": "storybook dev -p 6006",
     "test": "turbo run test",
     "build": "turbo run build",
     "lint": "turbo run lint",
@@ -34,6 +34,7 @@
     "@storybook/react": "^8.0.0",
     "concurrently": "^8.2.2",
     "playwright": "^1.60.0",
+    "storybook": "^8.6.18",
     "typescript": "^5.4.5"
   }
 }
