@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { getMockSession, setMockSession, clearMockSession, validateAdminCredentials, MockUser, SubscriptionTier } from "../lib/auth";
+import { getMockSession, setMockSession, setMockAvatar, clearMockSession, validateAdminCredentials, MockUser, SubscriptionTier } from "../lib/auth";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -50,6 +50,12 @@ export const useAuth = () => {
     syncSession();
   }, [user, syncSession]);
 
+  const updateAvatar = useCallback((newAvatarUrl: string) => {
+    if (!user) return;
+    setMockAvatar(newAvatarUrl);
+    syncSession();
+  }, [user, syncSession]);
+
   const signOut = useCallback(() => {
     clearMockSession();
     setIsSignedIn(false);
@@ -67,5 +73,6 @@ export const useAuth = () => {
     signOut,
     setRole,
     setTier,
+    updateAvatar,
   };
 };

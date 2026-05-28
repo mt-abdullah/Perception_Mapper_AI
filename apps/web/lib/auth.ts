@@ -41,7 +41,8 @@ export const getMockSession = (): { isSignedIn: boolean; user: MockUser | null }
     document.cookie = "pm_mock_admin_session=true; path=/";
   }
 
-  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b0764&color=c084fc`;
+  const customAvatar = localStorage.getItem("pm_mock_user_avatar");
+  const avatarUrl = customAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b0764&color=c084fc`;
 
   return {
     isSignedIn,
@@ -68,6 +69,11 @@ export const setMockSession = (email: string, role: "USER" | "ADMIN", name: stri
   document.cookie = "pm_mock_signed_in=true; path=/";
 };
 
+export const setMockAvatar = (url: string) => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("pm_mock_user_avatar", url);
+};
+
 export const clearMockSession = () => {
   if (typeof window === "undefined") return;
 
@@ -77,6 +83,7 @@ export const clearMockSession = () => {
   localStorage.removeItem("pm_mock_user_rbac_role");
   localStorage.removeItem("pm_mock_user_name");
   localStorage.removeItem("pm_mock_user_tier");
+  localStorage.removeItem("pm_mock_user_avatar");
   localStorage.removeItem("pm_mock_admin_session");
 
   document.cookie = "pm_mock_signed_in=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

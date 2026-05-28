@@ -1,18 +1,27 @@
 "use client";
-
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
+import { useDashboard } from "../../hooks/useDashboard";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Preloader from "../../components/Preloader";
-import ActivePlanWidget from "../../components/dashboard/ActivePlanWidget";
-import { Zap, Flame, ShieldCheck, ArrowRight } from "lucide-react";
-import { Card } from "@perception-mapper/ui";
+import BasicDashboard from "../../components/dashboard/BasicDashboard";
+import ProDashboard from "../../components/dashboard/ProDashboard";
+import EnterpriseDashboard from "../../components/dashboard/EnterpriseDashboard";
+import StripeCheckoutModal from "../../components/pricing/StripeCheckoutModal";
+import { SubscriptionTier } from "../../lib/auth";
+import BiasNetworkGraph from "../../components/dashboard/BiasNetworkGraph";
+import BatchProcessor from "../../components/dashboard/BatchProcessor";
+import SentimentMetricsDashboard from "../../components/dashboard/SentimentMetricsDashboard";
+import PromptSandbox from "../../components/dashboard/PromptSandbox";
+import AvatarSelector from "../../components/dashboard/AvatarSelector";
 
-export default function DashboardHome() {
+export default function UserDashboard() {
   const router = useRouter();
   const { isSignedIn, user, mounted, setTier } = useAuth();
+  const db = useDashboard();
+  const [checkoutPlan, setCheckoutPlan] = useState<{ id: 'free' | 'basic' | 'pro'; price: number; name: string } | null>(null);
 
   useEffect(() => {
     if (mounted && !isSignedIn) {
@@ -21,38 +30,31 @@ export default function DashboardHome() {
   }, [mounted, isSignedIn, router]);
 
   if (!mounted || !isSignedIn || !user) {
-    return <Preloader message="CONNECTING PERCEPTION CONSOLE..." />;
+    return <Preloader message="AUTHORIZING USER WORKSPACE..." />;
   }
 
-  const dashboards = [
-    {
-      title: "Free Console",
-      desc: "Acoustic basic semantic gateways. Evaluates textual inputs and clears baseline emotional expressions.",
-      href: "/dashboard/free",
-      color: "from-slate-500 to-slate-700 text-slate-400 border-slate-900/60 shadow-slate-950/20",
-      accent: "text-slate-400",
-      icon: Zap,
-      badge: "Free Gateway"
-    },
-    {
-      title: "Basic Console",
-      desc: "Pro workspace suite overlays. Accesses live telemetry graphs and dynamic custom overrides rules engines.",
-      href: "/dashboard/basic",
-      color: "from-blue-500 to-indigo-650 text-blue-400 border-blue-900/30 shadow-blue-950/20",
-      accent: "text-blue-400",
-      icon: Flame,
-      badge: "Basic Scope"
-    },
-    {
-      title: "Pro Console",
-      desc: "Enterprise OS security telemetry. Seamlessly streams log lines and allocates seats in team workspaces.",
-      href: "/dashboard/pro",
-      color: "from-purple-600 to-amber-650 text-purple-400 border-purple-900/30 shadow-purple-950/25",
-      accent: "text-amber-400",
-      icon: ShieldCheck,
-      badge: "Pro Core"
+  const handleUpgradeRequest = (targetTier: SubscriptionTier) => {
+    if (targetTier === "FREE") {
+      setTier("FREE");
+      return;
     }
-  ];
+    const name = targetTier === "BASIC" ? "Basic Plan" : "Pro Plan";
+    const price = targetTier === "BASIC" ? 19 : 59;
+    setCheckoutPlan({ id: targetTier.toLowerCase() as any, price, name });
+  };
+
+  const renderDashboardContent = () => {
+    switch (user.tier) {
+      case "FREE":
+        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} />;
+      case "BASIC":
+        return <ProDashboard db={db} onUpgrade={handleUpgradeRequest} />;
+      case "PRO":
+        return <EnterpriseDashboard db={db} />;
+      default:
+        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-955 text-slate-100 flex flex-col relative overflow-hidden font-sans">
@@ -60,47 +62,53 @@ export default function DashboardHome() {
       <div className="absolute bottom-[-20%] right-[-25%] w-[80%] h-[80%] rounded-full bg-purple-500/5 blur-[150px] pointer-events-none" />
       <Navbar />
 
-      <main className="flex-grow w-full max-w-[1200px] mx-auto px-6 py-24 space-y-12 relative z-10 select-none">
-        <div className="text-center space-y-4 max-w-2xl mx-auto pt-6">
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white uppercase">
-            Perception Command Gateway
-          </h2>
-          <p className="text-xs text-slate-400 font-semibold leading-relaxed">
-            Select your active telemetry console scope below to monitor cognitive sentiment indices, rephrase subjective phrases, and audit transaction records.
-          </p>
+      <main className="flex-grow w-full max-w-[1600px] mx-auto px-6 py-24 space-y-8 relative z-10">
+        <div className="flex items-center justify-between p-4 rounded-xl border border-indigo-500/20 bg-indigo-950/20 backdrop-blur-md">
+          <div className="flex items-center space-x-3">
+            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+            <p className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+              Security Session Context: <span className="text-indigo-400">USER WORKSPACE ACTIVE</span>
+            </p>
+          </div>
+          <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-400">Node cluster: 200 OK</span>
         </div>
 
-        <ActivePlanWidget currentTier={user.tier} setTier={setTier} />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {dashboards.map((db, i) => {
-            const Icon = db.icon;
-            return (
-              <Card key={i} className={`p-6 border bg-slate-950/40 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between min-h-[300px] shadow-2xl hover:border-slate-800 ${db.color}`}>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <div className="p-3 bg-slate-950 border border-slate-900 rounded-xl">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="text-[9px] font-extrabold uppercase px-2.5 py-0.5 bg-slate-955/60 border border-slate-900 rounded-full tracking-wider">
-                      {db.badge}
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-black text-white tracking-wider uppercase text-left">{db.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed font-semibold text-left">{db.desc}</p>
-                </div>
-
-                <button onClick={() => router.push(db.href)} className="w-full mt-6 py-3 bg-slate-900 hover:bg-slate-850 hover:border-slate-800 border border-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-350 hover:text-white rounded-xl transition duration-300 flex items-center justify-center space-x-1.5 cursor-pointer">
-                  <span>Open Console</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </Card>
-            );
-          })}
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-900/60 pb-6 gap-4">
+          <div>
+            <h1 className="text-2xl font-black tracking-tight text-white uppercase">User Dashboard</h1>
+            <p className="text-xs text-slate-400 mt-1">
+              Active telemetry console for User: <span className="text-indigo-400 font-semibold">{user.name}</span> ({user.email})
+            </p>
+          </div>
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-900">
+            Subscription Tier: <span className="text-indigo-400 font-extrabold">{user.tier}</span>
+          </div>
         </div>
+
+        <AvatarSelector />
+        {renderDashboardContent()}
+        <BatchProcessor />
+        <BiasNetworkGraph />
+        <SentimentMetricsDashboard />
+        <PromptSandbox />
       </main>
 
       <Footer />
+
+      {/* Stripe Billing Modal */}
+      {checkoutPlan && (
+        <StripeCheckoutModal
+          isOpen={checkoutPlan !== null}
+          onClose={() => setCheckoutPlan(null)}
+          planId={checkoutPlan.id}
+          planName={checkoutPlan.name}
+          planPrice={checkoutPlan.price}
+          userEmail={user.email}
+          onSuccess={(tier) => {
+            setTier(tier);
+          }}
+        />
+      )}
     </div>
   );
 }
