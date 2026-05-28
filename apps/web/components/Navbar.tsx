@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
-import { User } from "lucide-react";
+import { User, ChevronDown } from "lucide-react";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const { isSignedIn, user, signOut, mounted } = useAuth();
 
@@ -43,30 +44,34 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-4">
             {isSignedIn ? (
-              <div className="flex items-center space-x-3.5">
-                <span className={`text-[8px] font-extrabold uppercase px-2 py-0.5 rounded-md border tracking-wider select-none ${
-                  user?.tier === "PRO" ? "text-pink-400 border-pink-500/20 bg-pink-955/40" :
-                  user?.tier === "BASIC" ? "text-purple-400 border-purple-500/20 bg-purple-955/40" :
-                  "text-cyan-400 border-cyan-500/20 bg-cyan-955/40"
-                }`}>
-                  {user?.tier} PLAN
-                </span>
-
-                <div className={`w-7.5 h-7.5 w-[30px] h-[30px] rounded-full border overflow-hidden bg-slate-900 flex items-center justify-center shrink-0 ${
-                  user?.tier === "PRO" ? "border-pink-500/40" :
-                  user?.tier === "BASIC" ? "border-purple-500/40" :
-                  "border-cyan-500/40"
-                }`}>
-                  {user?.avatarUrl ? (
-                    <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <User className="h-3.5 w-3.5 text-slate-500" />
-                  )}
-                </div>
-
-                <button onClick={signOut} className="px-2 py-1 text-xs font-bold text-slate-400 hover:text-rose-400 transition">
-                  Sign Out
+              <div className="relative">
+                <button onClick={() => setMenuOpen(!menuOpen)} className="flex items-center space-x-2 p-1 rounded-xl bg-slate-900/40 hover:bg-slate-900/80 border border-slate-850/80 transition duration-300 cursor-pointer">
+                  <div className={`w-8 h-8 rounded-full border overflow-hidden bg-slate-900 flex items-center justify-center shrink-0 ${
+                    user?.tier === "PRO" ? "border-pink-500/40" : user?.tier === "BASIC" ? "border-purple-500/40" : "border-cyan-500/40"
+                  }`}>
+                    {user?.avatarUrl ? <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" /> : <User className="h-4 w-4 text-slate-500" />}
+                  </div>
+                  <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
                 </button>
+
+                {menuOpen && (
+                  <div className="absolute right-0 mt-2.5 w-56 bg-slate-950/90 border border-slate-900/80 backdrop-blur-xl rounded-xl shadow-2xl p-4 space-y-3.5 z-50 text-left animate-in fade-in duration-200">
+                    <div className="flex items-center space-x-3 pb-3 border-b border-slate-900">
+                      <img src={user?.avatarUrl} alt={user?.name} className="w-9 h-9 rounded-full object-cover border border-slate-800" />
+                      <div className="truncate leading-tight">
+                        <span className="block text-xs font-bold text-slate-200 truncate">{user?.name}</span>
+                        <span className="block text-[8px] text-slate-500 font-bold truncate mt-0.5">{user?.email}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 text-[9px] font-extrabold uppercase tracking-wider text-slate-500">
+                      <div className="flex justify-between"><span>Role:</span><span className="text-indigo-400">{user?.role}</span></div>
+                      <div className="flex justify-between"><span>Scope:</span><span className={user?.tier === "PRO" ? "text-pink-400" : user?.tier === "BASIC" ? "text-purple-400" : "text-cyan-400"}>{user?.tier} Plan</span></div>
+                    </div>
+                    <button onClick={signOut} className="w-full py-2 bg-slate-900 hover:bg-rose-955/40 border border-slate-850 hover:border-rose-500/25 text-slate-400 hover:text-rose-400 rounded-lg text-xs font-bold transition uppercase tracking-wide text-center cursor-pointer">
+                      Sign Out
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center space-x-3">
