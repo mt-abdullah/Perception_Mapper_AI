@@ -56,13 +56,13 @@ export default function LandingHero({ onSignUp, loadingAction = null }: LandingH
         <span className="animate-pulse text-indigo-400 font-bold ml-0.5">|</span>
       </p>
 
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4 relative z-10 font-sans">
+      <div className="flex justify-center items-center gap-4 pt-4 relative z-10 font-sans">
         <motion.button
           onClick={handleAction}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           disabled={loadingAction === "sign-up"}
-          className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-gradient-to-r from-indigo-600 via-purple-650 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white rounded-xl px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-650/15 transition duration-300 disabled:opacity-50"
+          className="flex items-center justify-center space-x-2 bg-gradient-to-r from-indigo-600 via-purple-650 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white rounded-xl px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-650/15 transition duration-300 disabled:opacity-50"
         >
           {loadingAction === "sign-up" && (
             <RefreshCw className="h-3.5 w-3.5 animate-spin mr-2" />
@@ -70,13 +70,6 @@ export default function LandingHero({ onSignUp, loadingAction = null }: LandingH
           <span>Deploy Workspace Handshake</span>
           <ArrowRight className="h-4 w-4 ml-1" />
         </motion.button>
-        
-        <a
-          href="#pricing"
-          className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-800 hover:border-slate-700 rounded-xl px-7 py-3.5 text-xs font-bold uppercase tracking-wider transition duration-300 shadow-md animate-fadeIn"
-        >
-          <span>View Pricing Tiers</span>
-        </a>
       </div>
     </div>
   );
