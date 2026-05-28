@@ -23,6 +23,7 @@ export default function Navbar() {
     { name: "How it Works", href: "#how-it-works" },
     { name: "Showcase", href: "#showcase" },
     { name: "Testimonials", href: "#testimonials" },
+    { name: "Pricing", href: "#pricing" },
   ];
 
   if (!mounted) {
