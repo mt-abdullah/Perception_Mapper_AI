@@ -11,6 +11,8 @@ import ProDashboard from "../../components/dashboard/ProDashboard";
 import EnterpriseDashboard from "../../components/dashboard/EnterpriseDashboard";
 import StripeCheckoutModal from "../../components/pricing/StripeCheckoutModal";
 import { SubscriptionTier } from "../../lib/auth";
+import BiasNetworkGraph from "../../components/dashboard/BiasNetworkGraph";
+import BatchProcessor from "../../components/dashboard/BatchProcessor";
 
 export default function UserDashboard() {
   const router = useRouter();
@@ -81,6 +83,8 @@ export default function UserDashboard() {
         </div>
 
         {renderDashboardContent()}
+        <BatchProcessor />
+        <BiasNetworkGraph />
       </main>
 
       <Footer />
