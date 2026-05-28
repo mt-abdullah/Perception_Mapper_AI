@@ -4,6 +4,7 @@ import React from "react";
 import { ShieldAlert, RefreshCw } from "lucide-react";
 import { Badge } from "@perception-mapper/ui";
 import { AnalysisResult } from "../types";
+import TTSReadout from "./dashboard/TTSReadout";
 
 interface CognitiveAnalyticsProps {
   analysisResult: AnalysisResult | null;
@@ -53,7 +54,7 @@ export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onReph
         <span className="text-[8px] font-bold text-slate-550 uppercase tracking-widest block">Tone breakdowns</span>
         {analysisResult.tones.map((t, idx) => (
           <div key={idx} className="space-y-1">
-            <div className="flex justify-between text-[10px] text-slate-350">
+            <div className="flex justify-between text-[10px] text-slate-355">
               <span>{t.name}</span>
               <span className="font-mono text-slate-500">{t.score}%</span>
             </div>
@@ -74,12 +75,18 @@ export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onReph
               </span>
               <Badge variant="neutral" className="text-[8px] lowercase font-mono">Recommend Rephrase</Badge>
             </div>
-            <p className="text-[10px] text-slate-350 italic">"{b.quote}"</p>
+            <div className="flex items-center justify-between space-x-2">
+              <p className="text-[10px] text-slate-350 italic">"{b.quote}"</p>
+              <TTSReadout text={b.quote} mode="emotional" />
+            </div>
             <div className="flex items-center justify-between pt-1 border-t border-slate-900">
               <span className="text-[9px] text-slate-500">💡 Substitute:</span>
-              <button onClick={() => onRephrase(b.quote, b.rephrase)} className="text-emerald-400 font-bold hover:underline">
-                "{b.rephrase}"
-              </button>
+              <div className="flex items-center space-x-2">
+                <button onClick={() => onRephrase(b.quote, b.rephrase)} className="text-emerald-400 font-bold hover:underline">
+                  "{b.rephrase}"
+                </button>
+                <TTSReadout text={b.rephrase} mode="neutral" />
+              </div>
             </div>
           </div>
         ))}

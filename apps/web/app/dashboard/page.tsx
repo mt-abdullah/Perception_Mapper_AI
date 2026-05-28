@@ -13,6 +13,8 @@ import StripeCheckoutModal from "../../components/pricing/StripeCheckoutModal";
 import { SubscriptionTier } from "../../lib/auth";
 import BiasNetworkGraph from "../../components/dashboard/BiasNetworkGraph";
 import BatchProcessor from "../../components/dashboard/BatchProcessor";
+import SentimentMetricsDashboard from "../../components/dashboard/SentimentMetricsDashboard";
+import PromptSandbox from "../../components/dashboard/PromptSandbox";
 
 export default function UserDashboard() {
   const router = useRouter();
@@ -85,6 +87,8 @@ export default function UserDashboard() {
         {renderDashboardContent()}
         <BatchProcessor />
         <BiasNetworkGraph />
+        <SentimentMetricsDashboard />
+        <PromptSandbox />
       </main>
 
       <Footer />
