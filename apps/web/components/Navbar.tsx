@@ -18,6 +18,13 @@ export default function Navbar() {
     ? [{ name: "Admin Panel", href: "/admin/dashboard" }]
     : [];
 
+  const landingNavItems = [
+    { name: "Features", href: "#features" },
+    { name: "How it Works", href: "#how-it-works" },
+    { name: "Showcase", href: "#showcase" },
+    { name: "Testimonials", href: "#testimonials" },
+  ];
+
   if (!mounted) {
     return <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-955/80 backdrop-blur-xl border-b border-slate-900/60 h-16" />;
   }
@@ -31,6 +38,15 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-400">
+            {!isSignedIn && landingNavItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="transition hover:text-white"
+              >
+                {item.name}
+              </a>
+            ))}
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -89,6 +105,16 @@ export default function Navbar() {
 
       {mobileOpen && (
         <div className="md:hidden bg-slate-955 border-t border-slate-900/60 px-4 pb-4 pt-2 space-y-2 select-none">
+          {!isSignedIn && landingNavItems.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-355 hover:text-white hover:bg-slate-900/50 transition"
+            >
+              {item.name}
+            </a>
+          ))}
           {navItems.map((item) => (
             <Link
               key={item.name}
