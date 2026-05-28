@@ -6,12 +6,13 @@ import { useAuth } from "../../hooks/useAuth";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Preloader from "../../components/Preloader";
+import ActivePlanWidget from "../../components/dashboard/ActivePlanWidget";
 import { Zap, Flame, ShieldCheck, ArrowRight } from "lucide-react";
 import { Card } from "@perception-mapper/ui";
 
 export default function DashboardHome() {
   const router = useRouter();
-  const { isSignedIn, user, mounted } = useAuth();
+  const { isSignedIn, user, mounted, setTier } = useAuth();
 
   useEffect(() => {
     if (mounted && !isSignedIn) {
@@ -69,6 +70,8 @@ export default function DashboardHome() {
           </p>
         </div>
 
+        <ActivePlanWidget currentTier={user.tier} setTier={setTier} />
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {dashboards.map((db, i) => {
             const Icon = db.icon;
@@ -87,7 +90,7 @@ export default function DashboardHome() {
                   <p className="text-xs text-slate-500 leading-relaxed font-semibold text-left">{db.desc}</p>
                 </div>
 
-                <button onClick={() => router.push(db.href)} className="w-full mt-6 py-3 bg-slate-900 hover:bg-slate-850 hover:border-slate-800 border border-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-350 hover:text-white rounded-xl transition duration-300 flex items-center justify-center space-x-1.5">
+                <button onClick={() => router.push(db.href)} className="w-full mt-6 py-3 bg-slate-900 hover:bg-slate-850 hover:border-slate-800 border border-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-350 hover:text-white rounded-xl transition duration-300 flex items-center justify-center space-x-1.5 cursor-pointer">
                   <span>Open Console</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
