@@ -15,7 +15,6 @@ import BiasNetworkGraph from "../../components/dashboard/BiasNetworkGraph";
 import BatchProcessor from "../../components/dashboard/BatchProcessor";
 import SentimentMetricsDashboard from "../../components/dashboard/SentimentMetricsDashboard";
 import PromptSandbox from "../../components/dashboard/PromptSandbox";
-import AvatarSelector from "../../components/dashboard/AvatarSelector";
 
 export default function UserDashboard() {
   const router = useRouter();
@@ -85,7 +84,6 @@ export default function UserDashboard() {
           </div>
         </div>
 
-        <AvatarSelector />
         {renderDashboardContent()}
         <BatchProcessor />
         <BiasNetworkGraph />
