@@ -72,17 +72,6 @@ export default function UserDashboard() {
           <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-400">Node cluster: 200 OK</span>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-900/60 pb-6 gap-4">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-white uppercase">User Dashboard</h1>
-            <p className="text-xs text-slate-400 mt-1">
-              Active telemetry console for User: <span className="text-indigo-400 font-semibold">{user.name}</span> ({user.email})
-            </p>
-          </div>
-          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-900">
-            Subscription Tier: <span className="text-indigo-400 font-extrabold">{user.tier}</span>
-          </div>
-        </div>
 
         {renderDashboardContent()}
         <BatchProcessor />
