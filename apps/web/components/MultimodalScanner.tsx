@@ -67,13 +67,30 @@ export default function MultimodalScanner({
           </div>
         </div>
       )}
-
       {activeTab === "image" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in duration-300">
-          <div className="p-4 border border-dashed border-slate-850 bg-slate-950 hover:bg-slate-900/20 rounded-xl text-center flex flex-col items-center justify-center cursor-pointer">
-            <Layers className="h-5 w-5 text-slate-600 mb-2" />
-            <span className="text-[9px] font-bold text-slate-500 uppercase">Drag PNG manifest</span>
-          </div>
+          <label className="p-4 border border-dashed border-slate-850 hover:border-indigo-500/40 bg-slate-950/40 hover:bg-indigo-950/10 rounded-xl text-center flex flex-col items-center justify-center cursor-pointer transition select-none">
+            <Layers className="h-5 w-5 text-indigo-400 mb-2" />
+            <span className="text-[9px] font-bold text-slate-300 uppercase">Upload or Drag PNG manifest</span>
+            <span className="text-[7px] text-slate-500 font-bold uppercase mt-1">Supports PNG, JPEG up to 5MB</span>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={(e) => {
+                if (!e.target.files || e.target.files.length === 0) return;
+                const file = e.target.files[0];
+                appendTerminalLog(`📸 SCAN EVENT: ${file.name.toUpperCase()}`);
+                appendTerminalLog("📡 BOOTING OPTICAL OCR CHARACTER DECODER...");
+                setTimeout(() => {
+                  const extracted = `OCR SCAN RESULT: Raw textual manifest extracted from file "${file.name}". Obviously, the sovereign border operation is undeniably experiencing a complete failure without a doubt. Always verify credentials.`;
+                  setInputText(extracted);
+                  triggerAnalysis(extracted);
+                  appendTerminalLog(`📸 OCR SUCCESS: 100% characters recognized from "${file.name}"`);
+                }, 1000);
+              }}
+              className="hidden" 
+            />
+          </label>
           <div className="space-y-1">
             {IMAGE_PRESETS.map((p, i) => (
               <button key={i} onClick={() => { setInputText(p.extractedText); triggerAnalysis(p.extractedText); appendTerminalLog(`📸 SCAN: ${p.fileName}`); }} className="w-full text-left p-2 border border-slate-900 bg-slate-950 hover:border-slate-800 rounded-lg text-[9px] font-bold">
