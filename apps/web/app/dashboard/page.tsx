@@ -73,10 +73,14 @@ export default function UserDashboard() {
         </div>
 
 
-        {renderDashboardContent()}
+        <div id="workspace" className="space-y-8">
+          {renderDashboardContent()}
+        </div>
         <BatchProcessor />
         <BiasNetworkGraph />
-        <SentimentMetricsDashboard />
+        <div id="telemetry">
+          <SentimentMetricsDashboard />
+        </div>
         <PromptSandbox />
       </main>
 
