@@ -4,14 +4,12 @@
 FROM node:18-alpine AS base
 WORKDIR /app
 
-# Enable pnpm
-RUN npm install -g pnpm
-
 # Install dependencies first
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY package.json package-lock.json* ./
 COPY apps/api/package.json ./apps/api/
+COPY packages/ ./packages/
 
-RUN pnpm install --no-frozen-lockfile
+RUN npm ci
 
 # Copy source assets
 COPY . .
