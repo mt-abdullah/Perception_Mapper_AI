@@ -87,6 +87,26 @@ BIAS_DICTIONARIES = {
   ]
 }
 
+# Advanced SpaCy & Deep-learning Zero-Shot integration support
+nlp = None
+try:
+    import spacy
+    try:
+        nlp = spacy.load("en_core_web_sm")
+    except Exception:
+        # Fallback if package is present but model is not downloaded
+        pass
+except ImportError:
+    pass
+
+zero_shot_pipeline = None
+try:
+    from transformers import pipeline
+    # Pluggable zero-shot classification model pipeline
+    zero_shot_pipeline = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=-1)
+except Exception:
+    pass
+
 def analyze_perception(text: str):
   # 1. Detect language
   try:
@@ -99,9 +119,15 @@ def analyze_perception(text: str):
   language_names = {"en": "English", "ta": "Tamil", "si": "Sinhala"}
   lang_label = language_names.get(detected_lang, "English")
 
-  # 2. Tone calculations (keyword frequency matching)
+  # 2. Advanced NLP Tokenization and Tone calculations
   tones = []
-  words = re.findall(r"\w+", text.lower())
+  
+  if nlp and detected_lang == "en":
+    doc = nlp(text)
+    words = [token.text.lower() for token in doc if not token.is_punct]
+  else:
+    words = re.findall(r"\w+", text.lower())
+    
   total_words = len(words) if len(words) > 0 else 1
 
   dict_to_use = TONE_DICTIONARIES.get(detected_lang, TONE_DICTIONARIES["en"])
@@ -114,13 +140,23 @@ def analyze_perception(text: str):
   
   scores = default_scores[detected_lang].copy()
   
-  for tone, keywords in dict_to_use.items():
-    match_count = sum(1 for w in words if w in keywords)
-    # Increment core scores dynamically based on matches
-    if match_count > 0:
-      if tone not in scores:
-        scores[tone] = 30
-      scores[tone] = min(100, scores[tone] + (match_count * 15))
+  # Try to use neural classifier if available for advanced sentiment mapping
+  if zero_shot_pipeline and detected_lang == "en":
+    try:
+      candidate_labels = ["Informative", "Formal", "Assertive", "Cooperative", "Emotional"]
+      res = zero_shot_pipeline(text, candidate_labels=candidate_labels)
+      for label, score in zip(res["labels"], res["scores"]):
+        scores[label] = int(score * 100)
+    except Exception:
+      pass
+  else:
+    # Lexicon frequency keyword matching
+    for tone, keywords in dict_to_use.items():
+      match_count = sum(1 for w in words if w in keywords)
+      if match_count > 0:
+        if tone not in scores:
+          scores[tone] = 30
+        scores[tone] = min(100, scores[tone] + (match_count * 15))
 
   tone_colors = {
     "Informative": "from-blue-500 to-indigo-500",
