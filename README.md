@@ -51,7 +51,7 @@ Perception_Mapper_AI/
 ├── .github/
 │   └── workflows/         # GitHub Actions parallel build CI/CD pipeline
 ├── package.json           # Global monorepo tasks
-├── pnpm-workspace.yaml    # Workspace configuration path
+├── package-lock.json      # Workspace package lockfile
 └── turbo.json             # Turborepo caching pipelines
 ```
 
@@ -64,10 +64,10 @@ Ensure you have Node.js 18+ and Python 3.10+ installed.
 ### Step 1: Start the TypeScript services
 From the monorepo root directory, install dependencies and run the development orchestrator:
 ```bash
-npx pnpm install
-npx pnpm run dev
+npm install
+npm run dev
 ```
-*   **Interactive Web Portal:** [http://localhost:3000](http://localhost:3000)
+*   **Interactive Web Portal:** [http://localhost:3009](http://localhost:3009)
 *   **NestJS Core Gateway API:** [http://localhost:3001/api](http://localhost:3001/api)
 
 ### Step 2: Start the Python FastAPI NLP Service
