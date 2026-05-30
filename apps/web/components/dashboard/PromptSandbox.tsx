@@ -92,6 +92,54 @@ export default function PromptSandbox() {
           </button>
         </div>
       </div>
+
+      {/* Developer API Console & Playground Code Generator */}
+      <div className="border-t border-slate-900 mt-8 pt-6 space-y-4 text-left">
+        <div className="flex items-center space-x-2">
+          <Shield className="h-4 w-4 text-indigo-400" />
+          <h3 className="text-xs font-extrabold uppercase tracking-widest text-slate-200">Developer API Integration Console</h3>
+        </div>
+        <p className="text-[10px] text-slate-400">
+          Access automated multilingual perception audits inside your publishing queue or custom pipelines by routing payload triggers.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-1 bg-slate-955/80 border border-slate-900 rounded-xl p-4 space-y-3.5">
+            <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 block">X-API-Key Configuration</span>
+            <div className="bg-slate-950 border border-slate-900 rounded-lg p-2.5 flex items-center justify-between">
+              <span className="font-mono text-[10px] text-indigo-400 select-all font-bold">pm_key_team_pro_2026</span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 font-extrabold">ACTIVE</span>
+            </div>
+            <p className="text-[9px] text-slate-500 leading-relaxed">
+              Subscribers can pass this authenticated header within integration environments to verify transactions.
+            </p>
+          </div>
+
+          <div className="md:col-span-2 bg-slate-955/80 border border-slate-900 rounded-xl p-4 space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-900/60 pb-2">
+              <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500">Playground Code Generator</span>
+              <span className="text-[8px] text-indigo-400 font-bold uppercase">Rate limit: 120/min</span>
+            </div>
+
+            <div className="space-y-2">
+              {/* Interactive Tabs */}
+              <div className="flex space-x-2 border-b border-slate-900 pb-2">
+                <button className="px-2.5 py-1 text-[9px] font-bold text-white bg-slate-900 border border-slate-800 rounded-md">cURL</button>
+                <button className="px-2.5 py-1 text-[9px] font-bold text-slate-400 hover:text-white transition">Node.js</button>
+                <button className="px-2.5 py-1 text-[9px] font-bold text-slate-400 hover:text-white transition">Python</button>
+              </div>
+
+              {/* Code Snippet Box */}
+              <pre className="bg-slate-950 border border-slate-900 rounded-lg p-3 text-[10px] font-mono text-slate-300 overflow-x-auto whitespace-pre leading-relaxed select-all">
+{`curl -X POST http://localhost:3001/api/analyze/developer \\
+  -H "X-API-Key: pm_key_team_pro_2026" \\
+  -H "Content-Type: application/json" \\
+  -d '{"text": "Obviously unbelievable disaster."}'`}
+              </pre>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
