@@ -4,13 +4,13 @@ const path = require('path');
 
 const baseUrl = 'http://localhost:3009';
 const routes = [
-  '/en',
-  '/en/sign-in',
-  '/en/sign-up',
-  '/en/dashboard',
-  '/en/admin/dashboard',
-  '/en/admin/sign-in',
-  '/en/configuration'
+  '/',
+  '/sign-in',
+  '/sign-up',
+  '/dashboard',
+  '/admin/dashboard',
+  '/admin/sign-in',
+  '/configuration'
 ];
 
 async function runAudit() {
@@ -112,7 +112,7 @@ async function runAudit() {
       console.log(`Found ${buttons.length} potential action components`);
 
       // Special interaction validations depending on route
-      if (route === '/en') {
+      if (route === '/') {
         // Test primary CTA navigation
         const dashboardBtn = await page.$('a[href*="dashboard"], button:has-text("Dashboard"), button:has-text("Workspace")');
         if (dashboardBtn) {
@@ -121,7 +121,7 @@ async function runAudit() {
         }
       }
 
-      if (route === '/en/dashboard') {
+      if (route === '/dashboard') {
         console.log('Performing Dashboard Interaction Scans...');
         // Test tab selections
         const tabSelectors = ['button:has-text("Telemetry")', 'button:has-text("Workspace")', 'button:has-text("Developer Sandbox")', 'button:has-text("Documentation")'];
@@ -155,7 +155,7 @@ async function runAudit() {
         }
       }
 
-      if (route === '/en/configuration') {
+      if (route === '/configuration') {
         console.log('Testing Configuration Save Actions...');
         const saveBtn = await page.$('button:has-text("Save"), button:has-text("Apply Changes")');
         if (saveBtn) {
