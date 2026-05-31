@@ -1,93 +1,127 @@
 # Perception Mapper AI
 
-Perception Mapper AI is an enterprise-grade multilingual sentiment, tone, and cognitive bias analyzer designed to examine content across **English**, **Tamil (தமிழ்)**, and **Sinhala (සිංහල)**. 
-
-Built as a high-fidelity SaaS platform utilizing a containerized monorepo, it empowers writers, journalists, and teams to uncover hidden emotional tones and cognitive distortions (Confirmation Bias, Sensationalism, Over-generalization) with live alternative rephrasings.
+Perception Mapper AI is an enterprise-grade, high-fidelity cognitive bias, tone, and multilingual sentiment analysis platform. Designed for journalists, content teams, and enterprises, it processes text in **English**, **Tamil (தமிழ்)**, and **Sinhala (සිංහල)** to identify cognitive distortions (e.g., Confirmation Bias, Sensationalism, Over-generalization), deliver progress-metered emotional tone breakdowns, and suggest objective alternative rephrasings in real-time.
 
 ---
 
 ## 🚀 Key Features
 
-*   **Multilingual Analysis Engine:** Evaluates text segments dynamically in English, Tamil, and Sinhala.
-*   **Tone Breakdown Progress Meters:** Tracks multiple emotional tones (Informative, Formal, Assertive, Cooperative) using custom keyword scoring algorithms.
-*   **Cognitive Bias Classifier:** Flag distortions (Confirmation Bias, Sensationalism, Over-generalization) with detailed explanations and suggest balanced, objective rephrase alternatives.
-*   **Custom Bias Rule Editor:** Allows Team Plan subscribers to submit custom regex parsing rules directly from the dashboard to target custom vocabularies.
-*   **Developer API Console:** Active `X-API-Key` credentials dashboard providing direct curl triggers for automation.
-*   **High-Fidelity PDF Exporter:** Renders a clean print stylesheet report and triggers the native browser print dialogue.
-*   **Dual Authentication Guards:** Secured with local JWT token decoders via Clerk (`ClerkGuard`) and developer key matching (`ApiKeyGuard`).
-*   **DevOps & CI/CD Pipelines:** Ready-to-deploy Dockerfiles for all microservices, backed by a unified GitHub Actions workflow running on main triggers.
+*   **Multilingual Analysis Engine:** High-accuracy natural language processing tailored for English, Tamil, and Sinhala content.
+*   **Cognitive Bias Classifier:** Automatically flags cognitive distortions with detailed linguistic explanations and context-aware rephrasing suggestions.
+*   **Tone Breakdown Analytics:** Progress-metered tracking of key emotional and communication tones (Informative, Formal, Assertive, Cooperative) driven by keyword scoring algorithms.
+*   **Interactive Team Customization:** Team Plan subscribers can build, test, and deploy custom regex parsing rules directly from the configuration panel to target custom vocabularies.
+*   **Developer API Console & Playground:** Self-service developer console offering real-time credentials management and a live playground for generating code snippets.
+*   **Enterprise Security:** Dual-layer guard architecture featuring local JWT token decoding via Clerk (`ClerkGuard`) and secure developer key validation (`ApiKeyGuard`).
+*   **High-Fidelity Reporting:** Prints clean, beautifully-styled assessment reports using native browser print streams and print-optimized stylesheets.
+*   **Production-Ready DevOps:** Complete multi-stage Docker deployment configurations integrated with GitHub Actions workflows for automated continuous integration.
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ System Architecture & Tech Stack
 
-*   **Monorepo Workspace:** Turborepo, pnpm workspaces, TypeScript.
-*   **Web Frontend Client:** Next.js 14 (App Router), Tailwind CSS, `@clerk/nextjs`, `next-intl` (i18n).
-*   **Gateway API Server:** NestJS (Node.js + TS), Prisma ORM, `jsonwebtoken`, `jwks-rsa`.
-*   **NLP Evaluation Engine:** Python 3.10, FastAPI, `langdetect`, `spacy` tokenization.
-*   **Infrastructure:** Docker, GitHub Actions, AWS ECS Fargate readiness.
-
----
-
-## 📁 Repository Directory Structure
+Perception Mapper AI utilizes a containerized monorepo workspace to orchestrate its microservices:
 
 ```
 Perception_Mapper_AI/
 ├── apps/
-│   ├── web/               # Next.js 14 Frontend Application
-│   │   ├── app/           # App Router localized layouts and page views
-│   │   ├── messages/      # English, Tamil, Sinhala localized JSON sheets
-│   │   └── Dockerfile     # Multi-stage production node container
-│   ├── api/               # NestJS Core Backend API Gateway
-│   │   ├── src/           # Clerk JWT Guards, ApiKey Guards, Prisma controllers
-│   │   ├── prisma/        # PostgreSQL Prisma database schema models
-│   │   └── Dockerfile     # Production NestJS node runner container
-│   └── nlp-engine/        # Python FastAPI NLP Sidecar Service
-│       ├── engine.py      # Language scanners and regex token maps
-│       ├── main.py        # Analysis endpoints routing
-│       └── Dockerfile     # Python runtime container
+│   ├── web/               # Next.js 14 Frontend Application (Tailwind CSS, Clerk, next-intl)
+│   ├── api/               # NestJS Core Gateway API (TypeScript, Prisma ORM, WebSockets)
+│   └── nlp-engine/        # Python FastAPI NLP Sidecar (SpaCy, regex classifiers)
 ├── packages/
 │   └── ui/                # Shared glassmorphic React Tailwind component library
 ├── .github/
-│   └── workflows/         # GitHub Actions parallel build CI/CD pipeline
-├── package.json           # Global monorepo tasks
-├── package-lock.json      # Workspace package lockfile
-└── turbo.json             # Turborepo caching pipelines
+│   └── workflows/         # Automated parallel-build CI/CD pipeline
 ```
+
+*   **Frontend Client:** Next.js 14 (App Router), Tailwind CSS, `@clerk/nextjs` for user management, and `next-intl` for comprehensive internationalization (i18n).
+*   **Gateway API Server:** NestJS (Node.js), Prisma ORM (PostgreSQL database handler), and WebSockets for real-time telemetry streaming.
+*   **NLP Evaluation Engine:** Python 3.10, FastAPI, SpaCy tokenization, and `langdetect` classifiers.
+*   **Infrastructure:** Docker, Docker Compose, GitHub Actions, and AWS ECS Fargate readiness.
 
 ---
 
-## ⚡ Quick Start & Local Execution
+## ⚡ Quick Start & Development Setup
 
-Ensure you have Node.js 18+ and Python 3.10+ installed.
+Ensure you have **Node.js 18+**, **pnpm/npm**, and **Python 3.10+** installed on your system.
 
-### Step 1: Start the TypeScript services
-From the monorepo root directory, install dependencies and run the development orchestrator:
+### 1. Start the Frontend and Gateway Services
+From the monorepo root directory, install dependencies and start the development servers:
+
 ```bash
+# Install root and workspace dependencies
 npm install
+
+# Start Next.js and NestJS servers in development mode
 npm run dev
 ```
+
 *   **Interactive Web Portal:** [http://localhost:3009](http://localhost:3009)
 *   **NestJS Core Gateway API:** [http://localhost:3001/api](http://localhost:3001/api)
 
-### Step 2: Start the Python FastAPI NLP Service
-Navigate to the `nlp-engine` directory, restore requirements, and run the server:
+### 2. Start the NLP Sidecar Service
+Navigate to the `nlp-engine` directory, configure the environment, and run the Python service:
+
 ```bash
 cd apps/nlp-engine
+
+# Install Python requirements
 pip install -r requirements.txt
+
+# Start the FastAPI reload server
 python -m uvicorn main:app --reload --port 8000
 ```
-*   **API Swaggers Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+*   **Interactive API Swaggers:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
-## 🔌 Developer Key Integration
+## 🔌 Developer Integration API
 
-Team Plan subscribers can run automated CLI perception audits by passing their active `X-API-Key` token:
+Enterprise subscribers can integrate the analysis engine into external systems using the developer API.
+
+### Endpoint: Analyze Text via Developer Key
 
 ```bash
 curl -X POST http://localhost:3001/api/analyze/developer \
   -H "X-API-Key: pm_key_team_pro_2026" \
   -H "Content-Type: application/json" \
-  -d '{"text": "Obviously unbelievable disaster."}'
+  -d '{
+    "text": "This is an absolute disaster and completely unbelievable."
+  }'
+```
+
+### Response Schema
+
+```json
+{
+  "success": true,
+  "language": "English",
+  "scores": {
+    "sentiment": 15,
+    "objectivity": 40,
+    "biasIndex": 75
+  },
+  "tones": [
+    { "name": "Assertive", "score": 85, "color": "from-red-500 to-orange-500" },
+    { "name": "Informative", "score": 30, "color": "from-blue-500 to-indigo-500" }
+  ],
+  "biases": [
+    {
+      "name": "Sensationalism",
+      "explanation": "Use of high-intensity emotional language ('absolute disaster', 'unbelievable') to amplify response.",
+      "rephrase": "This is a significant setback and unexpected."
+    }
+  ]
+}
+```
+
+---
+
+## 🐳 Docker Deployment
+
+To spin up the entire production environment locally, utilize the root Docker Compose orchestrator:
+
+```bash
+# Start all microservices in background containers
+docker-compose up -d --build
 ```
