@@ -79,44 +79,141 @@ export default function LandingPlayground() {
   const [showResults, setShowResults] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
+
+  // Sync initial preset
+  useEffect(() => {
+    loadPresetIntoResult(PLAYGROUND_PRESETS[0]);
+  }, []);
+
+  const loadPresetIntoResult = (preset: PresetItem) => {
+    setAnalysisResult({
+      language: "English",
+      source: "Preset Metadata",
+      scores: {
+        sentiment: preset.sentimentOriginal.includes("Highly") ? 85 : 55,
+        objectivity: preset.objectivityClean,
+        biasIndex: 100 - preset.objectivityClean
+      },
+      tones: [
+        { name: "Informative", score: preset.objectivityClean, color: "from-blue-500 to-indigo-500" },
+        { name: "Assertive", score: 100 - preset.objectivityClean, color: "from-purple-500 to-pink-500" }
+      ],
+      biases: preset.highlightsOriginal.map(h => ({
+        quote: h.word,
+        type: h.type,
+        description: "Static preset catalog term.",
+        rephrase: preset.cleansed
+      })),
+      cleansed: preset.cleansed,
+      biasLevel: preset.biasLevel,
+      objectivityOriginal: preset.objectivityOriginal
+    });
+  };
 
   // Load a preset
   const handleLoadPreset = (index: number) => {
     setCurrentPresetIndex(index);
     setInputText(PLAYGROUND_PRESETS[index].original);
+    loadPresetIntoResult(PLAYGROUND_PRESETS[index]);
     setShowResults(false);
     setLogs([]);
   };
 
-  // Run AI simulation scanning sequence
-  const handleLaunchSequence = () => {
+  // Run Real AI analysis via local NestJS REST gateway
+  const handleLaunchSequence = async () => {
+    if (!inputText.trim()) return;
     setIsScanning(true);
     setShowResults(false);
-    setLogs([]);
+    setLogs(["❯ ESTABLISHING RELAY ROUTING TO NestJS CORE PORT 3001..."]);
 
-    const logMessages = [
-      "❯ ESTABLISHING CORE AI INTERACTIVE CONNECTIONS...",
-      "❯ [SYS] HEURISTIC LEXICON SCANNER BOOTED",
-      "❯ [NLP] EXAMINING ADJECTIVE INTENSITY COEFFICIENT...",
-      "❯ [BIAS] CONFIRMATION & CERTAINTY MATRIX RESOLVED",
-      "❯ [CLEAN] ASSEMBLING OPTIMAL BALANCED DEVIATION...",
-      "❯ SUCCESS: COMPILATION CLEANSING PROCESS COMPLETE"
-    ];
+    try {
+      // Step-by-step logs for premium experience
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setLogs((prev) => [...prev, "❯ [SYS] AUTHORIZING DEV-MODE BYPASS..."]);
+      
+      const res = await fetch("http://localhost:3001/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-mock-role": "USER"
+        },
+        body: JSON.stringify({ text: inputText }),
+      });
 
-    let currentLogIdx = 0;
-    const logInterval = setInterval(() => {
-      if (currentLogIdx < logMessages.length) {
-        setLogs((prev) => [...prev, logMessages[currentLogIdx]]);
-        currentLogIdx++;
-      } else {
-        clearInterval(logInterval);
-        setIsScanning(false);
-        setShowResults(true);
+      setLogs((prev) => [...prev, "❯ [NLP] STREAMING QUANTUM LEXICAL FINDINGS..."]);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      if (!res.ok) {
+        throw new Error(`Platform gateway returned error ${res.status}`);
       }
-    }, 450);
+
+      const data = await res.json();
+      setLogs((prev) => [...prev, `❯ [SUCCESS] PARSED LANGUAGE: ${data.language || "English"}`]);
+      setLogs((prev) => [...prev, "❯ COMPILING OBJECTIVE REPHRASE MAPPINGS..."]);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      // Map dynamic analysis response parameters
+      const parsedBiases = data.biases || [];
+      const calculatedObjectivity = data.scores?.objectivity ?? 75;
+      const calculatedBiasIndex = data.scores?.biasIndex ?? 25;
+
+      setAnalysisResult({
+        language: data.language || "English",
+        source: data.source || "FastAPI Live Sidecar",
+        scores: {
+          sentiment: data.scores?.sentiment || 55,
+          objectivity: calculatedObjectivity,
+          biasIndex: calculatedBiasIndex
+        },
+        tones: data.tones || [
+          { name: "Informative", score: calculatedObjectivity, color: "from-blue-500 to-indigo-500" }
+        ],
+        biases: parsedBiases,
+        cleansed: parsedBiases.filter((b: any) => b.type !== "Objective Statement").map((b: any) => b.rephrase).join(" ") || inputText,
+        biasLevel: calculatedBiasIndex > 50 ? "High" : calculatedBiasIndex > 20 ? "Medium" : "Low",
+        objectivityOriginal: Math.max(10, calculatedObjectivity - 30) // dynamic original mock reference
+      });
+
+      setIsScanning(false);
+      setShowResults(true);
+    } catch (err: any) {
+      setLogs((prev) => [...prev, `❯ [ERR] PIPELINE FAILED: ${err.message}`]);
+      setLogs((prev) => [...prev, "❯ INITIATING SYSTEM FALLBACK MECHANISM..."]);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Offline baseline fallback
+      setAnalysisResult({
+        language: "English",
+        source: "Offline Baseline Fallback",
+        scores: {
+          sentiment: 50,
+          objectivity: 75,
+          biasIndex: 25
+        },
+        tones: [
+          { name: "Informative", score: 75, color: "from-blue-500 to-indigo-500" },
+          { name: "Assertive", score: 25, color: "from-purple-500 to-pink-500" }
+        ],
+        biases: [
+          {
+            quote: inputText.slice(0, Math.min(inputText.length, 60)),
+            type: "Offline Mode",
+            description: "Could not establish direct line to NestJS gateway.",
+            rephrase: inputText
+          }
+        ],
+        cleansed: inputText,
+        biasLevel: "Low",
+        objectivityOriginal: 70
+      });
+
+      setIsScanning(false);
+      setShowResults(true);
+    }
   };
 
-  // HTML5 Text to speech engine simulation
+  // HTML5 Text to speech engine
   const handleSpeak = (text: string) => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
@@ -126,39 +223,42 @@ export default function LandingPlayground() {
       utterance.onerror = () => setIsPlayingAudio(false);
       window.speechSynthesis.speak(utterance);
     } else {
-      // Fallback fallback animation if SpeechSynthesis not supported
       setIsPlayingAudio(true);
       setTimeout(() => setIsPlayingAudio(false), 2000);
     }
   };
 
-  const currentPreset = PLAYGROUND_PRESETS[currentPresetIndex];
+  const getCleansedOutput = () => {
+    if (!analysisResult) return "";
+    return analysisResult.cleansed || inputText;
+  };
 
-  // Helper to highlight words in original text
+  // Helper to highlight words in original text dynamically
   const renderHighlightedOriginal = () => {
-    let rawText = inputText;
-    // Simple rendering of highlighted phrases
-    const highlights = currentPreset.highlightsOriginal;
-    
-    // Split input text by spaces, and match with the highlighted terms
-    const words = rawText.split(" ");
-    return (
-      <div className="flex flex-wrap gap-x-1.5 gap-y-2 leading-relaxed text-slate-350 text-xs">
-        {words.map((w, idx) => {
-          // Check if w contains any of our highlighted keywords
-          const matchedHighlight = highlights.find(h => 
-            w.toLowerCase().replace(/[.,!]/g, "").includes(h.word.toLowerCase().replace(/[.,!]/g, ""))
-          );
+    if (!analysisResult) return <div className="text-slate-400 text-xs">{inputText}</div>;
 
-          if (matchedHighlight) {
+    const rawText = inputText;
+    const biasesList = analysisResult.biases || [];
+    const words = rawText.split(" ");
+
+    return (
+      <div className="flex flex-wrap gap-x-1.5 gap-y-2 leading-relaxed text-slate-350 text-xs select-none">
+        {words.map((w, idx) => {
+          const cleanWord = w.toLowerCase().replace(/[.,!?;:()"]/g, "");
+          const matchedBias = biasesList.find((b: any) => {
+            const quote = (b.quote || "").toLowerCase();
+            return quote.includes(cleanWord) && cleanWord.length > 2;
+          });
+
+          if (matchedBias && matchedBias.type !== "Objective Statement" && matchedBias.type !== "Offline Mode") {
             return (
-              <span 
-                key={idx} 
+              <span
+                key={idx}
                 className="relative group cursor-help border-b-2 border-dashed border-red-500 bg-red-950/20 text-red-300 font-bold px-1 rounded-sm transition hover:bg-red-900/30"
               >
                 {w}
                 <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1.5 scale-0 group-hover:scale-100 transition-all duration-200 bg-slate-950 border border-slate-800 text-[10px] text-red-400 font-medium px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-xl z-50">
-                  {matchedHighlight.type}
+                  {matchedBias.type}: {matchedBias.description || "Linguistic bias detected."}
                 </span>
               </span>
             );
@@ -315,13 +415,13 @@ export default function LandingPlayground() {
                     <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">Objectivity Cleanse</span>
                     <div className="flex items-end justify-between">
                       <div className="space-y-1">
-                        <span className="text-2xl font-black text-emerald-400">{currentPreset.objectivityClean}%</span>
-                        <span className="block text-[8px] text-slate-500 font-extrabold uppercase">Originally {currentPreset.objectivityOriginal}%</span>
+                        <span className="text-2xl font-black text-emerald-400">{analysisResult?.scores?.objectivity ?? 75}%</span>
+                        <span className="block text-[8px] text-slate-500 font-extrabold uppercase">Originally {analysisResult?.objectivityOriginal ?? 45}%</span>
                       </div>
                       <div className="h-1.5 w-16 bg-slate-900 rounded-full overflow-hidden">
-                        <motion.div 
+                        <motion.div
                           initial={{ width: 0 }}
-                          animate={{ width: `${currentPreset.objectivityClean}%` }}
+                          animate={{ width: `${analysisResult?.scores?.objectivity ?? 75}%` }}
                           transition={{ duration: 1, ease: "easeOut" }}
                           className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400"
                         />
@@ -333,8 +433,10 @@ export default function LandingPlayground() {
                   <Card className="p-4 border-slate-900 bg-slate-950/40 flex flex-col justify-between space-y-4">
                     <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">Sentiment Output</span>
                     <div className="space-y-1">
-                      <span className="text-xs font-extrabold text-indigo-300 block truncate">{currentPreset.sentimentClean}</span>
-                      <span className="text-[8px] text-slate-500 font-extrabold uppercase block truncate">Original: {currentPreset.sentimentOriginal}</span>
+                      <span className="text-xs font-extrabold text-indigo-300 block truncate">
+                        {analysisResult?.scores?.sentiment >= 70 ? "Assertive / Subjective" : "Balanced / Objective"}
+                      </span>
+                      <span className="text-[8px] text-slate-500 font-extrabold uppercase block truncate">Source: {analysisResult?.source}</span>
                     </div>
                   </Card>
 
@@ -343,7 +445,7 @@ export default function LandingPlayground() {
                     <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">Original Bias Level</span>
                     <div className="flex items-center space-x-2">
                       <Badge variant="error" className="shadow-lg shadow-red-950/30 px-3 py-1 text-[10px] font-extrabold">
-                        {currentPreset.biasLevel} Bias Detected
+                        {analysisResult?.biasLevel} Bias Detected
                       </Badge>
                     </div>
                   </Card>
@@ -352,7 +454,7 @@ export default function LandingPlayground() {
                 {/* Comparative Output panel */}
                 <Card className="border-slate-900 bg-slate-950/60 p-6 space-y-6 relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
-                  
+
                   {/* Before Segment */}
                   <div className="space-y-2">
                     <div className="flex items-center space-x-1.5 text-red-400">
@@ -371,13 +473,13 @@ export default function LandingPlayground() {
                         <CheckCircle2 className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-widest">Balanced Cleansed Output</span>
                       </div>
-                      
+
                       {/* Audio Synthesizer Button */}
                       <button
-                        onClick={() => handleSpeak(currentPreset.cleansed)}
+                        onClick={() => handleSpeak(getCleansedOutput())}
                         className={`flex items-center space-x-1 px-2.5 py-1 text-[9px] font-extrabold uppercase rounded-lg border transition ${
-                          isPlayingAudio 
-                            ? "bg-indigo-950/60 text-indigo-400 border-indigo-500/30 animate-pulse" 
+                          isPlayingAudio
+                            ? "bg-indigo-950/60 text-indigo-400 border-indigo-500/30 animate-pulse"
                             : "bg-slate-950 hover:bg-slate-900 text-slate-400 border-slate-850 hover:border-slate-750"
                         }`}
                       >
@@ -387,7 +489,7 @@ export default function LandingPlayground() {
                     </div>
 
                     <div className="p-4 rounded-xl border border-emerald-950/40 bg-emerald-950/5 leading-relaxed text-slate-200 text-xs relative">
-                      {currentPreset.cleansed}
+                      {getCleansedOutput()}
                       {isPlayingAudio && (
                         <div className="absolute bottom-2.5 right-3 flex items-center space-x-0.5">
                           <span className="w-[1.5px] h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
