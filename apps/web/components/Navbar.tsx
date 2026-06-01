@@ -24,11 +24,12 @@ export default function Navbar() {
   const navItems = user?.role === "ADMIN" ? [{ name: "Admin Panel", href: "/admin/dashboard" }] : [];
 
   const landingNavItems = [
-    { name: "Features", href: "#features" },
-    { name: "How it Works", href: "#how-it-works" },
-    { name: "Showcase", href: "#showcase" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "Pricing", href: "#pricing" }
+    { name: "Features", href: "/#features" },
+    { name: "How it Works", href: "/#how-it-works" },
+    { name: "Showcase", href: "/#showcase" },
+    { name: "Testimonials", href: "/#testimonials" },
+    { name: "Pricing", href: "/#pricing" },
+    { name: "Contact", href: "/contact" }
   ];
 
   if (!mounted) return <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-955/80 backdrop-blur-xl border-b border-slate-900/60 h-16" />;

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -8,12 +9,9 @@ export default function Footer() {
           © 2026 PERCEPTION AI SaaS Platform. All orbital node logs encrypted via SSL handshakes.
         </span>
         <div className="flex space-x-6 font-semibold text-slate-450">
-          <a href="#workspace" className="hover:text-slate-200 transition">
-            Assistant Workbench
-          </a>
-          <a href="#telemetry" className="hover:text-slate-200 transition">
-            SSE Monitor
-          </a>
+          <Link href="/contact" className="hover:text-slate-200 transition">
+            Contact Support
+          </Link>
         </div>
       </div>
     </footer>
