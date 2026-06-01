@@ -18,25 +18,13 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 18
-
-    - name: Setup pnpm Package Manager
-      uses: pnpm/action-setup@v3
-      with:
-        version: 9
-
-    - name: Setup pnpm Dependency Caching
-      uses: actions/cache@v4
-      with:
-        path: ~/.local/share/pnpm/store
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
+        cache: 'npm'
 
     - name: Install Monorepo Dependencies
-      run: pnpm install --no-frozen-lockfile
+      run: npm ci --legacy-peer-deps
 
     - name: Compile and Build Workspace Applications
-      run: pnpm run build
+      run: npm run build
 
   validate-nlp-engine:
     runs-on: ubuntu-latest
