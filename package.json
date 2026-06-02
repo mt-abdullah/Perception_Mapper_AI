@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0"
   },
   "scripts": {
+    "prepare": "husky install",
     "dev": "turbo run dev",
     "dev:api": "npm --prefix apps/api run dev",
     "dev:web": "npm --prefix apps/web run dev",
@@ -33,6 +34,7 @@
     "@storybook/nextjs": "^8.6.18",
     "@storybook/react": "^8.0.0",
     "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
     "next": "^14.2.3",
     "playwright": "^1.60.0",
     "storybook": "^8.6.18",
