@@ -30,8 +30,19 @@ pnpm-debug.log
 .next/
 out/
 build/
--dist/
--dist/**
+dist/
+dist/**
+**/dist/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# TypeScript build info
+*.tsbuildinfo
 
 # TurboRepo cache
 .turbo/
