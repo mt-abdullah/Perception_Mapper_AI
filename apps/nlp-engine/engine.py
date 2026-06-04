@@ -101,9 +101,11 @@ except ImportError:
 
 zero_shot_pipeline = None
 try:
-    from transformers import pipeline
-    # Pluggable zero-shot classification model pipeline
-    zero_shot_pipeline = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=-1)
+    import os
+    if os.getenv("USE_ZERO_SHOT", "false").lower() == "true":
+        from transformers import pipeline
+        # Pluggable zero-shot classification model pipeline
+        zero_shot_pipeline = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=-1)
 except Exception:
     pass
 

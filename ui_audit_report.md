@@ -1,6 +1,6 @@
 # E2E Browser UI & Interaction Audit Report
 
-* **Timestamp**: 2026-05-30T12:05:35.827Z
+* **Timestamp**: 2026-06-04T17:36:38.527Z
 * **Base URL**: http://localhost:3009
 * **Status**: Successfully Completed
 
@@ -43,36 +43,49 @@ Call log:
 
 | Error Description | Location |
 |---|---|
-| Failed to fetch RSC payload for http://localhost:3009/dashboard. Falling back to browser navigation. TypeError: Failed to fetch
+| Failed to fetch RSC payload for http://localhost:3009/. Falling back to browser navigation. TypeError: Failed to fetch
     at fetchServerResponse (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/fetch-server-response.js:57:27)
-    at eval (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/prefetch-cache-utils.js:136:106)
-    at Object.task (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/promise-queue.js:30:38)
-    at PromiseQueue.processNext (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/promise-queue.js:81:186)
-    at PromiseQueue.enqueue (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/promise-queue.js:45:76)
-    at createLazyPrefetchEntry (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/prefetch-cache-utils.js:136:49)
-    at getOrCreatePrefetchCacheEntry (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/prefetch-cache-utils.js:87:12)
-    at navigateReducer_noPPR (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/reducers/navigate-reducer.js:102:82)
-    at clientReducer (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/router-reducer.js:25:61)
+    at fastRefreshReducerImpl (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/reducers/fast-refresh-reducer.js:33:67)
+    at clientReducer (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/router-reducer.js:41:67)
     at Object.action (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/shared/lib/router/action-queue.js:150:55)
     at runAction (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/shared/lib/router/action-queue.js:56:38)
     at dispatchAction (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/shared/lib/router/action-queue.js:113:9)
     at Object.dispatch (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/shared/lib/router/action-queue.js:145:40)
     at eval (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/use-reducer-with-devtools.js:130:21)
-    at eval (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/app-router.js:159:16)
-    at eval (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/app-router.js:275:21)
+    at eval (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/app-router.js:296:25)
     at startTransition (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react/cjs/react.development.js:2597:25)
-    at Object.replace (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/app-router.js:273:44)
-    at eval (webpack-internal:///(app-pages-browser)/./hooks/useAuth.ts:32:16)
-    at eval (webpack-internal:///(app-pages-browser)/./app/sign-in/page.tsx:94:17) | webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/app-index.js |
+    at Object.fastRefresh (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/app-router.js:295:48)
+    at eval (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:277:28)
+    at startTransition (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react/cjs/react.development.js:2597:25)
+    at processMessage (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:276:44)
+    at WebSocket.handler (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:395:17) | webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/app-index.js |
+| Failed to fetch RSC payload for http://localhost:3009/dashboard. Falling back to browser navigation. TypeError: Failed to fetch
+    at fetchServerResponse (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/router-reducer/fetch-server-response.js:57:27)
+    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/components/layout-router.js:305:90)
+    at renderWithHooks (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:11121:18)
+    at mountIndeterminateComponent (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:16869:13)
+    at beginWork$1 (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:18458:16)
+    at beginWork (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:26927:14)
+    at performUnitOfWork (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:25748:12)
+    at workLoopSync (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:25464:5)
+    at renderRootSync (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:25419:7)
+    at performConcurrentWorkOnRoot (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:24504:74)
+    at workLoop (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:256:34)
+    at flushWork (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:225:14)
+    at MessagePort.performWorkUntilDeadline (webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:534:21) | webpack-internal:///(app-pages-browser)/../../node_modules/next/dist/client/app-index.js |
 
 ## 🌐 NETWORK INTEGRATION AUDITS
 
 | Failed Asset URL | Error Reason |
 |---|---|
-| `http://localhost:3009/_next/static/webpack/5fdfb048f8bec608.webpack.hot-update.json` | `net::ERR_ABORTED` |
+| `http://localhost:3009/?_rsc=r3yhw` | `net::ERR_ABORTED` |
+| `http://localhost:3009/_next/static/webpack/app/layout.93d9c0225b7f2648.hot-update.js` | `net::ERR_ABORTED` |
+| `http://localhost:3009/_next/static/webpack/webpack.2119a4cab71ac3b5.hot-update.js` | `net::ERR_ABORTED` |
 | `http://localhost:3009/admin/sign-in` | `net::ERR_ABORTED` |
 | `http://localhost:3009/sign-in` | `net::ERR_ABORTED` |
 | `http://localhost:3009/dashboard?_rsc=4xofb` | `net::ERR_ABORTED` |
+| `http://localhost:3009/dashboard?_rsc=3y0gy` | `net::ERR_ABORTED` |
+| `http://localhost:3009/_next/static/webpack/webpack.85e800e6f6d05cfb.hot-update.js` | `net::ERR_ABORTED` |
 | `http://localhost:3009/dashboard?_rsc=3y0gy` | `net::ERR_ABORTED` |
 
 ## 🎯 RECOMMENDATIONS & READINESS SUMMARY
