@@ -12,9 +12,10 @@ import { SubscriptionTier } from "../../lib/auth";
 interface DashboardProps {
   db: any;
   onUpgrade: (tier: SubscriptionTier) => void;
+  onExploreRephrase: (quote: string) => void;
 }
 
-export default function ProDashboard({ db, onUpgrade }: DashboardProps) {
+export default function ProDashboard({ db, onUpgrade, onExploreRephrase }: DashboardProps) {
   return (
     <div className="space-y-8 animate-fadeIn duration-500">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -37,6 +38,7 @@ export default function ProDashboard({ db, onUpgrade }: DashboardProps) {
               db.setInputText(cleanText);
               db.appendTerminalLog("💡 Applied objective rephrase pattern.");
             }}
+            onExploreRephrase={onExploreRephrase}
           />
         </Card>
       </div>

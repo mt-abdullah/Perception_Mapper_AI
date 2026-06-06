@@ -11,9 +11,10 @@ import TierSelector from "./TierSelector";
 interface DashboardProps {
   db: any;
   onUpgrade: (tier: SubscriptionTier) => void;
+  onExploreRephrase: (quote: string) => void;
 }
 
-export default function BasicDashboard({ db, onUpgrade }: DashboardProps) {
+export default function BasicDashboard({ db, onUpgrade, onExploreRephrase }: DashboardProps) {
   return (
     <div className="space-y-8 animate-fadeIn duration-500">
       <TierSelector currentTier="FREE" onChangeTier={onUpgrade} />
@@ -38,6 +39,7 @@ export default function BasicDashboard({ db, onUpgrade }: DashboardProps) {
               db.setInputText(cleanText);
               db.appendTerminalLog("💡 Applied objective rephrase pattern.");
             }}
+            onExploreRephrase={onExploreRephrase}
           />
         </Card>
       </div>

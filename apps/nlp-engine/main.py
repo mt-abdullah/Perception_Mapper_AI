@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from engine import analyze_perception
+from rephraser import generate_alternatives
+
 
 app = FastAPI(
   title="Perception Mapper NLP Engine",
@@ -53,3 +55,18 @@ def analyze_bias(payload: AnalysisRequest):
     "objectivity": res["scores"]["objectivity"],
     "language": res["language"]
   }
+
+class RephraseRequest(BaseModel):
+  text: str
+  language: str = "en"
+
+@app.post("/analyze/rephrase")
+def analyze_rephrase(payload: RephraseRequest):
+  if not payload.text.strip():
+    raise HTTPException(status_code=400, detail="Text content must not be empty")
+  try:
+    alternatives = generate_alternatives(payload.text, payload.language)
+    return {"success": True, "alternatives": alternatives}
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=str(e))
+

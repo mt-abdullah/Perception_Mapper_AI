@@ -60,3 +60,14 @@ export const updatePolicies = async (payload: PolicySettings, role = "ADMIN") =>
   if (!res.ok) throw new Error("Could not sync policy controls");
   return res.json();
 };
+
+export const fetchAIRephrasings = async (text: string, language = "en") => {
+  const res = await fetch(`${BASE_URL}/analyze/rephrase`, {
+    method: "POST",
+    headers: getHeaders("ADMIN"),
+    body: JSON.stringify({ text, language }),
+  });
+  if (!res.ok) throw new Error("Could not fetch AI rephrase suggestions");
+  return res.json();
+};
+

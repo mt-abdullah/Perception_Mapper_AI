@@ -127,7 +127,69 @@ export class AppController {
     }
   }
 
+  // Live secure AI rephrasing endpoint protected by Clerk
+  @Post("analyze/rephrase")
+  @UseGuards(ClerkGuard)
+  async rephraseText(
+    @Req() req: any,
+    @Body() body: { text: string; language?: string }
+  ) {
+    if (!body.text || !body.text.trim()) {
+      throw new HttpException("Text content is required for rephrasing", HttpStatus.BAD_REQUEST);
+    }
 
+    try {
+      const response = await fetch("http://localhost:8000/analyze/rephrase", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: body.text, language: body.language || "en" }),
+      });
+
+      if (!response.ok) {
+        throw new HttpException(
+          `NLP Engine returned status ${response.status}`,
+          HttpStatus.BAD_GATEWAY
+        );
+      }
+
+      const result = await response.json();
+      return {
+        success: true,
+        source: "FastAPI Live Sidecar",
+        ...result,
+      };
+    } catch (error) {
+      const language = body.language || "en";
+      let mockAlternatives = {
+        journalistic: body.text,
+        empathetic: `We understand the situation: ${body.text}`,
+        professional: `Regarding the matter: ${body.text}`
+      };
+      
+      if (language === "ta") {
+        mockAlternatives = {
+          journalistic: `ஆவணப்படுத்தப்பட்ட சான்றுகளின்படி: ${body.text}`,
+          empathetic: `ஒத்துழைப்புடன் கூடிய புரிந்துணர்வின் அடிப்படையில்: ${body.text}`,
+          professional: `முறையாகவும் அதிகாரப்பூர்வமாகவும்: ${body.text}`
+        };
+      } else if (language === "si") {
+        mockAlternatives = {
+          journalistic: `සත්‍යාපිත කරුණු සහ විශ්ලේෂණය අනුව: ${body.text}`,
+          empathetic: `සහයෝගීතාවය සහ අන්‍යෝන්‍ය අවබෝධය මත: ${body.text}`,
+          professional: `නිල ප්‍රකාශ සහ ව්‍යාපාරික සන්නිවේදනය අනුව: ${body.text}`
+        };
+      }
+
+      return {
+        success: false,
+        source: "NestJS Mock Offline Fallback",
+        message: "Python NLP sidecar offline. Returning baseline rephrase templates.",
+        alternatives: mockAlternatives,
+      };
+    }
+  }
 
   // User History Log Retrieval protected by Clerk
   @Get("history")

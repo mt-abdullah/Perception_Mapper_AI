@@ -10,9 +10,10 @@ interface CognitiveAnalyticsProps {
   analysisResult: AnalysisResult | null;
   isAnalyzing: boolean;
   onRephrase: (quote: string, rephrase: string) => void;
+  onExploreRephrase: (quote: string) => void;
 }
 
-export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onRephrase }: CognitiveAnalyticsProps) {
+export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onRephrase, onExploreRephrase }: CognitiveAnalyticsProps) {
   if (isAnalyzing) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
@@ -77,7 +78,16 @@ export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onReph
             </div>
             <div className="flex items-center justify-between space-x-2">
               <p className="text-[10px] text-slate-350 italic">"{b.quote}"</p>
-              <TTSReadout text={b.quote} mode="emotional" />
+              <div className="flex items-center space-x-1.5 shrink-0">
+                <button 
+                  onClick={() => onExploreRephrase(b.quote)}
+                  className="px-1.5 py-0.5 text-[8px] font-bold text-indigo-400 border border-indigo-550/20 hover:border-indigo-500 bg-indigo-950/15 hover:bg-indigo-950/30 rounded transition"
+                  title="Explore AI Rephrasings"
+                >
+                  AI Co-pilot
+                </button>
+                <TTSReadout text={b.quote} mode="emotional" />
+              </div>
             </div>
             <div className="flex items-center justify-between pt-1 border-t border-slate-900">
               <span className="text-[9px] text-slate-500">💡 Substitute:</span>

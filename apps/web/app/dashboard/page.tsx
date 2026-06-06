@@ -15,12 +15,14 @@ import BiasNetworkGraph from "../../components/dashboard/BiasNetworkGraph";
 import BatchProcessor from "../../components/dashboard/BatchProcessor";
 import SentimentMetricsDashboard from "../../components/dashboard/SentimentMetricsDashboard";
 import PromptSandbox from "../../components/dashboard/PromptSandbox";
+import RephraseSandbox from "../../components/dashboard/RephraseSandbox";
 
 export default function UserDashboard() {
   const router = useRouter();
   const { isSignedIn, user, mounted, setTier } = useAuth();
   const db = useDashboard();
   const [checkoutPlan, setCheckoutPlan] = useState<{ id: 'free' | 'basic' | 'pro'; price: number; name: string } | null>(null);
+  const [rephraseQuote, setRephraseQuote] = useState<string | null>(null);
 
   useEffect(() => {
     if (mounted && !isSignedIn) {
@@ -45,13 +47,13 @@ export default function UserDashboard() {
   const renderDashboardContent = () => {
     switch (user.tier) {
       case "FREE":
-        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} />;
+        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} onExploreRephrase={setRephraseQuote} />;
       case "BASIC":
-        return <ProDashboard db={db} onUpgrade={handleUpgradeRequest} />;
+        return <ProDashboard db={db} onUpgrade={handleUpgradeRequest} onExploreRephrase={setRephraseQuote} />;
       case "PRO":
-        return <EnterpriseDashboard db={db} />;
+        return <EnterpriseDashboard db={db} onExploreRephrase={setRephraseQuote} />;
       default:
-        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} />;
+        return <BasicDashboard db={db} onUpgrade={handleUpgradeRequest} onExploreRephrase={setRephraseQuote} />;
     }
   };
 
@@ -97,6 +99,22 @@ export default function UserDashboard() {
           userEmail={user.email}
           onSuccess={(tier) => {
             setTier(tier);
+          }}
+        />
+      )}
+
+      {/* AI Rephrase Modal Sandbox */}
+      {rephraseQuote && (
+        <RephraseSandbox
+          isOpen={rephraseQuote !== null}
+          onClose={() => setRephraseQuote(null)}
+          quote={rephraseQuote}
+          language={db.selectedLanguage}
+          onSelectRephrase={(rephrasedText) => {
+            const cleanText = db.inputText.replace(rephraseQuote, rephrasedText);
+            db.setInputText(cleanText);
+            db.appendTerminalLog(`💡 Applied AI rephrased alternative: "${rephrasedText}"`);
+            db.triggerAnalysis(cleanText);
           }}
         />
       )}

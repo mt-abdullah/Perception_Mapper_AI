@@ -12,9 +12,10 @@ import { Sparkles, Terminal, Activity, Cpu } from "lucide-react";
 
 interface DashboardProps {
   db: any;
+  onExploreRephrase: (quote: string) => void;
 }
 
-export default function EnterpriseDashboard({ db }: DashboardProps) {
+export default function EnterpriseDashboard({ db, onExploreRephrase }: DashboardProps) {
   return (
     <div className="space-y-8 animate-fadeIn duration-500">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl border border-pink-500/20 bg-gradient-to-r from-pink-950/10 via-slate-900/40 to-indigo-950/10 backdrop-blur-md">
@@ -44,6 +45,7 @@ export default function EnterpriseDashboard({ db }: DashboardProps) {
               db.setInputText(cleanText);
               db.appendTerminalLog("💡 Applied objective rephrase pattern.");
             }}
+            onExploreRephrase={onExploreRephrase}
           />
         </Card>
       </div>
