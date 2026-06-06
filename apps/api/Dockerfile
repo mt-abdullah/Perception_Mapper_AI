@@ -26,7 +26,6 @@ ENV PORT=3001
 
 # Copy compiled files and dependencies from builder stage
 COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=base /app/apps/api/dist ./apps/api/dist
 COPY --from=base /app/apps/api/package.json ./apps/api/package.json
 
