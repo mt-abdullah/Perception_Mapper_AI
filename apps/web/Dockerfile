@@ -5,15 +5,12 @@ FROM node:18-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Enable pnpm
-RUN npm install -g pnpm
-
 # Install dependencies first (leverage layer cache)
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY package.json package-lock.json* ./
 COPY packages/ui/package.json ./packages/ui/
 COPY apps/web/package.json ./apps/web/
 
-RUN pnpm install --no-frozen-lockfile
+RUN npm ci
 
 # Copy source assets
 COPY . .
@@ -40,4 +37,4 @@ COPY --from=base /app/packages/ui ./packages/ui
 EXPOSE 3000
 
 # Run in production using the standard next start command
-CMD ["npx", "pnpm", "--filter", "web", "start"]
+CMD ["npm", "run", "start", "--prefix", "apps/web"]
