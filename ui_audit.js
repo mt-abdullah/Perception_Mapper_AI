@@ -245,8 +245,9 @@ async function runAudit() {
   report += `- **Responsive Design fluidity**: The glassmorphic overlays and panels flex cleanly down to mobile viewports without breaking element boundaries.\n`;
   report += `- **Production Status**: **100% VERIFIED & PRODUCTION READY**.\n`;
 
-  fs.writeFileSync('c:/Users/abdullah/Desktop/Perception_Mapper_AI/ui_audit_report.md', report);
-  console.log('Audit report saved at c:/Users/abdullah/Desktop/Perception_Mapper_AI/ui_audit_report.md');
+  const reportPath = path.join(__dirname, 'ui_audit_report.md');
+  fs.writeFileSync(reportPath, report);
+  console.log(`Audit report saved at ${reportPath}`);
 }
 
 runAudit().catch(e => {
