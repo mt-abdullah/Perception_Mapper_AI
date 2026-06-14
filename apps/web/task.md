@@ -1,31 +1,32 @@
-- [ ] Create unified design system (Tailwind custom palette, glassmorphism utilities, Inter font)
-- [ ] Add `src/styles/globals.css` with CSS variables for colors, typography, and glass effect
-- [ ] Create `components/PageTemplate.tsx` (motion wrapper, glass background, max width)
-- [ ] Create `hooks/useRequireAuth.ts` for route protection and RBAC
-- [ ] Create `src/lib/api.ts` with typed fetch helpers
-- [ ] Implement shared `app/[locale]/layout.tsx` (Navbar, Footer, auth guard wrapper)
-- [ ] Refactor `components/Navbar.tsx`
-  - Highlight active route via `usePathname`
-  - Add mobile drawer with all links (Home, Dashboard, Admin (if admin), Configuration)
-  - Add dark‑mode toggle storing preference in localStorage
-- [ ] Update `app/[locale]/sign-in/page.tsx`
-  - Ensure imports: `useEffect`, `useRouter`, `usePathname`, `useAuth`
-  - Add redirect after successful sign‑in (to `/dashboard` or `/admin` based on role)
-- [ ] Update `app/[locale]/sign-up/page.tsx` similarly
-- [ ] Update `app/[locale]/page.tsx` (Home) to use `PageTemplate` and apply design system
-- [ ] Update `app/[locale]/dashboard/page.tsx`
-  - Use `useRequireAuth()`
-  - Wrap content with `PageTemplate`
-  - Add placeholder cards with framer‑motion
-- [ ] Update `app/[locale]/admin/page.tsx`
-  - Use `useRequireAuth('ADMIN')`
-  - Wrap with `PageTemplate`
-- [ ] Update `app/[locale]/configuration/page.tsx`
-  - Use `useRequireAuth()`
-  - Adjust UI to use new Card component and respect RBAC
-- [ ] Ensure all API calls (`/api/configuration`, `/api/analyze`) use `fetchJSON` with loading/error states
-- [ ] Add SEO meta tags (`<title>`, `<meta description>`) for each page
-- [ ] Run TypeScript build (`npm run build`) to catch any errors
-- [ ] Perform manual testing of routes, auth flow, navigation, responsiveness
-- [ ] Run Lighthouse audit and address performance warnings
-- [ ] Document final state in `walkthrough.md`
+- [x] Create unified design system (Tailwind custom palette, glassmorphism utilities, Inter font)
+- [x] Add `src/styles/globals.css` with CSS variables for colors, typography, and glass effect
+- [x] Create `components/PageTemplate.tsx` (motion wrapper, glass background, max width)
+- [x] Create `hooks/useRequireAuth.ts` for route protection and RBAC
+- [x] Create `src/lib/api.ts` with typed fetch helpers
+- [x] Implement shared `app/[locale]/layout.tsx` (Navbar, Footer, auth guard wrapper)
+- [x] Refactor `components/Navbar.tsx`
+  - [x] Highlight active route via `usePathname`
+  - [x] Add mobile drawer with all links (Home, Dashboard, Admin (if admin), Configuration)
+  - [x] Add dark‑mode toggle storing preference in localStorage
+- [x] Update `app/[locale]/sign-in/page.tsx`
+  - [x] Ensure imports: `useEffect`, `useRouter`, `usePathname`, `useAuth`
+  - [x] Add redirect after successful sign‑in (to `/dashboard` or `/admin` based on role)
+- [x] Update `app/[locale]/sign-up/page.tsx` similarly
+- [x] Update `app/[locale]/page.tsx` (Home) to use `PageTemplate` and apply design system
+- [x] Update `app/[locale]/dashboard/page.tsx`
+  - [x] Use `useRequireAuth()`
+  - [x] Wrap content with `PageTemplate`
+  - [x] Add placeholder cards with framer‑motion
+- [x] Update `app/[locale]/admin/page.tsx`
+  - [x] Use `useRequireAuth('ADMIN')`
+  - [x] Wrap with `PageTemplate`
+- [x] Update `app/[locale]/configuration/page.tsx`
+  - [x] Use `useRequireAuth()`
+  - [x] Adjust UI to use new Card component and respect RBAC
+- [x] Ensure all API calls (`/api/configuration`, `/api/analyze`) use `fetchJSON` with loading/error states
+- [x] Add SEO meta tags (`<title>`, `<meta description>`) for each page
+- [x] Run TypeScript build (`npm run build`) to catch any errors
+- [x] Perform manual testing of routes, auth flow, navigation, responsiveness
+- [x] Run Lighthouse audit and address performance warnings
+- [x] Document final state in `walkthrough.md`
+
