@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
@@ -12,6 +12,19 @@ export default function Navbar() {
   const [showAvatarEdit, setShowAvatarEdit] = useState(false);
   const pathname = usePathname();
   const { isSignedIn, user, signOut, updateAvatar, mounted } = useAuth();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const presets = [
     "https://api.dicebear.com/7.x/bottts/svg?seed=neutral",
@@ -53,7 +66,7 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-4">
             {isSignedIn ? (
-              <div className="relative">
+              <div ref={menuRef} className="relative">
                 <button onClick={() => setMenuOpen(!menuOpen)} className="flex items-center space-x-2 p-1 rounded-xl bg-slate-900/40 hover:bg-slate-900/80 border border-slate-850/80 transition duration-300 cursor-pointer">
                   <div className={`w-8 h-8 rounded-full border overflow-hidden bg-slate-900 flex items-center justify-center shrink-0 ${
                     user?.tier === "PRO" ? "border-pink-500/40" : user?.tier === "BASIC" ? "border-purple-500/40" : "border-cyan-500/40"
