@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { getMockSession, setMockSession, setMockAvatar, clearMockSession, validateAdminCredentials, MockUser, SubscriptionTier } from "../lib/auth";
 
 export const useAuth = () => {
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState<MockUser | null>(null);
@@ -22,9 +20,8 @@ export const useAuth = () => {
   const signInUser = useCallback((email: string, name = "Standard User") => {
     setMockSession(email, "USER", name);
     syncSession();
-    router.replace("/dashboard");
-    setTimeout(() => window.location.reload(), 150);
-  }, [router, syncSession]);
+    window.location.href = "/dashboard";
+  }, [syncSession]);
 
   const signInAdmin = useCallback((email: string, pass: string): { success: boolean; error?: string } => {
     const check = validateAdminCredentials(email, pass);
@@ -33,10 +30,9 @@ export const useAuth = () => {
     }
     setMockSession(email, "ADMIN", check.name);
     syncSession();
-    router.replace("/admin/dashboard");
-    setTimeout(() => window.location.reload(), 150);
+    window.location.href = "/admin/dashboard";
     return { success: true };
-  }, [router, syncSession]);
+  }, [syncSession]);
 
   const setRole = useCallback((newRole: "USER" | "ADMIN") => {
     if (!user) return;
@@ -60,9 +56,8 @@ export const useAuth = () => {
     clearMockSession();
     setIsSignedIn(false);
     setUser(null);
-    router.replace("/");
-    setTimeout(() => window.location.reload(), 150);
-  }, [router]);
+    window.location.href = "/";
+  }, []);
 
   return {
     isSignedIn: mounted ? isSignedIn : false,
