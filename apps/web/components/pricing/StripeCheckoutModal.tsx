@@ -74,7 +74,7 @@ export default function StripeCheckoutModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl relative overflow-hidden">
+      <div className="relative w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl overflow-hidden">
         {/* Glow accent matching selected plan */}
         <div className={`absolute top-0 left-0 right-0 h-1.5 ${
           planId === 'basic' ? 'bg-blue-500' : 'bg-emerald-500'

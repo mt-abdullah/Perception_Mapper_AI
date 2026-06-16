@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": { "@/*": ["*"] },
+    "paths": {
+      "@/*": ["*"],
+      "@perception-mapper/ui": ["../../packages/ui/src/index.tsx"]
+    },
     "lib": [
       "dom",
       "dom.iterable",
