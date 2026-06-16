@@ -242,7 +242,7 @@ export default function LandingPlayground() {
     const words = rawText.split(" ");
 
     return (
-      <div className="flex flex-wrap gap-x-1.5 gap-y-2 leading-relaxed text-slate-350 text-xs select-none">
+      <div className="flex flex-wrap gap-x-1.5 gap-y-2 leading-relaxed text-slate-300 text-xs select-none">
         {words.map((w, idx) => {
           const cleanWord = w.toLowerCase().replace(/[.,!?;:()"]/g, "");
           const matchedBias = biasesList.find((b: any) => {
@@ -299,7 +299,7 @@ export default function LandingPlayground() {
                     className={`w-full text-left p-3 rounded-xl border text-xs font-semibold transition ${
                       currentPresetIndex === idx
                         ? "border-indigo-500/50 bg-indigo-950/20 text-indigo-200"
-                        : "border-slate-850 hover:border-slate-700 bg-slate-950/70 text-slate-400"
+                        : "border-slate-800 hover:border-slate-700 bg-slate-950/70 text-slate-400"
                     }`}
                   >
                     <div className="flex justify-between items-center">
@@ -321,7 +321,7 @@ export default function LandingPlayground() {
                   setInputText(e.target.value);
                   setShowResults(false);
                 }}
-                className="text-xs h-28 font-mono bg-slate-950/80 border-slate-850 focus:border-indigo-500 text-slate-350"
+                className="text-xs h-28 font-mono bg-slate-950/80 border-slate-800 focus:border-indigo-500 text-slate-300"
                 placeholder="Enter subjective statements..."
               />
             </div>
@@ -480,7 +480,7 @@ export default function LandingPlayground() {
                         className={`flex items-center space-x-1 px-2.5 py-1 text-[9px] font-extrabold uppercase rounded-lg border transition ${
                           isPlayingAudio
                             ? "bg-indigo-950/60 text-indigo-400 border-indigo-500/30 animate-pulse"
-                            : "bg-slate-950 hover:bg-slate-900 text-slate-400 border-slate-850 hover:border-slate-750"
+                            : "bg-slate-950 hover:bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700"
                         }`}
                       >
                         <Volume2 className="h-3.5 w-3.5" />

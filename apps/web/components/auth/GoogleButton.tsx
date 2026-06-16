@@ -13,7 +13,7 @@ export default function GoogleButton({ onClick, disabled }: OAuthButtonProps) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex items-center justify-center w-full px-4 py-2.5 bg-slate-900/60 hover:bg-slate-850 border border-slate-800 hover:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-200 transition-all duration-200 disabled:opacity-50 select-none shadow-sm"
+      className="flex items-center justify-center w-full px-4 py-2.5 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-200 transition-all duration-200 disabled:opacity-50 select-none shadow-sm"
     >
       <svg className="h-4 w-4 mr-2.5 shrink-0" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
         <path
