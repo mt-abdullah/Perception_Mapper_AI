@@ -7,7 +7,7 @@ export default function LanguageSwitcher() {
   const { locale, setLocale } = useTranslation();
 
   return (
-    <div className="flex items-center space-x-2 bg-slate-900/65 border border-slate-800/80 rounded-xl px-2.5 py-1 text-[11px] font-semibold text-slate-350 hover:border-indigo-500/30 transition shadow-sm">
+    <div className="flex items-center space-x-2 bg-slate-900/65 border border-slate-800/80 rounded-xl px-2.5 py-1 text-[11px] font-semibold text-slate-300 hover:border-indigo-500/30 transition shadow-sm">
       <Globe className="h-3.5 w-3.5 text-indigo-400" />
       <select
         value={locale}

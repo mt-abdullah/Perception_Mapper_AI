@@ -37,7 +37,7 @@ export default function ComparisonTable() {
                       ? 'border-blue-500/30 text-blue-400 bg-blue-950/20'
                       : p.id === 'pro'
                       ? 'border-emerald-500/30 text-emerald-400 bg-emerald-950/20'
-                      : 'border-slate-800 text-slate-450 bg-slate-900'
+                      : 'border-slate-800 text-slate-400 bg-slate-900'
                   }`}>
                     {p.name}
                   </span>
@@ -46,7 +46,7 @@ export default function ComparisonTable() {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-850">
+          <tbody className="divide-y divide-slate-800">
             {categories.map((category) => (
               <React.Fragment key={category}>
                 {/* Category Header Row */}
@@ -69,7 +69,7 @@ export default function ComparisonTable() {
                         idx % 2 === 0 ? 'bg-slate-900/10' : 'bg-transparent'
                       }`}
                     >
-                      <td className="py-3.5 px-6 font-semibold text-slate-350">
+                      <td className="py-3.5 px-6 font-semibold text-slate-300">
                         {f.label}
                       </td>
                       {pricingPlans.map((p) => {
@@ -85,7 +85,7 @@ export default function ComparisonTable() {
                               <span className="font-bold text-slate-100">{val}</span>
                             ) : val === true ? (
                               <div className="flex justify-center">
-                                <Check className="h-4.5 w-4.5 text-emerald-450" />
+                                <Check className="h-4.5 w-4.5 text-emerald-400" />
                               </div>
                             ) : (
                               <div className="flex justify-center">
