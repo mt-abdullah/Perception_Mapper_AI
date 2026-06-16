@@ -31,7 +31,7 @@ export default function PromptSandbox() {
           <Terminal className="h-4 w-4 text-purple-400" />
           <h3 className="text-xs font-extrabold uppercase tracking-widest text-slate-200">System Directives Sandbox</h3>
         </div>
-        <button onClick={() => setPrompt(defaultPrompt)} className="flex items-center space-x-1 px-2.5 py-1 bg-slate-900/60 hover:bg-slate-800 border border-slate-850 text-[9px] font-bold text-slate-500 hover:text-slate-300 rounded-lg transition">
+        <button onClick={() => setPrompt(defaultPrompt)} className="flex items-center space-x-1 px-2.5 py-1 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 text-[9px] font-bold text-slate-500 hover:text-slate-300 rounded-lg transition">
           <RotateCcw className="h-3 w-3" />
           <span>Reset Prompt</span>
         </button>
@@ -44,7 +44,7 @@ export default function PromptSandbox() {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="w-full bg-slate-955/80 border border-slate-900 focus:border-purple-500 focus:outline-none rounded-xl p-3.5 text-[10.5px] font-mono leading-relaxed text-slate-300 h-28 resize-none"
+              className="w-full bg-slate-950/80 border border-slate-900 focus:border-purple-500 focus:outline-none rounded-xl p-3.5 text-[10.5px] font-mono leading-relaxed text-slate-300 h-28 resize-none"
             />
           </div>
           <div>
@@ -52,12 +52,12 @@ export default function PromptSandbox() {
             <input
               value={sandboxInput}
               onChange={(e) => setSandboxInput(e.target.value)}
-              className="w-full bg-slate-955/80 border border-slate-900 focus:border-purple-500 focus:outline-none rounded-xl px-3.5 py-2.5 text-[10.5px] text-slate-300 font-sans"
+              className="w-full bg-slate-950/80 border border-slate-900 focus:border-purple-500 focus:outline-none rounded-xl px-3.5 py-2.5 text-[10.5px] text-slate-300 font-sans"
             />
           </div>
         </div>
 
-        <div className="bg-slate-955/50 border border-slate-900 rounded-xl p-4 flex flex-col justify-between min-h-[220px]">
+        <div className="bg-slate-950/50 border border-slate-900 rounded-xl p-4 flex flex-col justify-between min-h-[220px]">
           <div className="space-y-3.5">
             <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 block">Dry-Run Output Auditing</span>
             {sandboxOutput ? (
@@ -104,7 +104,7 @@ export default function PromptSandbox() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-1 bg-slate-955/80 border border-slate-900 rounded-xl p-4 space-y-3.5">
+          <div className="md:col-span-1 bg-slate-950/80 border border-slate-900 rounded-xl p-4 space-y-3.5">
             <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 block">X-API-Key Configuration</span>
             <div className="bg-slate-950 border border-slate-900 rounded-lg p-2.5 flex items-center justify-between">
               <span className="font-mono text-[10px] text-indigo-400 select-all font-bold">pm_key_team_pro_2026</span>
@@ -115,7 +115,7 @@ export default function PromptSandbox() {
             </p>
           </div>
 
-          <div className="md:col-span-2 bg-slate-955/80 border border-slate-900 rounded-xl p-4 space-y-3">
+          <div className="md:col-span-2 bg-slate-950/80 border border-slate-900 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between border-b border-slate-900/60 pb-2">
               <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500">Playground Code Generator</span>
               <span className="text-[8px] text-indigo-400 font-bold uppercase">Rate limit: 120/min</span>
