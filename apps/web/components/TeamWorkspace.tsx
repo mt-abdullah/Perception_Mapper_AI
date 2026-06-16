@@ -39,12 +39,12 @@ export default function TeamWorkspace({ teamMembers, onInvite, onRevoke }: TeamW
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="colleague@perception.ai"
-          className="flex-grow bg-slate-950 border border-slate-850 focus:border-indigo-500/80 rounded-xl px-4 py-2 text-xs text-slate-250 outline-none"
+          className="flex-grow bg-slate-950 border border-slate-800 focus:border-indigo-500/80 rounded-xl px-4 py-2 text-xs text-slate-200 outline-none"
         />
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="bg-slate-950 border border-slate-850 rounded-xl px-3 text-xs text-slate-350"
+          className="bg-slate-950 border border-slate-800 rounded-xl px-3 text-xs text-slate-300"
         >
           <option value="USER">USER</option>
           <option value="ADMIN">ADMIN</option>
@@ -81,7 +81,7 @@ export default function TeamWorkspace({ teamMembers, onInvite, onRevoke }: TeamW
                 <td className="py-3 text-right font-sans">
                   <button
                     onClick={() => onRevoke(m.id, m.email)}
-                    className="text-rose-455 hover:text-rose-400 font-bold tracking-wide transition"
+                    className="text-rose-500 hover:text-rose-400 font-bold tracking-wide transition"
                   >
                     Revoke
                   </button>

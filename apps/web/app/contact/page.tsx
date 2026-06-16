@@ -72,7 +72,7 @@ export default function ContactPage() {
             
             {/* Left side info block */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="glass-panel border border-slate-900 bg-slate-955/30 rounded-2xl p-6 sm:p-8 space-y-6">
+              <div className="glass-panel border border-slate-900 bg-slate-950/30 rounded-2xl p-6 sm:p-8 space-y-6">
                 <h3 className="text-base font-bold uppercase tracking-wider text-slate-200">
                   Node Information
                 </h3>
@@ -131,7 +131,7 @@ export default function ContactPage() {
               </div>
 
               {/* Status metrics widget */}
-              <div className="glass-panel border border-slate-900/60 bg-slate-955/20 rounded-2xl p-6 flex items-center justify-between">
+              <div className="glass-panel border border-slate-900/60 bg-slate-950/20 rounded-2xl p-6 flex items-center justify-between">
                 <div>
                   <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gateway Status</span>
                   <span className="text-emerald-400 text-sm font-extrabold tracking-wider">OPERATIONAL</span>
@@ -145,7 +145,7 @@ export default function ContactPage() {
 
             {/* Right side interactive form */}
             <div className="lg:col-span-7">
-              <div className="glass-panel border border-slate-900 bg-slate-955/30 rounded-2xl p-6 sm:p-8 relative">
+              <div className="glass-panel border border-slate-900 bg-slate-950/30 rounded-2xl p-6 sm:p-8 relative">
                 
                 {isSuccess ? (
                   /* Stunning Success State */
@@ -159,7 +159,7 @@ export default function ContactPage() {
                         Your secure message has bypassed firewall nodes and synced with the active engineering terminal queue. Expect response coordinates within 8 standard cycles.
                       </p>
                     </div>
-                    <div className="bg-slate-900/40 border border-slate-850 px-4 py-3.5 rounded-xl max-w-sm mx-auto text-[10px] font-extrabold uppercase tracking-widest text-indigo-300">
+                    <div className="bg-slate-900/40 border border-slate-800 px-4 py-3.5 rounded-xl max-w-sm mx-auto text-[10px] font-extrabold uppercase tracking-widest text-indigo-300">
                       Receipt Code: PM-SEC-{Math.floor(100000 + Math.random() * 900000)}
                     </div>
                     <button
@@ -188,7 +188,7 @@ export default function ContactPage() {
                           className={`flex flex-col items-center justify-center p-3.5 rounded-xl border text-center transition cursor-pointer select-none ${
                             inquiryType === "general"
                               ? "bg-indigo-950/15 border-indigo-500/50 text-white shadow-[0_0_15px_rgba(99,102,241,0.1)]"
-                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-450 hover:text-slate-250"
+                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-400 hover:text-slate-200"
                           }`}
                         >
                           <MessageSquare className={`h-4.5 w-4.5 mb-1.5 transition ${inquiryType === "general" ? "text-indigo-400" : ""}`} />
@@ -200,8 +200,8 @@ export default function ContactPage() {
                           onClick={() => setInquiryType("enterprise")}
                           className={`flex flex-col items-center justify-center p-3.5 rounded-xl border text-center transition cursor-pointer select-none ${
                             inquiryType === "enterprise"
-                              ? "bg-pink-955/15 border-pink-500/50 text-white shadow-[0_0_15px_rgba(236,72,153,0.1)]"
-                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-450 hover:text-slate-250"
+                              ? "bg-pink-950/15 border-pink-500/50 text-white shadow-[0_0_15px_rgba(236,72,153,0.1)]"
+                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-400 hover:text-slate-200"
                           }`}
                         >
                           <Globe className={`h-4.5 w-4.5 mb-1.5 transition ${inquiryType === "enterprise" ? "text-pink-400" : ""}`} />
@@ -213,8 +213,8 @@ export default function ContactPage() {
                           onClick={() => setInquiryType("api")}
                           className={`flex flex-col items-center justify-center p-3.5 rounded-xl border text-center transition cursor-pointer select-none ${
                             inquiryType === "api"
-                              ? "bg-cyan-955/15 border-cyan-500/50 text-white shadow-[0_0_15px_rgba(6,182,212,0.1)]"
-                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-450 hover:text-slate-250"
+                              ? "bg-cyan-950/15 border-cyan-500/50 text-white shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-400 hover:text-slate-200"
                           }`}
                         >
                           <Cpu className={`h-4.5 w-4.5 mb-1.5 transition ${inquiryType === "api" ? "text-cyan-400" : ""}`} />
@@ -226,8 +226,8 @@ export default function ContactPage() {
                           onClick={() => setInquiryType("bias")}
                           className={`flex flex-col items-center justify-center p-3.5 rounded-xl border text-center transition cursor-pointer select-none ${
                             inquiryType === "bias"
-                              ? "bg-amber-955/15 border-amber-500/50 text-white shadow-[0_0_15px_rgba(245,158,11,0.1)]"
-                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-450 hover:text-slate-250"
+                              ? "bg-amber-950/15 border-amber-500/50 text-white shadow-[0_0_15px_rgba(245,158,11,0.1)]"
+                              : "bg-slate-950/20 border-slate-900 hover:border-slate-800 text-slate-400 hover:text-slate-200"
                           }`}
                         >
                           <Shield className={`h-4.5 w-4.5 mb-1.5 transition ${inquiryType === "bias" ? "text-amber-400" : ""}`} />
@@ -256,7 +256,7 @@ export default function ContactPage() {
                           placeholder="e.g. Sentinel-1 or Alice Vance"
                         />
                         {errors.name && (
-                          <span className="text-[9px] font-semibold text-rose-450 uppercase">{errors.name}</span>
+                          <span className="text-[9px] font-semibold text-rose-400 uppercase">{errors.name}</span>
                         )}
                       </div>
 
@@ -278,7 +278,7 @@ export default function ContactPage() {
                           placeholder="e.g. telemetry@quantum-host.net"
                         />
                         {errors.email && (
-                          <span className="text-[9px] font-semibold text-rose-450 uppercase">{errors.email}</span>
+                          <span className="text-[9px] font-semibold text-rose-400 uppercase">{errors.email}</span>
                         )}
                       </div>
 
@@ -300,7 +300,7 @@ export default function ContactPage() {
                           placeholder="Describe the payload parameters, bias calibration coordinates, or custom query in detail..."
                         />
                         {errors.message && (
-                          <span className="text-[9px] font-semibold text-rose-450 uppercase">{errors.message}</span>
+                          <span className="text-[9px] font-semibold text-rose-400 uppercase">{errors.message}</span>
                         )}
                       </div>
                     </div>

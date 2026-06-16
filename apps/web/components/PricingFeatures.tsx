@@ -52,12 +52,12 @@ export default function PricingFeatures() {
 
   const renderVal = (val: string | boolean) => {
     if (typeof val === "string") {
-      return <span className="text-slate-350 font-bold">{val}</span>;
+      return <span className="text-slate-300 font-bold">{val}</span>;
     }
     return val ? (
-      <Check className="w-4 h-4 text-emerald-450 mx-auto" />
+      <Check className="w-4 h-4 text-emerald-400 mx-auto" />
     ) : (
-      <X className="w-4 h-4 text-slate-650 mx-auto" />
+      <X className="w-4 h-4 text-slate-600 mx-auto" />
     );
   };
 
@@ -69,14 +69,14 @@ export default function PricingFeatures() {
       <div className="overflow-x-auto">
         <table className="w-full text-left text-[10px] text-slate-400 border-collapse">
           <thead>
-            <tr className="border-b border-slate-850 text-slate-500 font-bold uppercase tracking-wider">
+            <tr className="border-b border-slate-800 text-slate-500 font-bold uppercase tracking-wider">
               <th className="py-2.5">Capabilities</th>
               <th className="py-2.5 text-center w-24">Free</th>
               <th className="py-2.5 text-center w-24">Basic</th>
               <th className="py-2.5 text-center w-24">Pro</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-850/50">
+          <tbody className="divide-y divide-slate-800/50">
             {features.map((f, i) => (
               <tr key={i} className="hover:bg-slate-950/20 transition">
                 <td className="py-3 flex items-center space-x-2.5 font-medium">

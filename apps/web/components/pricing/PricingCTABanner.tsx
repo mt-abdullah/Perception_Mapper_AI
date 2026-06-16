@@ -20,14 +20,14 @@ export default function PricingCTABanner() {
         <div className="flex flex-col sm:flex-row gap-3 z-10 shrink-0">
           <Link
             href="/signup?plan=free"
-            className="px-5 py-2.5 rounded-xl text-center bg-indigo-650 hover:bg-indigo-600 text-white font-bold uppercase tracking-wider text-xs border border-indigo-500 shadow-md transition"
+            className="px-5 py-2.5 rounded-xl text-center bg-indigo-600 hover:bg-indigo-600 text-white font-bold uppercase tracking-wider text-xs border border-indigo-500 shadow-md transition"
             aria-label="Start for free"
           >
             Start for free
           </Link>
           <Link
             href="/contact"
-            className="px-5 py-2.5 rounded-xl text-center bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white font-bold uppercase tracking-wider text-xs border border-slate-800 transition"
+            className="px-5 py-2.5 rounded-xl text-center bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-bold uppercase tracking-wider text-xs border border-slate-800 transition"
             aria-label="Talk to sales team"
           >
             Talk to sales

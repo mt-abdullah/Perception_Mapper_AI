@@ -113,11 +113,11 @@ export default function AudioVisualizer({ onStop }: AudioVisualizerProps) {
     <div className="flex flex-col items-center justify-center p-4 border border-slate-900 bg-slate-950/60 rounded-xl space-y-4 font-sans select-none relative overflow-hidden h-40">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent pointer-events-none" />
       {isRecording && (
-        <span className="absolute top-3 left-4 flex items-center text-[9px] font-bold text-rose-400 bg-rose-955/60 border border-rose-500/20 rounded px-2 py-0.5 uppercase tracking-widest">
+        <span className="absolute top-3 left-4 flex items-center text-[9px] font-bold text-rose-400 bg-rose-950/60 border border-rose-500/20 rounded px-2 py-0.5 uppercase tracking-widest">
           <Radio className="h-2.5 w-2.5 mr-1 animate-pulse" /> LIVE STREAM
         </span>
       )}
-      <canvas ref={canvasRef} width={380} height={70} className="w-full h-[70px] rounded-lg border border-slate-900/60 bg-slate-955" />
+      <canvas ref={canvasRef} width={380} height={70} className="w-full h-[70px] rounded-lg border border-slate-900/60 bg-slate-950" />
       <button
         type="button"
         onClick={isRecording ? stopRecording : startRecording}

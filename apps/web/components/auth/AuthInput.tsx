@@ -41,11 +41,11 @@ export default function AuthInput({
         <input
           id={id}
           type={inputType}
-          className={`w-full bg-slate-955/80 border ${
-            error ? "border-rose-500/50 focus:border-rose-500 focus:ring-rose-500/25" : "border-slate-850 focus:border-indigo-500 focus:ring-indigo-500/25"
+          className={`w-full bg-slate-950/80 border ${
+            error ? "border-rose-500/50 focus:border-rose-500 focus:ring-rose-500/25" : "border-slate-800 focus:border-indigo-500 focus:ring-indigo-500/25"
           } focus:outline-none focus:ring-2 rounded-xl py-2.5 ${Icon ? "pl-9" : "px-3.5"} ${
             isPassword ? "pr-10" : "pr-3.5"
-          } text-xs text-slate-200 placeholder-slate-650 transition-all duration-200`}
+          } text-xs text-slate-200 placeholder-slate-600 transition-all duration-200`}
           {...props}
         />
 
@@ -53,7 +53,7 @@ export default function AuthInput({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-550 hover:text-slate-350 transition-colors"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
           >
             {showPassword ? (
               <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -65,7 +65,7 @@ export default function AuthInput({
       </div>
 
       {error && (
-        <p className="text-[10px] font-semibold text-rose-450 mt-1 pl-1">
+        <p className="text-[10px] font-semibold text-rose-500 mt-1 pl-1">
           {error}
         </p>
       )}

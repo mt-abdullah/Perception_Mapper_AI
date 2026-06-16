@@ -20,7 +20,7 @@ export default function LandingPricing() {
       border: "border-slate-800/80 bg-slate-900/40",
       highlight: false,
       btnText: "Start Free",
-      btnClass: "bg-slate-950 hover:bg-slate-900 text-slate-350 hover:text-white border border-slate-850",
+      btnClass: "bg-slate-950 hover:bg-slate-900 text-slate-300 hover:text-white border border-slate-800",
       planId: "free",
       iconName: "Sparkles",
     },
@@ -38,7 +38,7 @@ export default function LandingPricing() {
       border: "border-slate-800/80 bg-slate-900/40",
       highlight: false,
       btnText: "Get Basic",
-      btnClass: "bg-slate-950 hover:bg-slate-900 text-slate-355 hover:text-white border border-slate-850",
+      btnClass: "bg-slate-950 hover:bg-slate-900 text-slate-300 hover:text-white border border-slate-800",
       planId: "basic",
       iconName: "Layers",
     },
@@ -56,7 +56,7 @@ export default function LandingPricing() {
       border: "border-cyan-500/50 ring-1 ring-cyan-500/30 bg-slate-900/60 shadow-cyan-500/5",
       highlight: true,
       btnText: "Get Pro",
-      btnClass: "bg-gradient-to-r from-cyan-600 via-indigo-650 to-purple-650 hover:from-cyan-500 hover:to-purple-500 text-white shadow-lg shadow-cyan-600/15 border border-cyan-400/20",
+      btnClass: "bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white shadow-lg shadow-cyan-600/15 border border-cyan-400/20",
       planId: "pro",
       iconName: "Zap",
     },
@@ -68,7 +68,7 @@ export default function LandingPricing() {
         <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white uppercase tracking-wider">
           Cognitive Node Tiers & Pricing
         </h3>
-        <p className="text-xs text-slate-455 font-bold uppercase tracking-wider">
+        <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">
           Choose the optimal linguistic mapping node allocation for your workspace.
         </p>
       </div>

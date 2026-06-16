@@ -61,7 +61,7 @@ export default function AdminSignInPage() {
           </div>
 
           {error && (
-            <div className="p-3 bg-rose-955/40 border border-rose-500/20 text-rose-400 rounded-xl font-semibold flex items-center space-x-2">
+            <div className="p-3 bg-rose-950/40 border border-rose-500/20 text-rose-400 rounded-xl font-semibold flex items-center space-x-2">
               <ShieldAlert className="h-4 w-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -75,7 +75,7 @@ export default function AdminSignInPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin1@perception.ai"
-              className="w-full bg-slate-950/80 border border-slate-850 focus:border-purple-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
+              className="w-full bg-slate-950/80 border border-slate-800 focus:border-purple-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
             />
           </div>
 
@@ -87,14 +87,14 @@ export default function AdminSignInPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-slate-955/80 border border-slate-850 focus:border-purple-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
+              className="w-full bg-slate-950/80 border border-slate-800 focus:border-purple-500 focus:outline-none rounded-xl px-3 py-2.5 text-slate-200"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 via-indigo-650 to-pink-650 hover:from-purple-500 hover:to-pink-550 text-white rounded-xl text-xs font-bold border border-purple-400/20 shadow-lg transition flex items-center justify-center select-none uppercase tracking-wider"
+            className="w-full py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold border border-purple-400/20 shadow-lg transition flex items-center justify-center select-none uppercase tracking-wider"
           >
             {loading ? (
               <>

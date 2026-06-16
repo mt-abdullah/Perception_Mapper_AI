@@ -82,7 +82,7 @@ export default function StripeCheckoutModal({
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1 text-slate-500 hover:text-slate-350 rounded-lg transition"
+          className="absolute top-4 right-4 p-1 text-slate-500 hover:text-slate-300 rounded-lg transition"
           aria-label="Close billing overlay"
         >
           <X className="h-5 w-5" />
@@ -90,7 +90,7 @@ export default function StripeCheckoutModal({
 
         {success ? (
           <div className="flex flex-col items-center justify-center py-8 space-y-4 text-center">
-            <CheckCircle className="h-16 w-16 text-emerald-450 animate-bounce" />
+            <CheckCircle className="h-16 w-16 text-emerald-400 animate-bounce" />
             <h3 className="text-lg font-bold text-white uppercase tracking-wider">Payment Successful</h3>
             <p className="text-xs text-slate-400 max-w-xs">
               Your subscription is active. Enabling advanced linguistic capabilities and telemetry node clusters.
@@ -103,23 +103,23 @@ export default function StripeCheckoutModal({
                 Stripe Gateway
               </span>
               <h3 className="text-base font-extrabold text-white uppercase tracking-wider pt-2">Checkout Details</h3>
-              <p className="text-xs text-slate-450 font-semibold uppercase">Plan: <span className="text-white">{planName}</span> / ${planPrice} mo</p>
+              <p className="text-xs text-slate-400 font-semibold uppercase">Plan: <span className="text-white">{planName}</span> / ${planPrice} mo</p>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-850 space-y-3">
+            <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-450 font-bold uppercase tracking-wider">Billed To</span>
+                <span className="text-slate-400 font-bold uppercase tracking-wider">Billed To</span>
                 <span className="text-slate-200 font-bold truncate max-w-[200px]">{userEmail}</span>
               </div>
               <div className="w-full h-px bg-slate-900" />
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-450 font-bold uppercase tracking-wider">Total Charge</span>
+                <span className="text-slate-400 font-bold uppercase tracking-wider">Total Charge</span>
                 <span className="text-white font-extrabold text-sm">${planPrice}.00</span>
               </div>
             </div>
 
             <div className="space-y-3">
-              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider">
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                 Card Information
               </label>
               
@@ -181,8 +181,8 @@ export default function StripeCheckoutModal({
                 loading
                   ? 'bg-slate-900 border-slate-800 text-slate-500 cursor-not-allowed'
                   : planId === 'basic'
-                  ? 'bg-blue-650 hover:bg-blue-600 text-white border-blue-500'
-                  : 'bg-emerald-650 hover:bg-emerald-600 text-white border-emerald-500'
+                  ? 'bg-blue-600 hover:bg-blue-600 text-white border-blue-500'
+                  : 'bg-emerald-600 hover:bg-emerald-600 text-white border-emerald-500'
               }`}
             >
               {loading ? (

@@ -35,13 +35,13 @@ export default function BiasNetworkGraph() {
           <Network className="h-4 w-4 text-cyan-400" />
           <h3 className="text-xs font-extrabold uppercase tracking-widest text-slate-200">Cognitive Map Heuristics</h3>
         </div>
-        <span className="text-[8px] font-extrabold uppercase px-2 py-0.5 rounded bg-cyan-955/40 border border-cyan-500/20 text-cyan-400">
+        <span className="text-[8px] font-extrabold uppercase px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-500/20 text-cyan-400">
           2D Vector Map Active
         </span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-        <div className="lg:col-span-2 relative bg-slate-955/50 border border-slate-900/80 rounded-xl flex items-center justify-center p-4 min-h-[220px]">
+        <div className="lg:col-span-2 relative bg-slate-950/50 border border-slate-900/80 rounded-xl flex items-center justify-center p-4 min-h-[220px]">
           <svg className="w-full max-w-[340px] h-[200px]" viewBox="0 0 340 200">
             {/* Connection Lines */}
             {activeLinks.map((link, idx) => {
@@ -100,7 +100,7 @@ export default function BiasNetworkGraph() {
             </div>
           )}
           {selectedNode && (
-            <button onClick={() => setSelectedNode(null)} className="w-full py-2 bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-slate-200 border border-slate-800 text-[9px] font-bold rounded-lg transition">
+            <button onClick={() => setSelectedNode(null)} className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 text-[9px] font-bold rounded-lg transition">
               Reset Vector Scope
             </button>
           )}

@@ -65,7 +65,7 @@ export default function BatchProcessor() {
   };
 
   return (
-    <div className="bg-slate-955/40 border border-slate-900 rounded-2xl p-6 relative select-none font-sans overflow-hidden">
+    <div className="bg-slate-950/40 border border-slate-900 rounded-2xl p-6 relative select-none font-sans overflow-hidden">
       <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-6">
         <div className="flex items-center space-x-2">
           <FolderUp className="h-4 w-4 text-purple-400" />
@@ -83,7 +83,7 @@ export default function BatchProcessor() {
         <div
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          className="border border-dashed border-slate-850 hover:border-purple-500/40 bg-slate-950/40 hover:bg-slate-950/80 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition select-none min-h-[160px]"
+          className="border border-dashed border-slate-800 hover:border-purple-500/40 bg-slate-950/40 hover:bg-slate-950/80 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition select-none min-h-[160px]"
         >
           <FolderUp className="h-7 w-7 text-purple-400/80 mb-3 animate-pulse" />
           <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wide">Drag document logs here</span>
@@ -96,7 +96,7 @@ export default function BatchProcessor() {
               <div className="text-center py-8 text-[9px] font-bold uppercase tracking-wider text-slate-600">No documents in queue</div>
             ) : (
               files.map((file) => (
-                <div key={file.id} className="flex items-center justify-between p-2.5 rounded-lg border border-slate-900/60 bg-slate-955/50 text-[10px]">
+                <div key={file.id} className="flex items-center justify-between p-2.5 rounded-lg border border-slate-900/60 bg-slate-950/50 text-[10px]">
                   <div className="flex items-center space-x-2.5 max-w-[70%]">
                     <FileText className="h-4 w-4 text-purple-400 shrink-0" />
                     <div className="truncate text-left">

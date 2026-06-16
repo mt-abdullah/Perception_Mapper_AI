@@ -52,10 +52,10 @@ export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onReph
       </div>
 
       <div className="space-y-2 bg-slate-950 border border-slate-900 p-4 rounded-xl">
-        <span className="text-[8px] font-bold text-slate-550 uppercase tracking-widest block">Tone breakdowns</span>
+        <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest block">Tone breakdowns</span>
         {analysisResult.tones.map((t, idx) => (
           <div key={idx} className="space-y-1">
-            <div className="flex justify-between text-[10px] text-slate-355">
+            <div className="flex justify-between text-[10px] text-slate-300">
               <span>{t.name}</span>
               <span className="font-mono text-slate-500">{t.score}%</span>
             </div>
@@ -67,7 +67,7 @@ export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onReph
       </div>
 
       <div className="space-y-2 pr-1 max-h-[160px] overflow-y-auto">
-        <span className="text-[8px] font-bold text-slate-550 uppercase tracking-widest block">Matched Bias Indicators</span>
+        <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest block">Matched Bias Indicators</span>
         {analysisResult.biases.map((b, idx) => (
           <div key={idx} className="p-2.5 rounded-lg border border-slate-900 bg-slate-950/60 space-y-1">
             <div className="flex items-center justify-between">
@@ -77,11 +77,11 @@ export default function CognitiveAnalytics({ analysisResult, isAnalyzing, onReph
               <Badge variant="neutral" className="text-[8px] lowercase font-mono">Recommend Rephrase</Badge>
             </div>
             <div className="flex items-center justify-between space-x-2">
-              <p className="text-[10px] text-slate-350 italic">"{b.quote}"</p>
+              <p className="text-[10px] text-slate-300 italic">"{b.quote}"</p>
               <div className="flex items-center space-x-1.5 shrink-0">
                 <button 
                   onClick={() => onExploreRephrase(b.quote)}
-                  className="px-1.5 py-0.5 text-[8px] font-bold text-indigo-400 border border-indigo-550/20 hover:border-indigo-500 bg-indigo-950/15 hover:bg-indigo-950/30 rounded transition"
+                  className="px-1.5 py-0.5 text-[8px] font-bold text-indigo-400 border border-indigo-500/20 hover:border-indigo-500 bg-indigo-950/15 hover:bg-indigo-950/30 rounded transition"
                   title="Explore AI Rephrasings"
                 >
                   AI Co-pilot

@@ -45,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (isSignedIn && user?.role !== "ADMIN") {
     return (
-      <div className="min-h-screen bg-slate-955 flex flex-col justify-center items-center p-8 text-center font-sans">
+      <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-8 text-center font-sans">
         <div className="p-8 rounded-2xl border border-slate-900 bg-slate-950/60 backdrop-blur-2xl max-w-md w-full space-y-6">
           <Lock className="h-10 w-10 text-rose-500 mx-auto animate-bounce" />
           <h2 className="text-lg font-bold text-white">403: Forbidden</h2>
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AdminTabContext.Provider value={{ activeTab, setActiveTab }}>
       <div className="min-h-screen bg-slate-950 text-slate-100 flex overflow-hidden font-sans">
-        <aside className="w-64 border-r border-slate-900 bg-slate-955 flex flex-col shrink-0 relative overflow-hidden">
+        <aside className="w-64 border-r border-slate-900 bg-slate-950 flex flex-col shrink-0 relative overflow-hidden">
           <div className="p-6 border-b border-slate-900/60 flex items-center space-x-3.5 z-10 select-none">
             <ShieldAlert className="h-5 w-5 text-purple-400" />
             <div>
@@ -90,7 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
 
           <div className="p-4 border-t border-slate-900 space-y-3 z-10">
-            <button onClick={() => router.push("/dashboard")} className="w-full flex items-center justify-center space-x-2 py-2 border border-slate-850 bg-slate-900/20 text-slate-450 hover:text-slate-200 rounded-xl text-[9px] font-bold uppercase transition">
+            <button onClick={() => router.push("/dashboard")} className="w-full flex items-center justify-center space-x-2 py-2 border border-slate-800 bg-slate-900/20 text-slate-400 hover:text-slate-200 rounded-xl text-[9px] font-bold uppercase transition">
               <ArrowLeft className="h-3 w-3 shrink-0" />
               <span>Go to User App</span>
             </button>

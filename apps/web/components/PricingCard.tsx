@@ -69,11 +69,11 @@ export default function PricingCard({ plan, idx }: PricingCardProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2.5">
-              <div className="p-2 rounded-xl bg-slate-950 border border-slate-850">
+              <div className="p-2 rounded-xl bg-slate-950 border border-slate-800">
                 {planIcon}
               </div>
               <div className="text-left">
-                <span className={`text-[10px] font-bold uppercase tracking-wider ${plan.highlight ? "text-cyan-400" : "text-slate-450"}`}>
+                <span className={`text-[10px] font-bold uppercase tracking-wider ${plan.highlight ? "text-cyan-400" : "text-slate-400"}`}>
                   {plan.title}
                 </span>
               </div>
@@ -89,12 +89,12 @@ export default function PricingCard({ plan, idx }: PricingCardProps) {
             {plan.price} <span className="text-xs text-slate-500 font-semibold ml-1">/ month</span>
           </h4>
           
-          <p className="text-[10px] text-slate-450 font-medium leading-relaxed text-left min-h-[30px]">{plan.desc}</p>
+          <p className="text-[10px] text-slate-400 font-medium leading-relaxed text-left min-h-[30px]">{plan.desc}</p>
           
-          <ul className="text-[10px] text-slate-400 space-y-2.5 text-left py-4 border-t border-slate-850">
+          <ul className="text-[10px] text-slate-400 space-y-2.5 text-left py-4 border-t border-slate-800">
             {plan.features.map((feat, fIdx) => (
               <li key={fIdx} className="flex items-start space-x-2">
-                <Check className="w-3.5 h-3.5 text-emerald-450 shrink-0 mt-0.5" />
+                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                 <span>{feat}</span>
               </li>
             ))}

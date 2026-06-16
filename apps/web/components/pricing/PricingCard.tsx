@@ -65,12 +65,12 @@ export default function PricingCard({ plan, isAnnual, onSelectPlan }: PricingCar
 
       <div className="space-y-5">
         <div className="flex items-center space-x-3">
-          <div className="p-2 rounded-xl bg-slate-950 border border-slate-850">
+          <div className="p-2 rounded-xl bg-slate-950 border border-slate-800">
             {planIcon}
           </div>
           <div>
             <h3 className="text-base font-bold text-white uppercase tracking-wider">{plan.name}</h3>
-            <span className="text-[10px] text-slate-450 font-bold uppercase">{plan.id === 'pro' ? 'Enterprise workspace' : 'Individual tier'}</span>
+            <span className="text-[10px] text-slate-400 font-bold uppercase">{plan.id === 'pro' ? 'Enterprise workspace' : 'Individual tier'}</span>
           </div>
         </div>
 
@@ -82,7 +82,7 @@ export default function PricingCard({ plan, isAnnual, onSelectPlan }: PricingCar
           <span className="text-3xl font-extrabold text-white tracking-tight">
             ${currentPrice}
           </span>
-          <span className="text-xs text-slate-450 font-bold uppercase tracking-wider">
+          <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">
             / mo
           </span>
           {isAnnual && currentPrice > 0 && (
@@ -102,9 +102,9 @@ export default function PricingCard({ plan, isAnnual, onSelectPlan }: PricingCar
             return (
               <li key={idx} className="flex items-start space-x-2.5">
                 {hasFeature ? (
-                  <Check className="h-4 w-4 text-emerald-450 shrink-0 mt-0.5" aria-hidden="true" />
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
                 ) : (
-                  <Minus className="h-4 w-4 text-slate-650 shrink-0 mt-0.5" aria-hidden="true" />
+                  <Minus className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" aria-hidden="true" />
                 )}
                 <span className={hasFeature ? 'text-slate-200' : 'text-slate-500 line-through'}>
                   {isTextVal ? (
@@ -125,10 +125,10 @@ export default function PricingCard({ plan, isAnnual, onSelectPlan }: PricingCar
           onClick={handleAction}
           className={`block w-full text-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-md border ${
             plan.id === 'basic'
-              ? 'bg-blue-650 hover:bg-blue-600 text-white border-blue-500 hover:border-blue-400'
+              ? 'bg-blue-600 hover:bg-blue-600 text-white border-blue-500 hover:border-blue-400'
               : plan.id === 'pro'
-              ? 'bg-emerald-650 hover:bg-emerald-600 text-white border-emerald-500 hover:border-emerald-400'
-              : 'bg-slate-900 border-slate-800 text-slate-350 hover:text-white hover:border-slate-700'
+              ? 'bg-emerald-600 hover:bg-emerald-600 text-white border-emerald-500 hover:border-emerald-400'
+              : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700'
           }`}
           aria-label={`${plan.ctaLabel} subscription plan`}
         >

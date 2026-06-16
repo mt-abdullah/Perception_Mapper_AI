@@ -57,7 +57,7 @@ export default function AvatarSelector() {
 
         <div className="space-y-3.5 text-left w-full">
           <div>
-            <span className="block text-[8px] font-bold text-slate-550 uppercase tracking-widest mb-1.5">Preset Avatars</span>
+            <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Preset Avatars</span>
             <div className="flex items-center gap-3">
               {presets.map((p, idx) => {
                 const isActive = user?.avatarUrl === p;
@@ -65,7 +65,7 @@ export default function AvatarSelector() {
                   <button
                     key={idx}
                     onClick={() => updateAvatar && updateAvatar(p)}
-                    className={`relative w-11 h-11 rounded-lg border bg-slate-955/60 overflow-hidden flex items-center justify-center transition hover:border-slate-800 ${
+                    className={`relative w-11 h-11 rounded-lg border bg-slate-950/60 overflow-hidden flex items-center justify-center transition hover:border-slate-800 ${
                       isActive ? "border-indigo-500" : "border-slate-900/60"
                     }`}
                   >

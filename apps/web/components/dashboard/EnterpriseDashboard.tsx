@@ -96,7 +96,7 @@ export default function EnterpriseDashboard({ db, onExploreRephrase }: Dashboard
 
 function DiagnosticGauge({ label, value, icon: Icon, color }: { label: string; value: string; icon: typeof Cpu; color: string }) {
   return (
-    <div className="flex items-center space-x-3 bg-slate-955/60 p-3 rounded-xl border border-slate-900/80">
+    <div className="flex items-center space-x-3 bg-slate-950/60 p-3 rounded-xl border border-slate-900/80">
       <div className={`p-2 rounded-lg bg-slate-900 ${color}`}>
         <Icon className="h-3.5 w-3.5" />
       </div>
