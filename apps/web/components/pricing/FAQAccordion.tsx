@@ -56,7 +56,7 @@ export default function FAQAccordion() {
                   isOpen ? 'max-h-[250px] opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
-                <div className="px-4 pb-4 text-xs text-slate-400 font-medium leading-relaxed border-t border-slate-850/50 pt-3">
+                <div className="px-4 pb-4 text-xs text-slate-400 font-medium leading-relaxed border-t border-slate-800/50 pt-3">
                   {item.answer}
                 </div>
               </div>

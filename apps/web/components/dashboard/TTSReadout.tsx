@@ -64,7 +64,7 @@ export default function TTSReadout({ text, mode }: TTSReadoutProps) {
       className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-[9px] font-extrabold uppercase tracking-wider transition duration-300 relative ${
         isPlaying
           ? "bg-rose-950/40 border-rose-500/25 text-rose-400 hover:text-white"
-          : "bg-slate-900/60 border-slate-850 hover:border-slate-800 text-slate-400 hover:text-slate-200"
+          : "bg-slate-900/60 border-slate-800 hover:border-slate-800 text-slate-400 hover:text-slate-200"
       }`}
     >
       {isPlaying ? (

@@ -36,7 +36,7 @@ export default function LandingCTA({ onSignUp }: LandingCTAProps) {
           Secure Your Organizational Perception Integrity Today
         </h3>
         
-        <p className="text-xs md:text-sm text-slate-350 max-w-md leading-relaxed font-semibold">
+        <p className="text-xs md:text-sm text-slate-300 max-w-md leading-relaxed font-semibold">
           Establish automated safety override policies to evaluate sentiments and cleanse cognitive biases instantly across multilingual communication nodes.
         </p>
 

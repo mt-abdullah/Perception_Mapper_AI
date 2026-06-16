@@ -35,7 +35,7 @@ export default function TierSelector({ currentTier, onChangeTier }: TierSelector
   ];
 
   return (
-    <div className="w-full bg-slate-900/30 border border-slate-850 p-2.5 rounded-2xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-4 font-sans select-none relative z-20">
+    <div className="w-full bg-slate-900/30 border border-slate-800 p-2.5 rounded-2xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-4 font-sans select-none relative z-20">
       <div className="text-left pl-2">
         <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 block">Workspace Profile</span>
         <span className="text-xs font-bold text-slate-300">Choose active telemetry scope</span>

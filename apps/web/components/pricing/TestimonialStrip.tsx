@@ -31,14 +31,14 @@ export default function TestimonialStrip() {
                   />
                 ))}
               </div>
-              <p className="text-xs text-slate-350 font-medium leading-relaxed italic">
+              <p className="text-xs text-slate-300 font-medium leading-relaxed italic">
                 "{t.quote}"
               </p>
             </div>
 
             <div>
               <h4 className="text-xs font-bold text-white tracking-wide">{t.author}</h4>
-              <span className="text-[10px] text-slate-450 font-semibold">{t.role}</span>
+              <span className="text-[10px] text-slate-400 font-semibold">{t.role}</span>
             </div>
           </div>
         ))}

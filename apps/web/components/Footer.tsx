@@ -8,7 +8,7 @@ export default function Footer() {
         <span className="font-medium text-slate-500">
           © 2026 PERCEPTION AI SaaS Platform. All orbital node logs encrypted via SSL handshakes.
         </span>
-        <div className="flex space-x-6 font-semibold text-slate-450">
+        <div className="flex space-x-6 font-semibold text-slate-400">
           <Link href="/contact" className="hover:text-slate-200 transition">
             Contact Support
           </Link>

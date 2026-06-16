@@ -42,7 +42,7 @@ export default function CustomBiasRules({ customRules, onCreateRule, onDeleteRul
             value={pattern}
             onChange={(e) => setPattern(e.target.value)}
             placeholder="e.g. \b(clearly|evidently)\b"
-            className="w-full bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-205 outline-none focus:border-indigo-500 transition"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 outline-none focus:border-indigo-500 transition"
           />
         </div>
 
@@ -54,7 +54,7 @@ export default function CustomBiasRules({ customRules, onCreateRule, onDeleteRul
             value={rephrase}
             onChange={(e) => setRephrase(e.target.value)}
             placeholder="e.g. evidence points to"
-            className="w-full bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-205 outline-none focus:border-indigo-500 transition"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 outline-none focus:border-indigo-500 transition"
           />
         </div>
 
@@ -64,10 +64,10 @@ export default function CustomBiasRules({ customRules, onCreateRule, onDeleteRul
       </form>
 
       <div className="space-y-2">
-        <span className="block text-[8px] font-bold text-slate-550 uppercase tracking-widest">Active Policies</span>
+        <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Active Policies</span>
         <div className="space-y-2 max-h-[140px] overflow-y-auto pr-1">
           {customRules.map((rule) => (
-            <div key={rule.id} className="p-2.5 rounded-lg border border-slate-900 bg-slate-950 font-mono text-[9px] text-slate-350 flex justify-between items-center hover:border-slate-850 transition">
+            <div key={rule.id} className="p-2.5 rounded-lg border border-slate-900 bg-slate-950 font-mono text-[9px] text-slate-300 flex justify-between items-center hover:border-slate-800 transition">
               <div>
                 <span className="text-indigo-400 block font-bold font-sans text-[10px]">{rule.type}</span>
                 <span>Pattern: <span className="text-pink-400">"{rule.pattern}"</span> ➔ <span className="text-emerald-400">"{rule.rephrase}"</span></span>
