@@ -20,7 +20,7 @@ export default function AdminPoliciesForm({ policies, onSave, isLoading }: Admin
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 rounded-2xl border border-slate-900 bg-slate-950/40 backdrop-blur-md space-y-6 text-xs text-slate-350">
+    <form onSubmit={handleSubmit} className="p-6 rounded-2xl border border-slate-900 bg-slate-950/40 backdrop-blur-md space-y-6 text-xs text-slate-300">
       <div className="flex items-center justify-between border-b border-slate-900 pb-3">
         <div>
           <h3 className="text-xs font-bold tracking-wider text-slate-300 uppercase flex items-center">
@@ -31,7 +31,7 @@ export default function AdminPoliciesForm({ policies, onSave, isLoading }: Admin
       </div>
 
       <div className="space-y-3">
-        <span className="block text-[9px] font-bold text-slate-550 uppercase tracking-widest">Feature Toggles</span>
+        <span className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">Feature Toggles</span>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { label: "Text Perception", val: state.textEnabled, key: "textEnabled" as const },
@@ -52,7 +52,7 @@ export default function AdminPoliciesForm({ policies, onSave, isLoading }: Admin
       </div>
 
       <div className="space-y-3">
-        <span className="block text-[9px] font-bold text-slate-550 uppercase tracking-widest">Monthly Limit Quotas</span>
+        <span className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">Monthly Limit Quotas</span>
         <div className="grid grid-cols-3 gap-4 font-sans">
           {[
             { label: "FREE Limit", val: state.limitFree, key: "limitFree" as const },
@@ -65,7 +65,7 @@ export default function AdminPoliciesForm({ policies, onSave, isLoading }: Admin
                 type="number"
                 value={item.val}
                 onChange={(e) => setState({ ...state, [item.key]: Number(e.target.value) })}
-                className="w-full bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-100 focus:border-purple-500 transition outline-none"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-100 focus:border-purple-500 transition outline-none"
               />
             </div>
           ))}
@@ -73,7 +73,7 @@ export default function AdminPoliciesForm({ policies, onSave, isLoading }: Admin
       </div>
 
       <div className="space-y-3">
-        <span className="block text-[9px] font-bold text-slate-550 uppercase tracking-widest">Rate Limiting (RPM)</span>
+        <span className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">Rate Limiting (RPM)</span>
         <div className="grid grid-cols-3 gap-4 font-sans">
           {[
             { label: "FREE Rate", val: state.rateFree, key: "rateFree" as const },
@@ -86,7 +86,7 @@ export default function AdminPoliciesForm({ policies, onSave, isLoading }: Admin
                 type="number"
                 value={item.val}
                 onChange={(e) => setState({ ...state, [item.key]: Number(e.target.value) })}
-                className="w-full bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-slate-100 focus:border-purple-500 transition outline-none"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-100 focus:border-purple-500 transition outline-none"
               />
             </div>
           ))}

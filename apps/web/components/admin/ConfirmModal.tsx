@@ -23,7 +23,7 @@ export default function ConfirmModal({
       <div className="relative p-6 rounded-2xl border border-slate-900 bg-slate-950/90 backdrop-blur-2xl max-w-md w-full space-y-6 shadow-2xl">
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
 
-        <div className="flex items-start space-x-3 text-xs text-slate-350">
+        <div className="flex items-start space-x-3 text-xs text-slate-300">
           <div className={`p-2 rounded-full border ${isDestructive ? "bg-rose-950/40 border-rose-500/30 text-rose-500 animate-bounce" : "bg-purple-950/40 border-purple-500/30 text-purple-400"}`}>
             <AlertCircle className="h-5 w-5" />
           </div>
