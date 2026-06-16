@@ -83,7 +83,7 @@ function SignInContent() {
     <AuthCard title="Welcome Back" description="Sign in to resume secure NLP node visualization and custom mappings.">
       <form onSubmit={handleSignIn} className="space-y-3.5">
         {successMsg && <div className="p-3 bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 rounded-xl font-semibold text-xs text-center">{successMsg}</div>}
-        {errors.general && <div className="p-3 bg-rose-950/40 border border-rose-500/20 text-rose-450 rounded-xl font-semibold text-xs text-center">{errors.general}</div>}
+        {errors.general && <div className="p-3 bg-rose-950/40 border border-rose-500/20 text-rose-400 rounded-xl font-semibold text-xs text-center">{errors.general}</div>}
 
         <AuthInput label="Email Address" id="email" type="email" icon={Mail} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="user@perception.ai" error={errors.email} required />
         <div className="space-y-1">
