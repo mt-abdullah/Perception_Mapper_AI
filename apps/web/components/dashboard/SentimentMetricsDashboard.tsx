@@ -21,13 +21,13 @@ export default function SentimentMetricsDashboard() {
           <AreaChart className="h-4 w-4 text-pink-400" />
           <h3 className="text-xs font-extrabold uppercase tracking-widest text-slate-200">Sentiment Dynamics Metrics</h3>
         </div>
-        <span className="text-[8px] font-extrabold uppercase px-2 py-0.5 rounded bg-pink-955/40 border border-pink-500/20 text-pink-400">
+        <span className="text-[8px] font-extrabold uppercase px-2 py-0.5 rounded bg-pink-950/40 border border-pink-500/20 text-pink-400">
           Telemetry Analytics Live
         </span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 relative bg-slate-955/50 border border-slate-900/80 rounded-xl p-4 flex flex-col justify-between min-h-[220px]">
+        <div className="lg:col-span-2 relative bg-slate-950/50 border border-slate-900/80 rounded-xl p-4 flex flex-col justify-between min-h-[220px]">
           <div className="flex justify-between items-center mb-3">
             <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block text-left">Daily Scanning Velocity</span>
             <span className="text-[10px] text-pink-400 font-bold flex items-center"><TrendingUp className="h-3.5 w-3.5 mr-1" /> +32%</span>
@@ -60,12 +60,12 @@ export default function SentimentMetricsDashboard() {
             ))}
           </svg>
 
-          <div className="flex justify-between px-2 text-[8px] font-bold text-slate-550 uppercase">
+          <div className="flex justify-between px-2 text-[8px] font-bold text-slate-500 uppercase">
             {data.map((d, i) => <span key={i}>{d.label}</span>)}
           </div>
         </div>
 
-        <div className="bg-slate-955/60 border border-slate-900 rounded-xl p-4 min-h-[220px] flex flex-col justify-between">
+        <div className="bg-slate-950/60 border border-slate-900 rounded-xl p-4 min-h-[220px] flex flex-col justify-between">
           {hoveredIndex !== null ? (
             <div className="space-y-3 text-left">
               <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 block">Scope Analytics</span>

@@ -103,12 +103,12 @@ export default function RephraseSandbox({
           {/* Error Alert */}
           {error && (
             <div className="p-4 rounded-xl border border-rose-500/10 bg-rose-950/20 text-rose-400 flex items-center space-x-3 text-xs">
-              <AlertCircle className="h-5 w-5 shrink-0" />
-              <div>
-                <p className="font-bold">Execution Interrupted</p>
-                <p className="text-[10px] text-rose-450 mt-0.5">{error}</p>
-              </div>
+            <AlertCircle className="h-5 w-5 shrink-0" />
+            <div>
+              <p className="font-bold">Execution Interrupted</p>
+              <p className="text-[10px] text-rose-400 mt-0.5">{error}</p>
             </div>
+          </div>
           )}
 
           {/* Alternatives Grid */}
@@ -196,7 +196,7 @@ export default function RephraseSandbox({
         </div>
 
         {/* Footer info banner */}
-        <div className="px-6 py-3 border-t border-slate-900 bg-slate-955/65 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">
+        <div className="px-6 py-3 border-t border-slate-900 bg-slate-950/65 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">
           ⚡ Selecting a style inserts it directly into your dashboard playground editor.
         </div>
       </div>

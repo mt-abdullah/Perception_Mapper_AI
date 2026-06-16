@@ -45,7 +45,7 @@ export default function Navbar() {
     { name: "Contact", href: "/contact" }
   ];
 
-  if (!mounted) return <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-955/80 backdrop-blur-xl border-b border-slate-900/60 h-16" />;
+  if (!mounted) return <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-900/60 h-16" />;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-900/60 shadow-lg select-none">
@@ -67,7 +67,7 @@ export default function Navbar() {
           <div className="flex items-center space-x-4">
             {isSignedIn ? (
               <div ref={menuRef} className="relative">
-                <button onClick={() => setMenuOpen(!menuOpen)} className="flex items-center space-x-2 p-1 rounded-xl bg-slate-900/40 hover:bg-slate-900/80 border border-slate-850/80 transition duration-300 cursor-pointer">
+                <button onClick={() => setMenuOpen(!menuOpen)} className="flex items-center space-x-2 p-1 rounded-xl bg-slate-900/40 hover:bg-slate-900/80 border border-slate-800/80 transition duration-300 cursor-pointer">
                   <div className={`w-8 h-8 rounded-full border overflow-hidden bg-slate-900 flex items-center justify-center shrink-0 ${
                     user?.tier === "PRO" ? "border-pink-500/40" : user?.tier === "BASIC" ? "border-purple-500/40" : "border-cyan-500/40"
                   }`}>
@@ -140,7 +140,7 @@ export default function Navbar() {
                                   <button
                                     key={idx}
                                     onClick={() => updateAvatar && updateAvatar(p)}
-                                    className={`relative w-10 h-10 rounded-lg border bg-slate-955/60 overflow-hidden flex items-center justify-center transition hover:border-slate-800 cursor-pointer ${
+                                    className={`relative w-10 h-10 rounded-lg border bg-slate-950/60 overflow-hidden flex items-center justify-center transition hover:border-slate-800 cursor-pointer ${
                                       isActive ? "border-indigo-500" : "border-slate-900"
                                     }`}
                                   >
@@ -159,7 +159,7 @@ export default function Navbar() {
                       )}
                     </div>
 
-                    <button onClick={signOut} className="w-full py-2 bg-slate-900 hover:bg-rose-955/40 border border-slate-850 hover:border-rose-500/25 text-slate-400 hover:text-rose-400 rounded-lg text-xs font-bold transition uppercase tracking-wide text-center cursor-pointer">
+                    <button onClick={signOut} className="w-full py-2 bg-slate-900 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/25 text-slate-400 hover:text-rose-400 rounded-lg text-xs font-bold transition uppercase tracking-wide text-center cursor-pointer">
                       Sign Out
                     </button>
                   </div>
@@ -182,7 +182,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-slate-955 border-t border-slate-900/60 px-4 pb-4 pt-2 space-y-3.5 select-none text-left">
+        <div className="md:hidden bg-slate-950 border-t border-slate-900/60 px-4 pb-4 pt-2 space-y-3.5 select-none text-left">
           {isSignedIn && user ? (
             <div className="space-y-4 px-3 py-2 border border-slate-900 bg-slate-950/40 rounded-xl">
               <div className="flex items-center space-x-3 pb-3 border-b border-slate-900/80">
@@ -257,17 +257,17 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <button onClick={signOut} className="w-full py-2 bg-slate-900 hover:bg-rose-955/40 border border-slate-850 hover:border-rose-500/25 text-slate-400 hover:text-rose-400 rounded-lg text-xs font-bold transition uppercase tracking-wide text-center cursor-pointer">
+              <button onClick={signOut} className="w-full py-2 bg-slate-900 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/25 text-slate-400 hover:text-rose-400 rounded-lg text-xs font-bold transition uppercase tracking-wide text-center cursor-pointer">
                 Sign Out
               </button>
             </div>
           ) : null}
 
           {!isSignedIn && landingNavItems.map((item) => (
-            <a key={item.name} href={item.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-355 hover:text-white hover:bg-slate-900/50 transition">{item.name}</a>
+            <a key={item.name} href={item.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-900/50 transition">{item.name}</a>
           ))}
           {navItems.map((item) => (
-            <Link key={item.name} href={item.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-355 hover:text-white hover:bg-slate-900/50 transition">{item.name}</Link>
+            <Link key={item.name} href={item.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-900/50 transition">{item.name}</Link>
           ))}
         </div>
       )}
