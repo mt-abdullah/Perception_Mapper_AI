@@ -40,7 +40,8 @@ export default function MultimodalScanner({
         <div className="flex items-center space-x-2">
           <Layers className="h-4 w-4 text-indigo-400" />
           <h3 className="text-xs font-extrabold uppercase tracking-widest text-slate-200">Omnibox Playground</h3>
-              <div className="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5 text-[9px] font-bold">
+        </div>
+        <div className="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5 text-[9px] font-bold">
           {(["text", "voice", "image"] as const).map((tab) => (
             <button key={tab} onClick={() => { setActiveTab(tab); appendTerminalLog(`📡 MODE SWAP: ${tab}`); }} className={`px-2.5 py-1 rounded transition capitalize ${activeTab === tab ? "bg-indigo-600 text-white" : "text-slate-500 hover:text-slate-300"}`}>
               {tab}
