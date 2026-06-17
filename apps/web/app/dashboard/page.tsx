@@ -79,7 +79,15 @@ export default function UserDashboard() {
           {renderDashboardContent()}
         </div>
         <BatchProcessor />
-        <BiasNetworkGraph />
+        <BiasNetworkGraph 
+          analysisResult={db.analysisResult}
+          onApplyRephrase={(quote, rephrasedText) => {
+            const cleanText = db.inputText.replace(quote, rephrasedText);
+            db.setInputText(cleanText);
+            db.appendTerminalLog(`💡 Applied Graph Rephrase: "${rephrasedText}"`);
+            db.triggerAnalysis(cleanText);
+          }}
+        />
         <div id="telemetry">
           <SentimentMetricsDashboard />
         </div>
