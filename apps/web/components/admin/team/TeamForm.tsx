@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { Card, Button, Input } from "@perception-mapper/ui";
 import { useTranslation } from "../../../hooks/useTranslation";
 
-export default function TeamForm() {
+interface TeamFormProps {
+  onTeamCreated?: () => void;
+}
+
+export default function TeamForm({ onTeamCreated }: TeamFormProps) {
   const { t } = useTranslation();
   const [form, setForm] = useState({
     name: "",
@@ -13,6 +17,7 @@ export default function TeamForm() {
     status: "ACTIVE",
   });
   const [users, setUsers] = useState<Array<{ id: string; email: string }>>([]);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     // fetch available users for lead selector – using existing admin/users endpoint
@@ -32,7 +37,14 @@ export default function TeamForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
-    // TODO: refresh list / show toast
+    
+    // Refresh parent sibling list & stats
+    onTeamCreated?.();
+
+    // Show success feedback
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+
     setForm({
       name: "",
       description: "",
@@ -46,6 +58,11 @@ export default function TeamForm() {
   return (
     <Card className="glassmorphism p-4">
       <h3 className="text-sm font-semibold text-slate-200 mb-3">{t("team.form.create")}</h3>
+      {success && (
+        <div className="p-3 bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 rounded-xl text-xs font-semibold text-center mb-3">
+          Team created successfully! Workspace node initialized.
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="grid gap-3">
         <Input name="name" placeholder={t("team.form.namePlaceholder")} value={form.name} onChange={handleChange} required />
         <Input name="description" placeholder={t("team.form.descPlaceholder")} value={form.description} onChange={handleChange} />
