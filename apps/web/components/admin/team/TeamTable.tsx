@@ -15,7 +15,12 @@ interface Team {
   createdAt: string;
 }
 
-export default function TeamTable() {
+interface TeamTableProps {
+  refreshKey?: number;
+  onTeamDeleted?: () => void;
+}
+
+export default function TeamTable({ refreshKey = 0, onTeamDeleted }: TeamTableProps) {
   const { t } = useTranslation();
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,12 +33,13 @@ export default function TeamTable() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [refreshKey]);
 
   const handleDelete = async (id: string) => {
     if (confirm(t("team.table.deleteConfirm"))) {
       await fetch(`/api/admin/teams/${id}`, { method: "DELETE" });
       setTeams((t) => t.filter((x) => x.id !== id));
+      onTeamDeleted?.();
     }
   };
 

@@ -12,16 +12,27 @@ interface StatsData {
   activity: number;
 }
 
-export default function TeamStats() {
+interface TeamStatsProps {
+  refreshKey?: number;
+  stats?: StatsData;
+}
+
+export default function TeamStats({ refreshKey = 0, stats: initialStats }: TeamStatsProps) {
   const { t } = useTranslation();
-  const [stats, setStats] = useState<StatsData>({
-    totalTeams: 0,
-    activeMembers: 0,
-    pendingInvites: 0,
-    activity: 0,
-  });
+  const [stats, setStats] = useState<StatsData>(
+    initialStats || {
+      totalTeams: 0,
+      activeMembers: 0,
+      pendingInvites: 0,
+      activity: 0,
+    }
+  );
 
   useEffect(() => {
+    if (initialStats) {
+      setStats(initialStats);
+      return;
+    }
     // Fetch the teams and calculate counters
     fetch("/api/admin/teams")
       .then((r) => r.json())
@@ -34,7 +45,7 @@ export default function TeamStats() {
         setStats({ totalTeams, activeMembers, pendingInvites, activity });
       })
       .catch(() => console.error("Failed to load team stats"));
-  }, []);
+  }, [refreshKey, initialStats]);
 
   const cards = [
     { title: t("team.stats.total"), value: stats.totalTeams, icon: <Users className="h-5 w-5 text-indigo-400" /> },
