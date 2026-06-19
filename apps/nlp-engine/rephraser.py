@@ -52,8 +52,22 @@ def generate_alternatives(text: str, language: str = "en") -> dict:
         # Try to clean common words
         clean_text = clean_text.replace("எப்போதுமே", "பெரும்பாலான சந்தர்ப்பங்களில்")
         clean_text = clean_text.replace("ஒருபோதும்", "சில நேரங்களில்")
+        clean_text = clean_text.replace("எல்லாரும்", "சிலர்")
+        clean_text = clean_text.replace("யாரும் இல்லை", "குறிப்பிட்ட சிலரே")
+        clean_text = clean_text.replace("யாரும்", "சில தனிநபர்கள்")
+        clean_text = clean_text.replace("முற்றிலும்", "பகுதியளவு")
+        clean_text = clean_text.replace("அனைவரும்", "பலர்")
         clean_text = clean_text.replace("வெளிப்படையாக", "சான்றுகள் குறிப்பிடுகின்றன")
+        clean_text = clean_text.replace("நிச்சயமாகவே", "உண்மையிலேயே")
+        clean_text = clean_text.replace("நிச்சயமாக", "சாத்தியமாக")
+        clean_text = clean_text.replace("சந்தேகமின்றி", "அநேகமாக")
+        clean_text = clean_text.replace("உண்மையிலேயே", "குறிப்பிடத்தக்க வகையில்")
+        clean_text = clean_text.replace("அதிர்ச்சியூட்டும்", "குறிப்பிடத்தக்க")
         clean_text = clean_text.replace("அதிர்ச்சி", "கவனிக்கத்தக்க நிகழ்வு")
+        clean_text = clean_text.replace("பேரழிவு", "சவாலான சூழ்நிலை")
+        clean_text = clean_text.replace("சதி", "நிகழ்வு")
+        clean_text = clean_text.replace("நெருக்கடி", "கடினமான சூழல்")
+        clean_text = clean_text.replace("பயங்கரமான", "சவாலான")
         
         return {
             "journalistic": f"ஆவணப்படுத்தப்பட்ட சான்றுகளின்படி: {clean_text}",
@@ -64,8 +78,21 @@ def generate_alternatives(text: str, language: str = "en") -> dict:
         # Sinhala rephrasing
         clean_text = clean_text.replace("සෑමවිටම", "බොහෝ අවස්ථාවලදී")
         clean_text = clean_text.replace("කිසිවිටෙකත්", "කලාතුරකින්")
+        clean_text = clean_text.replace("සෑමදෙනාම", "බොහෝ අය")
+        clean_text = clean_text.replace("කිසිවෙකුත්", "සමහර පුද්ගලයන්")
+        clean_text = clean_text.replace("සම්පූර්ණයෙන්ම", "යම් දුරකට")
+        clean_text = clean_text.replace("සියලු දෙනා", "බොහෝ දෙනෙක්")
         clean_text = clean_text.replace("පැහැදිලිවම", "සාක්ෂි මගින් පෙන්වා දෙන්නේ")
+        clean_text = clean_text.replace("නිසැකවම", "සමහර විට")
+        clean_text = clean_text.replace("සැකයකින් තොරව", "දැනට ඇති තොරතුරු අනුව")
+        clean_text = clean_text.replace("නියත වශයෙන්ම", "පෙනෙන පරිදි")
+        clean_text = clean_text.replace("ඇත්ත වශයෙන්ම", "සැලකිය යුතු ලෙස")
+        clean_text = clean_text.replace("අතිශය", "සැලකිය යුතු")
+        clean_text = clean_text.replace("මහා විනාශයක්", "විශාල අභියෝගයක්")
         clean_text = clean_text.replace("ව්‍යසනයක්", "අභියෝගාත්මක තත්ත්වය")
+        clean_text = clean_text.replace("කුමන්ත්‍රණය", "සිදුවීම")
+        clean_text = clean_text.replace("අර්බුදය", "දුෂ්කර තත්ත්වය")
+        clean_text = clean_text.replace("කම්පන සහගත", "අනපේක්ෂිත")
         
         return {
             "journalistic": f"සත්‍යාපිත කරුණු සහ විශ්ලේෂණය අනුව: {clean_text}",

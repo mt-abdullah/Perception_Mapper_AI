@@ -27,19 +27,19 @@ TONE_DICTIONARIES = {
 BIAS_DICTIONARIES = {
   "en": [
     {
-      "pattern": r"\b(always|never|everyone|nobody)\b",
+      "pattern": r"(?<!\w)(always|never|everyone|nobody)(?!\w)",
       "type": "Over-generalization",
       "description": "Uses absolute statements that fail to accommodate context nuances.",
       "rephrase": "most cases / some individuals"
     },
     {
-      "pattern": r"\b(obviously|clearly|undeniably|without a doubt)\b",
+      "pattern": r"(?<!\w)(obviously|clearly|undeniably|without a doubt)(?!\w)",
       "type": "Confirmation Bias",
       "description": "Presents assumptions as verified absolute facts to reinforce beliefs.",
       "rephrase": "evidence suggests / indications point to"
     },
     {
-      "pattern": r"\b(shocking|unbelievable|disaster|conspiracy|crisis)\b",
+      "pattern": r"(?<!\w)(shocking|unbelievable|disaster|conspiracy|crisis)(?!\w)",
       "type": "Sensationalism",
       "description": "Employs dramatic phrasing to provoke visceral emotional reactions rather than objective analysis.",
       "rephrase": "significant / noteworthy event / challenging circumstance"
@@ -47,19 +47,19 @@ BIAS_DICTIONARIES = {
   ],
   "ta": [
     {
-      "pattern": r"\b(எப்போதுமே|ஒருபோதும்|எல்லாரும்|யாரும்)\b",
+      "pattern": r"(?<![\w\u0b80-\u0bff])(எப்போதுமே|ஒருபோதும்|எல்லாரும்|யாரும்|முற்றிலும்|அனைவரும்|யாரும் இல்லை)(?![\w\u0b80-\u0bff])",
       "type": "Over-generalization (பொதுமைப்படுத்தல் சார்பு)",
       "description": "சூழல் நுணுக்கங்களுக்கு இடமளிக்காத முழுமையான அறிக்கைகளைப் பயன்படுத்துகிறது.",
       "rephrase": "பெரும்பாலான சந்தர்ப்பங்களில் / சில தனிநபர்கள்"
     },
     {
-      "pattern": r"\b(வெளிப்படையாக|நிச்சயமாக|சந்தேகமின்றி)\b",
+      "pattern": r"(?<![\w\u0b80-\u0bff])(வெளிப்படையாக|நிச்சயமாக|சந்தேகமின்றி|நிச்சயமாகவே|உண்மையிலேயே)(?![\w\u0b80-\u0bff])",
       "type": "Confirmation Bias (உறுதிப்படுத்தல் சார்பு)",
       "description": "நம்பிக்கைகளை வலுப்படுத்த சரிபார்க்கப்பட்ட உண்மைகளாக அனுமானங்களை முன்வைக்கிறது.",
       "rephrase": "சான்றுகள் குறிப்பிடுகின்றன / சுட்டிக்காட்டுகின்றன"
     },
     {
-      "pattern": r"\b(அதிர்ச்சி|பேரழிவு|சதி|நெருக்கடி)\b",
+      "pattern": r"(?<![\w\u0b80-\u0bff])(அதிர்ச்சி|பேரழிவு|சதி|நெருக்கடி|அதிர்ச்சியூட்டும்|பயங்கரமான)(?![\w\u0b80-\u0bff])",
       "type": "Sensationalism (உணர்ச்சிவசப்படுத்துதல் சார்பு)",
       "description": "பகுப்பாய்வை விட உணர்ச்சிபூர்வமான எதிர்வினைகளைத் தூண்டுவதற்கு வியத்தகு சொற்களைப் பயன்படுத்துகிறது.",
       "rephrase": "கவனிக்கத்தக்க நிகழ்வு / சவாலான சூழ்நிலை"
@@ -67,19 +67,19 @@ BIAS_DICTIONARIES = {
   ],
   "si": [
     {
-      "pattern": r"\b(සෑමවිටම|කිසිවිටෙකත්|සෑමදෙනාම|කිසිවෙකුත්)\b",
+      "pattern": r"(?<![\w\u0d80-\u0dff\u200c\u200d])(සෑමවිටම|කිසිවිටෙකත්|සෑමදෙනාම|කිසිවෙකුත්|සම්පූර්ණයෙන්ම|සියලු දෙනා)(?![\w\u0d80-\u0dff\u200c\u200d])",
       "type": "Over-generalization (අති-සාමාන්‍යකරණය)",
       "description": "සන්දර්භීය සූක්ෂ්මතා සැලකිල්ලට නොගෙන නිරපේක්ෂ ප්‍රකාශ භාවිතා කරයි.",
       "rephrase": "බොහෝ අවස්ථාවලදී / සමහර පුද්ගලයන්"
     },
     {
-      "pattern": r"\b(පැහැදිලිවම|නිසැකවම|සැකයකින් තොරව)\b",
+      "pattern": r"(?<![\w\u0d80-\u0dff\u200c\u200d])(පැහැදිලිවම|නිසැකවම|සැකයකින් තොරව|නියත වශයෙන්ම|ඇත්ත වශයෙන්ම)(?![\w\u0d80-\u0dff\u200c\u200d])",
       "type": "Confirmation Bias (තහවුරු කිරීමේ නැඹුරුව)",
       "description": "විශ්වාසයන් ශක්තිමත් කිරීම සඳහා උපකල්පන සත්‍යාපිත කරුණු ලෙස ඉදිරිපත් කරයි.",
       "rephrase": "සාක්ෂි මගින් පෙන්වා දෙන්නේ / ඉඟි කරන්නේ"
     },
     {
-      "pattern": r"\b(අතිශය|ව්‍යසනයක්|කුමන්ත්‍රණය|අර්බුදය)\b",
+      "pattern": r"(?<![\w\u0d80-\u0dff\u200c\u200d])(අතිශය|ව්‍යසනයක්|කුමන්ත්‍රණය|අර්බුදය|කම්පන සහගත|මහා විනාශයක්)(?![\w\u0d80-\u0dff\u200c\u200d])",
       "type": "Sensationalism (ආන්දෝලනාත්මකකරණය)",
       "description": "විෂයමූලික විශ්ලේෂණයකට වඩා හැඟීම් අවදි කිරීමට නාට්‍යමය වාක්‍ය ඛණ්ඩ භාවිතා කරයි.",
       "rephrase": "සැලකිය යුතු / අභියෝගාත්මක තත්ත්වය"
