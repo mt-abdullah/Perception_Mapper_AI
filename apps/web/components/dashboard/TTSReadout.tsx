@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX, Play } from "lucide-react";
 
 interface TTSReadoutProps {
@@ -11,10 +11,6 @@ interface TTSReadoutProps {
 export default function TTSReadout({ text, mode }: TTSReadoutProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  function useRef<T>(initialValue: T | null): { current: T | null } {
-    return React.useRef(initialValue);
-  }
 
   const handleSpeak = () => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
