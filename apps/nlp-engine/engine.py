@@ -43,6 +43,24 @@ BIAS_DICTIONARIES = {
       "type": "Sensationalism",
       "description": "Employs dramatic phrasing to provoke visceral emotional reactions rather than objective analysis.",
       "rephrase": "significant / noteworthy event / challenging circumstance"
+    },
+    {
+      "pattern": r"(?<!\w)(either we|must choose between|only two choices|black or white)(?!\w)",
+      "type": "False Dilemma",
+      "description": "Presents complex choices as simple binary either/or decisions.",
+      "rephrase": "considering multiple alternatives"
+    },
+    {
+      "pattern": r"(?<!\w)(stupid|idiot|hypocrite|liar|corrupt|incompetent)(?!\w)",
+      "type": "Ad Hominem",
+      "description": "Attacks the character or traits of an individual rather than addressing their logical argument.",
+      "rephrase": "the argument presented"
+    },
+    {
+      "pattern": r"(?<!\w)(pathetic|terrifying|horrendous|heartbreaking|outrageous)(?!\w)",
+      "type": "Appeal to Emotion",
+      "description": "Attempts to manipulate an emotional reaction to distract from objective or rational reasoning.",
+      "rephrase": "concerning aspect / challenging factor"
     }
   ],
   "ta": [
@@ -63,6 +81,24 @@ BIAS_DICTIONARIES = {
       "type": "Sensationalism (உணர்ச்சிவசப்படுத்துதல் சார்பு)",
       "description": "பகுப்பாய்வை விட உணர்ச்சிபூர்வமான எதிர்வினைகளைத் தூண்டுவதற்கு வியத்தகு சொற்களைப் பயன்படுத்துகிறது.",
       "rephrase": "கவனிக்கத்தக்க நிகழ்வு / சவாலான சூழ்நிலை"
+    },
+    {
+      "pattern": r"(?<![\w\u0b80-\u0bff])(ஒன்றில்|அல்லது|இரண்டில் ஒன்று|வேறு வழியே இல்லை)(?![\w\u0b80-\u0bff])",
+      "type": "False Dilemma (தவறான இருநிலைத் தேர்வு)",
+      "description": "சிக்கலான தேர்வுகளை எளிய இருநிலைத் தேர்வுகளாக முன்வைக்கிறது.",
+      "rephrase": "மாற்று வழிகளைக் கருத்தில் கொள்கிறது"
+    },
+    {
+      "pattern": r"(?<![\w\u0b80-\u0bff])(முட்டாள்|ஏமாற்றுக்காரன்|பொய்யன்|ஊழல்வாதி|திறமையற்றவர்)(?![\w\u0b80-\u0bff])",
+      "type": "Ad Hominem (நபர் சார்பு தாக்குதல்)",
+      "description": "தர்க்கரீதியான வாதத்திற்குப் பதில் நபரின் தன்மையைத் தாக்குகிறது.",
+      "rephrase": "முன்வைக்கப்பட்ட வாதம்"
+    },
+    {
+      "pattern": r"(?<![\w\u0b80-\u0bff])(பரிதாபகரமான|பயங்கரமான|நெஞ்சை உலுக்கும்|அபத்தமான)(?![\w\u0b80-\u0bff])",
+      "type": "Appeal to Emotion (உணர்ச்சி தூண்டல் சார்பு)",
+      "description": "பகுத்தறிவுக்குப் பதிலாக உணர்ச்சிகரமான எதிர்வினையைத் தூண்ட முயல்கிறது.",
+      "rephrase": "கடினமான அம்சம் / சவாலான காரணி"
     }
   ],
   "si": [
@@ -83,6 +119,24 @@ BIAS_DICTIONARIES = {
       "type": "Sensationalism (ආන්දෝලනාත්මකකරණය)",
       "description": "විෂයමූලික විශ්ලේෂණයකට වඩා හැඟීම් අවදි කිරීමට නාට්‍යමය වාක්‍ය ඛණ්ඩ භාවිතා කරයි.",
       "rephrase": "සැලකිය යුතු / අභියෝගාත්මක තත්ත්වය"
+    },
+    {
+      "pattern": r"(?<![\w\u0d80-\u0dff\u200c\u200d])(එක්කෝ|නැත්නම්|විකල්ප නැත|දෙකෙන් එකක්)(?![\w\u0d80-\u0dff\u200c\u200d])",
+      "type": "False Dilemma (ව්‍යාජ උභතෝකෝටිකය)",
+      "description": "සංකීර්ණ තේරීම් සරල ද්විමය විකල්ප ලෙස ඉදිරිපත් කරයි.",
+      "rephrase": "විකල්ප කිහිපයක් සලකා බැලීම"
+    },
+    {
+      "pattern": r"(?<![\w\u0d80-\u0dff\u200c\u200d])(මෝඩයා|තක්කඩියා|බොරුවකාරයා|දූෂිත|අදක්ෂයා)(?![\w\u0d80-\u0dff\u200c\u200d])",
+      "type": "Ad Hominem (පුද්ගල ප්‍රහාරය)",
+      "description": "තර්කානුකූල තර්කය වෙනුවට පුද්ගලයාගේ චරිතයට පහර දෙයි.",
+      "rephrase": "ඉදිරිපත් කළ තර්කය"
+    },
+    {
+      "pattern": r"(?<![\w\u0d80-\u0dff\u200c\u200d])(ඛේදජනක|භයානක|හදවත කම්පා කරවන|නින්දිත)(?![\w\u0d80-\u0dff\u200c\u200d])",
+      "type": "Appeal to Emotion (හැඟීම් අවදි කිරීමේ නැඹුරුව)",
+      "description": "හේතුවාදී තර්කනය වෙනුවට හැඟීම් සහගත ප්‍රතිචාරයක් ඇති කිරීමට උත්සාහ කරයි.",
+      "rephrase": "අභියෝගාත්මක කරුණ"
     }
   ]
 }

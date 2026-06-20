@@ -59,13 +59,14 @@ def analyze_bias(payload: AnalysisRequest):
 class RephraseRequest(BaseModel):
   text: str
   language: str = "en"
+  api_key: str = None
 
 @app.post("/analyze/rephrase")
 def analyze_rephrase(payload: RephraseRequest):
   if not payload.text.strip():
     raise HTTPException(status_code=400, detail="Text content must not be empty")
   try:
-    alternatives = generate_alternatives(payload.text, payload.language)
+    alternatives = generate_alternatives(payload.text, payload.language, payload.api_key)
     return {"success": True, "alternatives": alternatives}
   except Exception as e:
     raise HTTPException(status_code=500, detail=str(e))

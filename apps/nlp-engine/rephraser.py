@@ -7,8 +7,9 @@ try:
 except ImportError:
     HAS_GENAI = False
 
-def generate_alternatives(text: str, language: str = "en") -> dict:
-    api_key = os.getenv("GEMINI_API_KEY")
+def generate_alternatives(text: str, language: str = "en", api_key: str = None) -> dict:
+    if not api_key:
+        api_key = os.getenv("GEMINI_API_KEY")
     if HAS_GENAI and api_key:
         try:
             genai.configure(api_key=api_key)
