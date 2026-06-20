@@ -35,7 +35,9 @@ export default function RephraseSandbox({
       setAlternatives(null);
       setAppliedStyle(null);
 
-      fetchAIRephrasings(quote, language)
+      const apiKey = localStorage.getItem("pm_gemini_api_key") || undefined;
+
+      fetchAIRephrasings(quote, language, apiKey)
         .then((res) => {
           if (res.success && res.alternatives) {
             setAlternatives(res.alternatives);

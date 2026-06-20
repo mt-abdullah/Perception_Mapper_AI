@@ -61,11 +61,11 @@ export const updatePolicies = async (payload: PolicySettings, role = "ADMIN") =>
   return res.json();
 };
 
-export const fetchAIRephrasings = async (text: string, language = "en") => {
+export const fetchAIRephrasings = async (text: string, language = "en", apiKey?: string) => {
   const res = await fetch(`${BASE_URL}/analyze/rephrase`, {
     method: "POST",
     headers: getHeaders("ADMIN"),
-    body: JSON.stringify({ text, language }),
+    body: JSON.stringify({ text, language, apiKey }),
   });
   if (!res.ok) throw new Error("Could not fetch AI rephrase suggestions");
   return res.json();
