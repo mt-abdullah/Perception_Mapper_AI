@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Terminal, Shield, Play, RotateCcw } from "lucide-react";
 
 export default function PromptSandbox() {
@@ -9,6 +9,26 @@ export default function PromptSandbox() {
   const [sandboxInput, setSandboxInput] = useState("We are completely thrilled to announce that this spectacular release is incredibly revolutionary!");
   const [sandboxOutput, setSandboxOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
+
+  const [customGeminiKey, setCustomGeminiKey] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCustomGeminiKey(localStorage.getItem("pm_gemini_api_key") || "");
+    }
+  }, []);
+
+  const handleGeminiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setCustomGeminiKey(val);
+    if (typeof window !== "undefined") {
+      if (val.trim()) {
+        localStorage.setItem("pm_gemini_api_key", val.trim());
+      } else {
+        localStorage.removeItem("pm_gemini_api_key");
+      }
+    }
+  };
 
   const handleDryRun = () => {
     if (!sandboxInput || isRunning) return;
@@ -105,14 +125,29 @@ export default function PromptSandbox() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-1 bg-slate-950/80 border border-slate-900 rounded-xl p-4 space-y-3.5">
-            <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 block">X-API-Key Configuration</span>
-            <div className="bg-slate-950 border border-slate-900 rounded-lg p-2.5 flex items-center justify-between">
-              <span className="font-mono text-[10px] text-indigo-400 select-all font-bold">pm_key_team_pro_2026</span>
-              <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 font-extrabold">ACTIVE</span>
+            <div>
+              <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 block mb-2">Developer Integration Key</span>
+              <div className="bg-slate-950 border border-slate-900 rounded-lg p-2.5 flex items-center justify-between">
+                <span className="font-mono text-[10px] text-indigo-400 select-all font-bold">pm_key_team_pro_2026</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 font-extrabold">ACTIVE</span>
+              </div>
             </div>
-            <p className="text-[9px] text-slate-500 leading-relaxed">
-              Subscribers can pass this authenticated header within integration environments to verify transactions.
-            </p>
+
+            <div className="border-t border-slate-900 pt-3">
+              <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 block mb-2">Gemini API Key Override</span>
+              <div className="space-y-2">
+                <input
+                  type="password"
+                  value={customGeminiKey}
+                  onChange={handleGeminiKeyChange}
+                  placeholder="Enter Gemini API Key..."
+                  className="w-full bg-slate-950 border border-slate-900 focus:border-purple-500 focus:outline-none rounded-lg px-2.5 py-1.5 text-[10px] text-slate-350 font-mono"
+                />
+                <p className="text-[9px] text-slate-500 leading-relaxed">
+                  Used client-side for dynamic AI-powered rephrasings (saved to your local session).
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="md:col-span-2 bg-slate-950/80 border border-slate-900 rounded-xl p-4 space-y-3">

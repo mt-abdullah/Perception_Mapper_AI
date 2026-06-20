@@ -132,7 +132,7 @@ export class AppController {
   @UseGuards(ClerkGuard)
   async rephraseText(
     @Req() req: any,
-    @Body() body: { text: string; language?: string }
+    @Body() body: { text: string; language?: string; apiKey?: string }
   ) {
     if (!body.text || !body.text.trim()) {
       throw new HttpException("Text content is required for rephrasing", HttpStatus.BAD_REQUEST);
@@ -144,7 +144,11 @@ export class AppController {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: body.text, language: body.language || "en" }),
+        body: JSON.stringify({ 
+          text: body.text, 
+          language: body.language || "en",
+          api_key: body.apiKey 
+        }),
       });
 
       if (!response.ok) {
