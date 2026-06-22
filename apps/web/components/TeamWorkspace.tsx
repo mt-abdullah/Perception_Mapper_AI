@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Users } from "lucide-react";
-import { Button } from "@perception-mapper/ui";
+import { Button, Input } from "@perception-mapper/ui";
 import { TeamMember } from "../types";
 
 interface TeamWorkspaceProps {
@@ -23,33 +23,33 @@ export default function TeamWorkspace({ teamMembers, onInvite, onRevoke }: TeamW
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 select-none font-sans">
       <div className="border-b border-slate-900 pb-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Users className="h-4 w-4 text-indigo-400" />
           <h3 className="text-xs font-extrabold uppercase tracking-widest text-slate-200">Team Workspace</h3>
         </div>
-        <span className="text-[8px] font-mono text-slate-500 uppercase font-bold">Roster Seat Allocation</span>
+        <span className="text-[8px] font-mono text-slate-500 uppercase font-bold tracking-widest">Roster Seat Allocation</span>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-        <input
+        <Input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="colleague@perception.ai"
-          className="flex-grow bg-slate-950 border border-slate-800 focus:border-indigo-500/80 rounded-xl px-4 py-2 text-xs text-slate-200 outline-none"
+          className="flex-grow text-xs"
         />
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="bg-slate-950 border border-slate-800 rounded-xl px-3 text-xs text-slate-300"
+          className="bg-slate-950 border border-slate-800 hover:border-slate-700/60 focus:border-indigo-500/80 rounded-xl px-3 text-xs text-slate-350 outline-none transition focus:ring-4 focus:ring-indigo-500/10 cursor-pointer font-sans font-semibold"
         >
-          <option value="USER">USER</option>
-          <option value="ADMIN">ADMIN</option>
+          <option value="USER" className="bg-slate-950 text-slate-300">USER</option>
+          <option value="ADMIN" className="bg-slate-950 text-slate-300">ADMIN</option>
         </select>
-        <Button type="submit" variant="primary" size="sm" className="shrink-0">
+        <Button type="submit" variant="primary" size="sm" className="shrink-0 font-bold tracking-wide uppercase px-4 py-2">
           Invite Seat
         </Button>
       </form>
@@ -66,22 +66,25 @@ export default function TeamWorkspace({ teamMembers, onInvite, onRevoke }: TeamW
           </thead>
           <tbody className="divide-y divide-slate-900/60 font-mono">
             {teamMembers.map((m) => (
-              <tr key={m.id} className="hover:bg-slate-900/10 transition">
-                <td className="py-3 font-sans font-bold text-slate-300">{m.email}</td>
-                <td className="py-3">
-                  <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-sans border border-slate-800 text-[8px] font-bold uppercase">
+              <tr key={m.id} className="hover:bg-slate-900/20 transition duration-200">
+                <td className="py-3.5 font-sans font-bold text-slate-300">{m.email}</td>
+                <td className="py-3.5">
+                  <span className="px-2.5 py-0.5 rounded bg-slate-950 border border-slate-900 text-slate-400 font-sans text-[8px] font-bold uppercase tracking-wider">
                     {m.role}
                   </span>
                 </td>
-                <td className="py-3">
-                  <span className="px-2 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-800/20 text-[8px] font-bold font-sans">
-                    ACTIVE
-                  </span>
+                <td className="py-3.5">
+                  <div className="flex items-center space-x-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-emerald-400 text-[8px] font-bold font-sans uppercase tracking-wider">
+                      ACTIVE
+                    </span>
+                  </div>
                 </td>
-                <td className="py-3 text-right font-sans">
+                <td className="py-3.5 text-right font-sans">
                   <button
                     onClick={() => onRevoke(m.id, m.email)}
-                    className="text-rose-500 hover:text-rose-400 font-bold tracking-wide transition"
+                    className="text-rose-400 hover:text-rose-350 text-[10px] font-bold tracking-wider uppercase transition duration-200"
                   >
                     Revoke
                   </button>
@@ -94,3 +97,4 @@ export default function TeamWorkspace({ teamMembers, onInvite, onRevoke }: TeamW
     </div>
   );
 }
+
