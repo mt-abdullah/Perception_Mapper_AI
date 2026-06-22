@@ -1,4 +1,4 @@
-import { UserProfile, GlobalStats, PolicySettings, AuditLog } from "../types";
+import { UserProfile, GlobalStats, PolicySettings, AuditLog, WorkspaceTeam } from "../types";
 
 const BASE_URL = "http://localhost:3001/api";
 
@@ -70,4 +70,30 @@ export const fetchAIRephrasings = async (text: string, language = "en", apiKey?:
   if (!res.ok) throw new Error("Could not fetch AI rephrase suggestions");
   return res.json();
 };
+
+export const fetchAdminTeams = async (role = "ADMIN"): Promise<WorkspaceTeam[]> => {
+  const res = await fetch(`${BASE_URL}/admin/teams`, { headers: getHeaders(role) });
+  if (!res.ok) throw new Error("Could not retrieve workspace team catalogs");
+  return res.json();
+};
+
+export const createAdminTeam = async (payload: Partial<WorkspaceTeam>, role = "ADMIN"): Promise<WorkspaceTeam> => {
+  const res = await fetch(`${BASE_URL}/admin/teams`, {
+    method: "POST",
+    headers: getHeaders(role),
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error("Could not create workspace team node");
+  return res.json();
+};
+
+export const deleteAdminTeam = async (id: string, role = "ADMIN") => {
+  const res = await fetch(`${BASE_URL}/admin/teams/${id}`, {
+    method: "DELETE",
+    headers: getHeaders(role),
+  });
+  if (!res.ok) throw new Error("Could not purge workspace team node");
+  return res.json();
+};
+
 
