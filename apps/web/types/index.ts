@@ -89,3 +89,15 @@ export interface AnalysisResult {
   tones: ToneInfo[];
   biases: BiasPattern[];
 }
+
+export interface WorkspaceTeam {
+  id: string;
+  name: string;
+  description?: string;
+  leadId?: string;
+  tier: string;
+  maxMembers: number;
+  status: string;
+  createdAt?: string;
+}
+
