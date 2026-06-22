@@ -115,29 +115,34 @@ export default function RephraseSandbox({
 
           {/* Alternatives Grid */}
           {alternatives && !loading && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-in slide-in-from-bottom-4 duration-500">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-in slide-in-from-bottom-4 duration-500 font-sans">
               {/* Journalistic / Factual Card */}
               <div 
                 onClick={() => handleApply("journalistic", alternatives.journalistic)}
-                className={`relative group cursor-pointer border rounded-xl p-4 transition-all duration-300 flex flex-col justify-between h-[210px] select-none hover:scale-[1.02] ${
+                className={`relative group cursor-pointer border rounded-2xl p-5 transition-all duration-350 flex flex-col justify-between min-h-[220px] select-none hover:scale-[1.025] hover:shadow-[0_0_20px_rgba(99,102,241,0.04)] ${
                   appliedStyle === "journalistic" 
-                    ? "bg-indigo-950/30 border-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.2)]" 
-                    : "bg-slate-950/40 border-slate-900 hover:border-indigo-500/40 hover:bg-indigo-950/5"
+                    ? "bg-indigo-950/40 border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/30 text-white" 
+                    : "bg-slate-950/50 border-slate-850 hover:border-indigo-500/35 hover:bg-indigo-950/10 text-slate-300"
                 }`}
               >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-1.5">
-                      <Newspaper className="h-4 w-4 text-indigo-400" />
+                {/* Glow effect on hover */}
+                <div className="absolute top-0 right-0 w-[80px] h-[80px] rounded-full bg-indigo-500/5 blur-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-305 pointer-events-none" />
+
+                <div className="space-y-3.5 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 group-hover:border-indigo-500/30 transition-colors">
+                        <Newspaper className="h-3.5 w-3.5 text-indigo-400" />
+                      </div>
                       <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-200">Journalistic</span>
                     </div>
                     {appliedStyle === "journalistic" && <CheckCircle className="h-4.5 w-4.5 text-indigo-400" />}
                   </div>
-                  <p className="text-[10.5px] leading-relaxed text-slate-400 group-hover:text-slate-200 transition-colors">
+                  <p className="text-[10px] leading-relaxed text-slate-400 group-hover:text-slate-200 transition-colors">
                     {alternatives.journalistic}
                   </p>
                 </div>
-                <div className="text-[8px] font-bold uppercase tracking-widest text-indigo-400 group-hover:underline self-end">
+                <div className="text-[8px] font-extrabold uppercase tracking-widest text-indigo-400 group-hover:underline self-end pt-3 relative z-10">
                   Apply Style
                 </div>
               </div>
@@ -145,25 +150,30 @@ export default function RephraseSandbox({
               {/* Empathetic / Warm Card */}
               <div 
                 onClick={() => handleApply("empathetic", alternatives.empathetic)}
-                className={`relative group cursor-pointer border rounded-xl p-4 transition-all duration-300 flex flex-col justify-between h-[210px] select-none hover:scale-[1.02] ${
+                className={`relative group cursor-pointer border rounded-2xl p-5 transition-all duration-350 flex flex-col justify-between min-h-[220px] select-none hover:scale-[1.025] hover:shadow-[0_0_20px_rgba(20,184,166,0.04)] ${
                   appliedStyle === "empathetic" 
-                    ? "bg-teal-950/30 border-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.2)]" 
-                    : "bg-slate-950/40 border-slate-900 hover:border-teal-500/40 hover:bg-teal-950/5"
+                    ? "bg-teal-950/40 border-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.15)] ring-1 ring-teal-500/30 text-white" 
+                    : "bg-slate-950/50 border-slate-850 hover:border-teal-500/35 hover:bg-teal-950/10 text-slate-300"
                 }`}
               >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-1.5">
-                      <Heart className="h-4 w-4 text-teal-400" />
+                {/* Glow effect on hover */}
+                <div className="absolute top-0 right-0 w-[80px] h-[80px] rounded-full bg-teal-500/5 blur-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-305 pointer-events-none" />
+
+                <div className="space-y-3.5 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 group-hover:border-teal-500/30 transition-colors">
+                        <Heart className="h-3.5 w-3.5 text-teal-400" />
+                      </div>
                       <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-200">Empathetic</span>
                     </div>
                     {appliedStyle === "empathetic" && <CheckCircle className="h-4.5 w-4.5 text-teal-400" />}
                   </div>
-                  <p className="text-[10.5px] leading-relaxed text-slate-400 group-hover:text-slate-200 transition-colors">
+                  <p className="text-[10px] leading-relaxed text-slate-400 group-hover:text-slate-200 transition-colors">
                     {alternatives.empathetic}
                   </p>
                 </div>
-                <div className="text-[8px] font-bold uppercase tracking-widest text-teal-400 group-hover:underline self-end">
+                <div className="text-[8px] font-extrabold uppercase tracking-widest text-teal-400 group-hover:underline self-end pt-3 relative z-10">
                   Apply Style
                 </div>
               </div>
@@ -171,25 +181,30 @@ export default function RephraseSandbox({
               {/* Professional / Clear Card */}
               <div 
                 onClick={() => handleApply("professional", alternatives.professional)}
-                className={`relative group cursor-pointer border rounded-xl p-4 transition-all duration-300 flex flex-col justify-between h-[210px] select-none hover:scale-[1.02] ${
+                className={`relative group cursor-pointer border rounded-2xl p-5 transition-all duration-350 flex flex-col justify-between min-h-[220px] select-none hover:scale-[1.025] hover:shadow-[0_0_20px_rgba(168,85,247,0.04)] ${
                   appliedStyle === "professional" 
-                    ? "bg-purple-950/30 border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.2)]" 
-                    : "bg-slate-950/40 border-slate-900 hover:border-purple-500/40 hover:bg-purple-950/5"
+                    ? "bg-purple-950/40 border-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.15)] ring-1 ring-purple-500/30 text-white" 
+                    : "bg-slate-950/50 border-slate-850 hover:border-purple-500/35 hover:bg-purple-950/10 text-slate-300"
                 }`}
               >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-1.5">
-                      <Briefcase className="h-4 w-4 text-purple-400" />
+                {/* Glow effect on hover */}
+                <div className="absolute top-0 right-0 w-[80px] h-[80px] rounded-full bg-purple-500/5 blur-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-305 pointer-events-none" />
+
+                <div className="space-y-3.5 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 group-hover:border-purple-500/30 transition-colors">
+                        <Briefcase className="h-3.5 w-3.5 text-purple-400" />
+                      </div>
                       <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-200">Professional</span>
                     </div>
                     {appliedStyle === "professional" && <CheckCircle className="h-4.5 w-4.5 text-purple-400" />}
                   </div>
-                  <p className="text-[10.5px] leading-relaxed text-slate-400 group-hover:text-slate-200 transition-colors">
+                  <p className="text-[10px] leading-relaxed text-slate-400 group-hover:text-slate-200 transition-colors">
                     {alternatives.professional}
                   </p>
                 </div>
-                <div className="text-[8px] font-bold uppercase tracking-widest text-purple-400 group-hover:underline self-end">
+                <div className="text-[8px] font-extrabold uppercase tracking-widest text-purple-400 group-hover:underline self-end pt-3 relative z-10">
                   Apply Style
                 </div>
               </div>
@@ -198,7 +213,7 @@ export default function RephraseSandbox({
         </div>
 
         {/* Footer info banner */}
-        <div className="px-6 py-3 border-t border-slate-900 bg-slate-950/65 text-[9px] font-bold text-slate-500 uppercase tracking-wider text-center">
+        <div className="px-6 py-3 border-t border-slate-900 bg-slate-950/70 text-[9px] font-bold text-slate-500 uppercase tracking-widest text-center select-none">
           ⚡ Selecting a style inserts it directly into your dashboard playground editor.
         </div>
       </div>
