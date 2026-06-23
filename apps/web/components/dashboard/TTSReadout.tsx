@@ -12,6 +12,21 @@ export default function TTSReadout({ text, mode }: TTSReadoutProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    const updateVoices = () => {
+      setVoices(window.speechSynthesis.getVoices());
+    };
+
+    updateVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = updateVoices;
+    }
+  }, []);
+
   const handleSpeak = () => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
@@ -33,8 +48,8 @@ export default function TTSReadout({ text, mode }: TTSReadoutProps) {
       utterance.rate = 0.82;
       
       // Select a deeper/robotic voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const robotVoice = voices.find((v) => v.name.includes("Google") || v.name.includes("Microsoft"));
+      const availableVoices = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+      const robotVoice = availableVoices.find((v) => v.name.includes("Google") || v.name.includes("Microsoft"));
       if (robotVoice) utterance.voice = robotVoice;
     }
 
@@ -57,10 +72,10 @@ export default function TTSReadout({ text, mode }: TTSReadoutProps) {
     <button
       type="button"
       onClick={handleSpeak}
-      className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-[9px] font-extrabold uppercase tracking-wider transition duration-300 relative ${
+      className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-[9px] font-extrabold uppercase tracking-wider transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.98] ${
         isPlaying
-          ? "bg-rose-950/40 border-rose-500/25 text-rose-400 hover:text-white"
-          : "bg-slate-900/60 border-slate-800 hover:border-slate-800 text-slate-400 hover:text-slate-200"
+          ? "bg-rose-950/40 border-rose-500/25 text-rose-400 hover:text-white hover:border-rose-500/50 shadow-sm shadow-rose-950/50"
+          : "bg-slate-900/60 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-900/80 shadow-sm"
       }`}
     >
       {isPlaying ? (

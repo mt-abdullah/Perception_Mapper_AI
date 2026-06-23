@@ -132,7 +132,7 @@ export default function StripeCheckoutModal({
                     value={form.cardNumber}
                     onChange={handleChange}
                     placeholder="4242 4242 4242 4242 (Stripe test)"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-650 text-xs font-semibold focus:outline-none focus:border-indigo-500/50"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-500 text-xs font-semibold focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/10 transition"
                     required
                   />
                 </div>
@@ -144,7 +144,7 @@ export default function StripeCheckoutModal({
                     value={form.expiry}
                     onChange={handleChange}
                     placeholder="MM/YY"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-650 text-center text-xs font-semibold focus:outline-none focus:border-indigo-500/50"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-500 text-center text-xs font-semibold focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/10 transition"
                     required
                   />
                   <input
@@ -153,7 +153,7 @@ export default function StripeCheckoutModal({
                     value={form.cvc}
                     onChange={handleChange}
                     placeholder="CVC"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-650 text-center text-xs font-semibold focus:outline-none focus:border-indigo-500/50"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-500 text-center text-xs font-semibold focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/10 transition"
                     required
                   />
                   <input
@@ -162,7 +162,7 @@ export default function StripeCheckoutModal({
                     value={form.zip}
                     onChange={handleChange}
                     placeholder="ZIP"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-650 text-center text-xs font-semibold focus:outline-none focus:border-indigo-500/50"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-200 placeholder-slate-500 text-center text-xs font-semibold focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/10 transition"
                     required
                   />
                 </div>
@@ -181,8 +181,8 @@ export default function StripeCheckoutModal({
                 loading
                   ? 'bg-slate-900 border-slate-800 text-slate-500 cursor-not-allowed'
                   : planId === 'basic'
-                  ? 'bg-blue-600 hover:bg-blue-600 text-white border-blue-500'
-                  : 'bg-emerald-600 hover:bg-emerald-600 text-white border-emerald-500'
+                  ? 'bg-blue-600 hover:bg-blue-500 text-white border-blue-500'
+                  : 'bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-500'
               }`}
             >
               {loading ? (
