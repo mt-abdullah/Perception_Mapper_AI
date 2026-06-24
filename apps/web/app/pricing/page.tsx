@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PricingHero from '../../components/pricing/PricingHero';
 import PricingCard from '../../components/pricing/PricingCard';
 import ComparisonTable from '../../components/pricing/ComparisonTable';
+import PricingCalculator from '../../components/pricing/PricingCalculator';
 import FAQAccordion from '../../components/pricing/FAQAccordion';
 import TestimonialStrip from '../../components/pricing/TestimonialStrip';
 import PricingCTABanner from '../../components/pricing/PricingCTABanner';
@@ -63,6 +64,12 @@ export default function PricingPage() {
 
         {/* Social Proof Strip */}
         <TestimonialStrip />
+
+        {/* Dynamic Calculator Estimator */}
+        <PricingCalculator
+          isAnnual={isAnnual}
+          onSelectPlan={(id, price, name) => setCheckoutPlan({ id, price, name })}
+        />
 
         {/* Full Feature Comparison Grid */}
         <ComparisonTable />
