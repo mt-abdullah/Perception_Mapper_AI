@@ -28,6 +28,10 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
   const [needsAPI, setNeedsAPI] = useState<boolean>(false);
   const [recommendedPlan, setRecommendedPlan] = useState<PricingPlan>(pricingPlans[1]); // Default to Basic
 
+  // Calculate percentages for sliders
+  const analysesPercent = ((analyses - 10) / (2000 - 10)) * 100;
+  const seatsPercent = ((seats - 1) / (30 - 1)) * 100;
+
   // Real-time plan recommendation algorithm
   useEffect(() => {
     let planId: "free" | "basic" | "pro" = "free";
@@ -90,9 +94,17 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
                 <FileText className="h-4.5 w-4.5 text-indigo-400 mr-2" />
                 Monthly Analysis Scans
               </label>
-              <span className="text-xs font-mono font-bold text-indigo-400 bg-slate-950 px-2 py-0.5 border border-slate-800 rounded-lg">
-                {analyses === 2000 ? "Unlimited Scans" : `${analyses} scans / mo`}
-              </span>
+              <AnimatePresence mode="popLayout">
+                <motion.span
+                  key={analyses}
+                  initial={{ scale: 0.9, opacity: 0.5 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  className="text-xs font-mono font-bold text-indigo-400 bg-slate-950 px-2 py-0.5 border border-slate-800 rounded-lg inline-block"
+                >
+                  {analyses === 2000 ? "Unlimited Scans" : `${analyses} scans / mo`}
+                </motion.span>
+              </AnimatePresence>
             </div>
             <div className="relative">
               <input
@@ -102,7 +114,10 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
                 step="10"
                 value={analyses}
                 onChange={(e) => setAnalyses(Number(e.target.value))}
-                className="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                className="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-indigo-500 focus:outline-none"
+                style={{
+                  background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${analysesPercent}%, #020617 ${analysesPercent}%, #020617 100%)`
+                }}
               />
               <div className="flex justify-between text-[8px] text-slate-500 font-bold uppercase pt-1 px-1">
                 <span>Free (50 max)</span>
@@ -119,9 +134,17 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
                 <Users className="h-4.5 w-4.5 text-blue-400 mr-2" />
                 Workspace Seat Allocations
               </label>
-              <span className="text-xs font-mono font-bold text-blue-400 bg-slate-950 px-2 py-0.5 border border-slate-800 rounded-lg">
-                {seats === 30 ? "Enterprise (30+ seats)" : `${seats} ${seats === 1 ? "seat" : "seats"}`}
-              </span>
+              <AnimatePresence mode="popLayout">
+                <motion.span
+                  key={seats}
+                  initial={{ scale: 0.9, opacity: 0.5 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  className="text-xs font-mono font-bold text-blue-400 bg-slate-950 px-2 py-0.5 border border-slate-800 rounded-lg inline-block"
+                >
+                  {seats === 30 ? "Enterprise (30+ seats)" : `${seats} ${seats === 1 ? "seat" : "seats"}`}
+                </motion.span>
+              </AnimatePresence>
             </div>
             <div className="relative">
               <input
@@ -131,7 +154,10 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
                 step="1"
                 value={seats}
                 onChange={(e) => setSeats(Number(e.target.value))}
-                className="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                className="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-blue-500 focus:outline-none"
+                style={{
+                  background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${seatsPercent}%, #020617 ${seatsPercent}%, #020617 100%)`
+                }}
               />
               <div className="flex justify-between text-[8px] text-slate-500 font-bold uppercase pt-1 px-1">
                 <span>1 Seat (Free/Basic)</span>
@@ -215,7 +241,7 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
             >
               {seats >= 25 ? (
                 /* Enterprise Recommendation */
-                <div className="flex-grow rounded-3xl border border-purple-500/50 bg-slate-900/60 backdrop-blur-md p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                <div className="flex-grow rounded-3xl border border-purple-500/50 ring-1 ring-purple-500/20 bg-slate-950/40 backdrop-blur-md p-6 flex flex-col justify-between shadow-[0_0_25px_rgba(168,85,247,0.08)] relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-[120px] h-[120px] rounded-full bg-gradient-to-tr from-purple-500/10 to-indigo-500/10 blur-[20px] pointer-events-none" />
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 text-[9px] font-bold text-white bg-purple-600 border border-purple-500 rounded-full uppercase tracking-widest shadow-md">
                     Custom Setup
@@ -274,10 +300,10 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
                 <div
                   className={`flex-grow rounded-3xl border p-6 flex flex-col justify-between glass-card transition-all duration-300 shadow-2xl relative overflow-hidden ${
                     recommendedPlan.id === "pro"
-                      ? "border-emerald-500/50 ring-1 ring-emerald-500/30 bg-slate-900/60 shadow-emerald-500/5"
+                      ? "border-emerald-500/50 ring-1 ring-emerald-500/20 bg-slate-950/40 shadow-[0_0_25px_rgba(16,185,129,0.08)]"
                       : recommendedPlan.id === "basic"
-                      ? "border-blue-500/50 ring-1 ring-blue-500/30 bg-slate-900/60 shadow-blue-500/5"
-                      : "border-slate-800/80 bg-slate-900/40"
+                      ? "border-blue-500/50 ring-1 ring-blue-500/20 bg-slate-950/40 shadow-[0_0_25px_rgba(59,130,246,0.08)]"
+                      : "border-slate-800/80 bg-slate-950/20 shadow-indigo-950/10"
                   }`}
                 >
                   {/* Glowing corner accent */}
@@ -327,6 +353,11 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
                       {isAnnual && recommendedPrice > 0 && (
                         <span className="text-[9px] text-slate-400 ml-2 font-semibold">
                           (billed annually)
+                        </span>
+                      )}
+                      {isAnnual && recommendedPlan.id !== "free" && (
+                        <span className="ml-3 px-2 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-[9px] font-extrabold text-emerald-400 uppercase tracking-wide">
+                          Save ${recommendedPlan.id === "pro" ? "144" : "48"}/yr
                         </span>
                       )}
                     </div>
