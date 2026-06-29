@@ -232,14 +232,14 @@ export default function PricingCalculator({ isAnnual, onSelectPlan }: PricingCal
         <div className="lg:col-span-5 flex flex-col items-stretch">
           <AnimatePresence mode="wait">
             <motion.div
-              key={recommendedPlan.id + (seats >= 25 ? "-enterprise" : "")}
+              key={recommendedPlan.id + (seats > 20 ? "-enterprise" : "")}
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.2 }}
               className="flex-grow flex flex-col"
             >
-              {seats >= 25 ? (
+              {seats > 20 ? (
                 /* Enterprise Recommendation */
                 <div className="flex-grow rounded-3xl border border-purple-500/50 ring-1 ring-purple-500/20 bg-slate-950/40 backdrop-blur-md p-6 flex flex-col justify-between shadow-[0_0_25px_rgba(168,85,247,0.08)] relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-[120px] h-[120px] rounded-full bg-gradient-to-tr from-purple-500/10 to-indigo-500/10 blur-[20px] pointer-events-none" />

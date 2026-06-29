@@ -19,7 +19,7 @@ export default function PricingCTABanner() {
 
         <div className="flex flex-col sm:flex-row gap-3 z-10 shrink-0">
           <Link
-            href="/signup?plan=free"
+            href="/sign-up?plan=free"
             className="px-5 py-2.5 rounded-xl text-center bg-indigo-600 hover:bg-indigo-600 text-white font-bold uppercase tracking-wider text-xs border border-indigo-500 shadow-md transition"
             aria-label="Start for free"
           >
